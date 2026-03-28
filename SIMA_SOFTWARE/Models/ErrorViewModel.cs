@@ -1,4 +1,4 @@
-namespace SimaSoftwareMVC.Models
+namespace SIMA_SOFTWARE.Models
 {
     public class ErrorViewModel
     {

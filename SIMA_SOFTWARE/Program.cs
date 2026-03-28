@@ -1,7 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using SIMA_SOFTWARE.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Incluir DbContext
+builder.Services.AddDbContext<SimaDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
+
 
 var app = builder.Build();
 
