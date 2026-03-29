@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SIMA_SOFTWARE.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SIMA_Software.Models
@@ -15,10 +16,12 @@ namespace SIMA_Software.Models
         public string? Nombre { get; set; }
 
         [EmailAddress]
-        [StringLength(100)]
+        [Required]
+        [StringLength(50)]
         public string? Email { get; set; }
         
         [StringLength(20)]
+        [Phone]
         public string? Telefono { get; set; }
 
         public int IdDireccion { get; set; }
@@ -31,6 +34,13 @@ namespace SIMA_Software.Models
 
         public List<Pedido>? Pedidos { get; set; }
         public List<Factura>? Facturas { get; set; }
+
+        // Propiedad de navegación hacia Identity
+        public string? ApplicationUserId { get; set; }
+        public virtual ApplicationUser? User { get; set; }
+
+
+
     }
 }
 

@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SIMA_Software.Models;
+using SIMA_SOFTWARE.Models;
 
 namespace SIMA_SOFTWARE.Data
 {
-    public class SimaDbContext : DbContext
+    public class SimaDbContext : IdentityDbContext<ApplicationUser>
     {
         public SimaDbContext(DbContextOptions<SimaDbContext> options) : base(options)
         {
