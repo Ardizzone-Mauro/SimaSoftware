@@ -1,0 +1,61 @@
+﻿@using SIMA_SOFTWARE.Models.ViewModels
+
+
+@model LoginViewModel;
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/auth.css" />
+}
+
+<div class="bg-pattern"></div>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="text-center">
+            <a class="brand-logo" href="/">
+                <i class="bi bi-layers-fill"></i>
+                <span>SIMA Software</span>
+            </a>
+            <p class="text-secondary small">Iniciar sesión</p>
+        </div>
+        <!-- Error Message for .NET Identity -->
+        @* <div class="alert alert-danger" id="login-error-alert" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>Cuenta bloqueada temporalmente</span>
+        </div> *@
+        <form method="post">
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label" ></label>
+                    
+                    <input asp-for="Email" class="form-control"  placeholder="usuario@sima.com" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label asp-for="Clave" class="form-label mb-0"></label>
+                </div>
+                    
+                    <input asp-for="Clave" class="form-control" placeholder="••••••••"  />
+                    <span asp-validation-for="Clave" class="text-danger small"></span>
+               
+            </div>
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <div class="form-check">
+                    <input class="form-check-input" asp-for="Recordarme" />
+                    <label class="form-check-label text-light small" >
+                        Recordarme
+                    </label>
+                </div>
+                <a class="forgot-password" href="/Identity/Account/ForgotPassword" id="forgot-password">¿Olvidó su contraseña?</a>
+            </div>
+            <button class="btn btn-primary w-100" type="submit">
+                Acceder al Sistema
+            </button>
+        </form>
+        <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 text-center">
+            
+        </div>
+    </div>
+</div>

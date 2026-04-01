@@ -1,0 +1,83 @@
+﻿@model SIMA_SOFTWARE.Models.ViewModels.RegistroViewModel;
+
+@{
+    ViewData["Title"] = "Registro";
+  
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/auth.css" />
+}
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+
+    <div class="text-center mb-4">
+        <h2 class="brand-logo">SIMA Software</h2>
+        <p class="text-secondary small">Crear una cuenta</p>
+    </div>
+
+    <form  method="post">
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Apellido" class="form-label"></label>
+            <input asp-for="Apellido" class="form-control" />
+            <span asp-validation-for="Apellido" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Clave" class="form-label"></label>
+            <input asp-for="Clave" class="form-control" type="password" />
+            <span asp-validation-for="Clave" class="text-danger"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="ConfirmarClave" class="form-label"></label>
+            <input asp-for="ConfirmarClave" class="form-control" type="password" />
+            <span asp-validation-for="ConfirmarClave" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">
+            Registrarse
+        </button>
+
+        <div class="divider">O continúa con</div>
+        <!-- Social Links Mockup -->
+        <div class="row g-2">
+            <div class="col-6">
+                <button class="btn btn-outline-secondary w-100 text-white border-secondary-subtle" type="button">
+                    <i class="bi bi-google me-2"></i>Google
+                </button>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-outline-secondary w-100 text-white border-secondary-subtle" type="button">
+                    <i class="bi bi-instagra me-2"></i>Instagram
+                </button>
+            </div>
+        </div>
+        <!-- Footer Link -->
+        <div class="text-center mt-4">
+            <p class="small text-secondary mb-0">
+                ¿Ya tienes cuenta?
+                <a asp-action="Login" class="login-link ms-1" >
+                    Inicia sesión
+            
+                </a>
+            </p>
+        </div>
+    </form>
+</div>
+</div>
