@@ -7,26 +7,40 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 //Incluir DbContext
 builder.Services.AddDbContext<SimaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
 
 //Incluir Identity
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
     options.Password.RequireUppercase = true;
-    options.Password.RequiredLength = 6;
+    options.Password.RequiredLength = 4;
     options.User.RequireUniqueEmail = true;
     options.Lockout.MaxFailedAccessAttempts = 3;
 
 })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<SimaDbContext>();
+    .AddEntityFrameworkStores<SimaDbContext>()
+    .AddSignInManager<SignInManager<ApplicationUser>>();
+//Manejo de la cookie de autenticación en defecto
+builder.Services.AddAuthentication(opt =>
+{ opt.DefaultScheme = IdentityConstants.ApplicationScheme; })
+    .AddIdentityCookies();
 
+//configurar cookie 
+builder.Services.ConfigureApplicationCookie(o =>
+{
+    o.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    o.SlidingExpiration = true;
+    o.LoginPath = "/Usuario/Login";
+    o.AccessDeniedPath = "/Usuario/AccessDenied";
 
+});
 
 var app = builder.Build();
 
@@ -49,6 +63,8 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 //Incluir SeedData para roles
 using (var scope = app.Services.CreateScope())
