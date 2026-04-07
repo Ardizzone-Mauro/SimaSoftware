@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SIMA_SOFTWARE.Configuration;
 using SIMA_SOFTWARE.Data;
 using SIMA_SOFTWARE.Models;
+using SIMA_SOFTWARE.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<SimaDbContext>()
+    .AddDefaultTokenProviders()
     .AddSignInManager<SignInManager<ApplicationUser>>();
 //Manejo de la cookie de autenticación en defecto
 builder.Services.AddAuthentication(opt =>
@@ -39,8 +42,15 @@ builder.Services.ConfigureApplicationCookie(o =>
     o.SlidingExpiration = true;
     o.LoginPath = "/Usuario/Login";
     o.AccessDeniedPath = "/Usuario/AccessDenied";
+   
 
 });
+
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<EmailService>();
+
+
 
 var app = builder.Build();
 
