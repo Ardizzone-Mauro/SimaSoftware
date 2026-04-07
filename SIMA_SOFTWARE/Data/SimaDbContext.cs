@@ -26,6 +26,7 @@ namespace SIMA_SOFTWARE.Data
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Envio> Envios { get; set; }
         public DbSet<Notificacion> Notificaciones { get; set; }
+        public DbSet<CodigoRecuperacion> CodigosRecuperacion { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
