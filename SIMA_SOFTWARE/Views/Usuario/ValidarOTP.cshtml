@@ -1,0 +1,77 @@
+﻿@using SIMA_SOFTWARE.Models.ViewModels
+
+@model ValidarOTPViewModel
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/auth.css" />
+}
+
+<div class="bg-pattern"></div>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <div class="text-center">
+            <a class="brand-logo" href="/">
+                <i class="bi bi-shield-lock-fill"></i>
+                <span>SIMA Software</span>
+            </a>
+            <p class="text-secondary small">Recuperar contraseña</p>
+        </div>
+
+        <form method="post">
+
+            <!-- EMAIL (OCULTO) -->
+            <input type="hidden" asp-for="Email" />
+
+            <!-- CÓDIGO OTP -->
+            <div class="mb-3">
+                <label asp-for="Codigo" class="form-label"></label>
+
+                <input asp-for="Codigo"
+                       class="form-control"
+                       placeholder="Ingresá el código de 6 dígitos" />
+
+                <span asp-validation-for="Codigo" class="text-danger small"></span>
+            </div>
+
+            <!-- NUEVA PASSWORD -->
+            <div class="mb-3">
+                <label asp-for="NuevaPassword" class="form-label"></label>
+
+                <input asp-for="NuevaPassword"
+                       type="password"
+                       class="form-control"
+                       placeholder="••••••••" />
+
+                <span asp-validation-for="NuevaPassword" class="text-danger small"></span>
+            </div>
+
+            <!-- CONFIRMAR PASSWORD -->
+            <div class="mb-4">
+                <label asp-for="ConfirmarPassword" class="form-label"></label>
+
+                <input asp-for="ConfirmarPassword"
+                       type="password"
+                       class="form-control"
+                       placeholder="••••••••" />
+
+                <span asp-validation-for="ConfirmarPassword" class="text-danger small"></span>
+            </div>
+
+            <!-- BOTÓN -->
+            <button class="btn btn-primary w-100" type="submit">
+                Cambiar contraseña
+            </button>
+
+        </form>
+
+        <!-- FOOTER -->
+        <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 text-center">
+            <a href="/Usuario/Login" class="text-secondary small">
+                Volver al login
+            </a>
+        </div>
+
+    </div>
+</div>

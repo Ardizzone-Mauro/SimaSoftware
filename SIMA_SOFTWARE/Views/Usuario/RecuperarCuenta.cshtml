@@ -1,0 +1,52 @@
+﻿
+@{
+}
+
+@model SIMA_SOFTWARE.Models.ViewModels.RecuperoCuentaViewModel
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/auth.css" />
+}
+
+
+
+<div class="bg-pattern"></div>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <div class="text-center">
+            <a class="brand-logo" href="/">
+                <i class="bi bi-layers-fill"></i>
+                <span>SIMA Software</span>
+            </a>
+            <p class="text-secondary small">Recuperar cuenta</p>
+        </div>
+        <form asp-action="RecuperarCuenta" asp-controller="Usuario" method="post">
+            <div class="mb-4">
+        <label asp-for="Email" class="form-label"></label>
+
+        <div class="input-group">
+            <span class="input-group-text border-end-0">
+                <i class="bi bi-envelope"></i>
+            </span>
+
+            <input asp-for="Email" class="form-control border-start-0 ps-0" placeholder="nombre@ejemplo.com" />
+        </div>
+
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary w-100" type="submit">
+        Enviar código de recuperación
+    </button>
+</form>
+
+        <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 text-center">
+            <a class="login-link" href="/Usuario/Login">
+                ← Volver al inicio de sesión
+            </a>
+        </div>
+
+    </div>
+</div>
