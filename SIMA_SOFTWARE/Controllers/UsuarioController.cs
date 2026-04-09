@@ -40,7 +40,7 @@ namespace SIMA_SOFTWARE.Controllers
                 var resultado = await _signInManager.PasswordSignInAsync(Usuario.Email, Usuario.Clave, Usuario.Recordarme, lockoutOnFailure: false);
                 if (resultado.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Dashboard");
                 }
                 else
                 {
