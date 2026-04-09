@@ -1,0 +1,101 @@
+﻿@using Microsoft.AspNetCore.Identity
+@{
+}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SIMA Software - Panel de Control</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+   
+    <link href="~/css/dashboard.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="top-navbar d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-4">
+            <span class="fs-4 fw-black text-emerald font-headline text-success d-none d-lg-block" style="letter-spacing: -1px;">SIMA Software</span>
+            <div class="search-container d-none d-md-flex">
+                <span class="material-symbols-outlined text-secondary fs-6 me-2">search</span>
+                <input class="search-input" placeholder="Buscar en SIMA..." type="text" />
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-link text-secondary p-2 rounded-circle hover-bg-dark">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <button class="btn btn-link text-secondary p-2 rounded-circle hover-bg-dark">
+                <span class="material-symbols-outlined">settings</span>
+            </button>
+            <button class="btn btn-link text-secondary p-2 rounded-circle hover-bg-dark">
+                <span class="material-symbols-outlined">help</span>
+            </button>
+            <div class="vr mx-2 bg-secondary opacity-25" style="height: 24px;"></div>
+            <div class="d-flex align-items-center gap-3 ms-2">
+                <div class="text-end d-none d-sm-block">
+                    <p class="mb-0 fw-bold small text-light">@User.Identity?.Name</p>
+                    <p class="mb-0 text-success fw-bold" style="font-size: 10px;">Administrador</p>
+                </div>
+                <img alt="Avatar" class="rounded-circle border border-2 border-secondary" height="40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASQEu93ZUjOPhNYVLSCv8sJkJwbo5hAldXanHCVmGXtXgOEJQee5Nj8fiOY41AcqwB6FtdCkjnz4W64wgp4e69cTAnNIG64gIizRrwuag_wbnQNItNWMejbKPuTK2PEHbipZqjPC0irrFtUyQXCL06dwKw1ovhu9kBY-hl_c1mGZ76SQTwvdeqfs9uybe18jmCM0O4Vn7MmM-sl59egGZGvi2Tz4WhnKYl9aEag-LOJ12He4cVaBCZmYhF2N8OySBS_cRYNboyklLA" width="40" />
+            </div>
+        </div>
+    </nav>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="px-4 mb-3">
+            <p class="text-uppercase small fw-bold text-secondary tracking-widest mb-0" style="font-size: 10px;">Menú Principal</p>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="#">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL';">dashboard</span>
+                Dashboard
+            </a>
+            <a class="nav-link"   asp-area=""  asp-controller="Clientes"  asp-action="Index">
+                <span class="material-symbols-outlined">group</span>
+                Clientes
+            </a>
+            <a class="nav-link" href="#">
+                <span class="material-symbols-outlined">inventory_2</span>
+                Productos
+            </a>
+            <a class="nav-link" href="#">
+                <span class="material-symbols-outlined">shopping_cart</span>
+                Pedidos
+            </a>
+            <a class="nav-link" href="#">
+                <span class="material-symbols-outlined">receipt_long</span>
+                Facturación
+            </a>
+            <a class="nav-link" href="#">
+                <span class="material-symbols-outlined">local_shipping</span>
+                Envíos
+            </a>
+            <a class="nav-link" href="#">
+                <span class="material-symbols-outlined">notifications</span>
+                Notificaciones
+            </a>
+        </nav>
+        <div class="px-4 mt-5">
+            <button class="btn btn-emerald w-100 d-flex align-items-center justify-content-center gap-2">
+                <span class="material-symbols-outlined fs-5">add</span>
+                Nuevo Pedido
+            </button>
+        </div>
+    </aside>
+
+
+
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+

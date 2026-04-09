@@ -1,32 +1,33 @@
 ﻿using SIMA_SOFTWARE.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace SIMA_Software.Models
+namespace SIMA_SOFTWARE.Models
 {
     [Table("Clientes")]
+    [Index(nameof(Email), IsUnique = true)]
     public class Cliente
     {
-
         [Key]
         public int IdCliente { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string? Nombre { get; set; }
+        public string Nombre { get; set; } = string.Empty;
 
-        [EmailAddress]
         [Required]
+        [EmailAddress]
         [StringLength(50)]
-        public string? Email { get; set; }
-        
+        public string Email { get; set; } = string.Empty;
+
         [StringLength(20)]
         [Phone]
         public string? Telefono { get; set; }
 
-        public int IdDireccion { get; set; }
-        public int IdTipoCliente { get; set; }
-        public int IdCuenta { get; set; }
+        public int DireccionId { get; set; }
+        public int TipoClienteId { get; set; }
+        public int CuentaId { get; set; }
 
         public Direccion? Direccion { get; set; }
         public TipoCliente? TipoCliente { get; set; }
@@ -35,12 +36,12 @@ namespace SIMA_Software.Models
         public List<Pedido>? Pedidos { get; set; }
         public List<Factura>? Facturas { get; set; }
 
-        // Propiedad de navegación hacia Identity
+        // Identity
         public string? ApplicationUserId { get; set; }
-        public virtual ApplicationUser? User { get; set; }
+        public ApplicationUser? User { get; set; }
 
-
-
+        //  BAJA LÓGICA
+        public bool Activo { get; set; } = true;
     }
 }
 

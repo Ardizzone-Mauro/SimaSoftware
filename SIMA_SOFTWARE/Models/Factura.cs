@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace SIMA_Software.Models
+
+
+
+namespace SIMA_SOFTWARE.Models
 {
     public class Factura
     {

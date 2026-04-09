@@ -1,0 +1,239 @@
+﻿
+
+@{
+}
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<!-- Main Content -->
+<main class="main-content">
+    <header class="mb-5">
+        <h1 class="fw-black text-light mb-1">Panel de Control</h1>
+        <p class="text-secondary mb-0">Bienvenido de nuevo, esto es lo que está sucediendo en SIMA hoy.</p>
+    </header>
+    <!-- Metric Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="custom-card">
+                <span class="material-symbols-outlined metric-icon-bg">group</span>
+                <p class="text-uppercase small fw-bold text-secondary mb-1" style="font-size: 10px;">Total Clientes</p>
+                <h3 class="fw-black text-white mb-2">1,284</h3>
+                <div class="d-flex align-items-center gap-1 text-success small fw-bold">
+                    <span class="material-symbols-outlined fs-6">trending_up</span>
+                    +12% este mes
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="custom-card">
+                <span class="material-symbols-outlined metric-icon-bg">shopping_bag</span>
+                <p class="text-uppercase small fw-bold text-secondary mb-1" style="font-size: 10px;">Pedidos Activos</p>
+                <h3 class="fw-black text-white mb-2">42</h3>
+                <div class="d-flex align-items-center gap-1 text-success small fw-bold">
+                    <span class="material-symbols-outlined fs-6">arrow_forward</span>
+                    8 listos para envío
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="custom-card">
+                <span class="material-symbols-outlined metric-icon-bg">inventory</span>
+                <p class="text-uppercase small fw-bold text-secondary mb-1" style="font-size: 10px;">Stock de Artículos</p>
+                <h3 class="fw-black text-white mb-2">3,502</h3>
+                <div class="d-flex align-items-center gap-1 text-warning small fw-bold">
+                    <span class="material-symbols-outlined fs-6">warning</span>
+                    12 bajo mínimos
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="custom-card">
+                <span class="material-symbols-outlined metric-icon-bg">payments</span>
+                <p class="text-uppercase small fw-bold text-secondary mb-1" style="font-size: 10px;">Ingresos Mensuales</p>
+                <h3 class="fw-black text-white mb-2">€48,250</h3>
+                <div class="d-flex align-items-center gap-1 text-success small fw-bold">
+                    <span class="material-symbols-outlined fs-6">trending_up</span>
+                    +8.4% vs mes anterior
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-4">
+        <!-- Table Section -->
+        <div class="col-12 col-lg-8">
+            <div class="custom-card p-0 border-0 shadow-lg" style="background-color: var(--surface-bg);">
+                <div class="p-4 border-bottom border-secondary border-opacity-10 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-success rounded-pill" style="width: 4px; height: 24px;"></div>
+                        <h2 class="h5 fw-bold mb-0 text-white">Pedidos Recientes</h2>
+                    </div>
+                    <button class="btn btn-link text-success text-decoration-none fw-bold small p-0">Ver todos</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Estado</th>
+                                <th>Total</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-secondary fw-medium">#ORD-7281</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 10px;">AL</div>
+                                        <span class="fw-semibold text-light">Alejandro López</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge-status bg-success bg-opacity-10 text-success border border-success border-opacity-25">Completado</span></td>
+                                <td class="fw-bold text-light">€1,240.00</td>
+                                <td class="text-secondary">12/10/2023</td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-link text-secondary p-1"><span class="material-symbols-outlined fs-5">edit</span></button>
+                                        <button class="btn btn-link text-danger p-1"><span class="material-symbols-outlined fs-5">delete</span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-secondary fw-medium">#ORD-7282</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 10px;">MS</div>
+                                        <span class="fw-semibold text-light">María Sánchez</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge-status bg-info bg-opacity-10 text-info border border-info border-opacity-25">En Proceso</span></td>
+                                <td class="fw-bold text-light">€850.50</td>
+                                <td class="text-secondary">12/10/2023</td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-link text-secondary p-1"><span class="material-symbols-outlined fs-5">edit</span></button>
+                                        <button class="btn btn-link text-danger p-1"><span class="material-symbols-outlined fs-5">delete</span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-secondary fw-medium">#ORD-7283</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 10px;">RP</div>
+                                        <span class="fw-semibold text-light">Ricardo Pérez</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge-status bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">Pendiente</span></td>
+                                <td class="fw-bold text-light">€2,100.00</td>
+                                <td class="text-secondary">13/10/2023</td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-link text-secondary p-1"><span class="material-symbols-outlined fs-5">edit</span></button>
+                                        <button class="btn btn-link text-danger p-1"><span class="material-symbols-outlined fs-5">delete</span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Side Panels -->
+        <div class="col-12 col-lg-4">
+            <div class="d-flex flex-column gap-4">
+                <!-- Stock Alerts -->
+                <div class="custom-card">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="bg-warning rounded-pill" style="width: 4px; height: 24px;"></div>
+                        <h2 class="h5 fw-bold mb-0 text-white">Alertas de Stock</h2>
+                    </div>
+                    <div class="vstack gap-3">
+                        <div class="d-flex align-items-center justify-content-between p-2 rounded-3 bg-dark bg-opacity-25">
+                            <div class="d-flex align-items-center gap-3">
+                                <img class="rounded" height="40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBof01xVq9bsuK9CVjTJFXMobvZh7AwPtxWn37-6CNoB5J0HnrJs_iDFrYKmhz1qk6m9ZVDKZpYMfKMtKTpxCZf8j6OkULaUFbbOUw1JUk25EOdot34yr9DDyyap7cwZHwE53hEH3KOIUuWVijmwQoxMRenhoGBb5krjabm8o-mENeRvVkfXWR5b3V8PLrcj_o0SdBQNgH1Sd1gaPCZZWqFsEMFGm6kaQTh7SJJ1l9KcFY5OUn6Kagmox12l8hCRr_q1qhqSb7KEJpu" style="object-fit: cover;" width="40" />
+                                <div>
+                                    <p class="mb-0 small fw-bold text-light">Zapatilla Air Max</p>
+                                    <p class="mb-0 text-secondary" style="font-size: 10px;">SKU: ZAP-002</p>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <p class="mb-0 small fw-black text-danger">2 uni.</p>
+                                <p class="mb-0 text-secondary" style="font-size: 10px;">Crítico</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between p-2 rounded-3 bg-dark bg-opacity-25">
+                            <div class="d-flex align-items-center gap-3">
+                                <img class="rounded" height="40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhcvcSiPxSrwZltMOvRkltwRJS3jX6mItEY6_G0yNSZRVD2XrQH5NsbAYyTBiewl4Tcb7JJW5HYOAxhXY2P-CR_6BYC3YA2C0hxYfBEd_aDHlr8e9-5tMvLVV7w-PposI1VYnZEhhIWJw2YkqxymS-PkF9NkQkeK-tnflQHvmoJO500VrpM2ZC3jCHmF1RBI-gD3OCJuTjPcdILzACKdZEyjcO2cJ5k3t6Wdt5IuCk9_3tSWdbEtv42lqc50z9t3ZgP_yILzQrpAU1" style="object-fit: cover;" width="40" />
+                                <div>
+                                    <p class="mb-0 small fw-bold text-light">Auriculares Pro</p>
+                                    <p class="mb-0 text-secondary" style="font-size: 10px;">SKU: AUD-015</p>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <p class="mb-0 small fw-black text-warning">5 uni.</p>
+                                <p class="mb-0 text-secondary" style="font-size: 10px;">Bajo</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-secondary w-100 mt-4 text-uppercase fw-bold border-opacity-25" style="font-size: 11px; letter-spacing: 1px;">Gestionar Inventario</button>
+                </div>
+                <!-- Recent Activity -->
+                <div class="custom-card flex-grow-1">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="bg-primary rounded-pill" style="width: 4px; height: 24px;"></div>
+                        <h2 class="h5 fw-bold mb-0 text-white">Actividad Reciente</h2>
+                    </div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot bg-success"></div>
+                            <p class="mb-0 small fw-bold text-light">Pago confirmado</p>
+                            <p class="mb-1 text-secondary" style="font-size: 10px;">El pedido #ORD-7281 ha sido pagado</p>
+                            <span class="badge bg-dark border border-secondary border-opacity-25 text-secondary" style="font-size: 9px;">Hace 5 min</span>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot bg-primary"></div>
+                            <p class="mb-0 small fw-bold text-light">Nuevo cliente registrado</p>
+                            <p class="mb-1 text-secondary" style="font-size: 10px;">Carlos Mendoza se unió a la plataforma</p>
+                            <span class="badge bg-dark border border-secondary border-opacity-25 text-secondary" style="font-size: 9px;">Hace 42 min</span>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot bg-warning"></div>
+                            <p class="mb-0 small fw-bold text-light">Stock bajo detectado</p>
+                            <p class="mb-1 text-secondary" style="font-size: 10px;">Producto "Zapatilla Air Max" requiere reposición</p>
+                            <span class="badge bg-dark border border-secondary border-opacity-25 text-secondary" style="font-size: 9px;">Hace 2 horas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="mt-5 pt-4 border-top border-secondary border-opacity-10">
+        <div class="row align-items-center">
+            <div class="col-md-8 d-flex gap-5 mb-4 mb-md-0">
+                <div>
+                    <p class="text-uppercase fw-bold text-secondary mb-1" style="font-size: 10px; letter-spacing: 1px;">Servidor</p>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="bg-success rounded-circle" style="width: 8px; height: 8px;"></div>
+                        <span class="small fw-bold text-secondary">Óptimo (99.9%)</span>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-uppercase fw-bold text-secondary mb-1" style="font-size: 10px; letter-spacing: 1px;">Base de Datos</p>
+                    <span class="small fw-bold text-secondary">Sincronizado</span>
+                </div>
+                <div>
+                    <p class="text-uppercase fw-bold text-secondary mb-1" style="font-size: 10px; letter-spacing: 1px;">Versión</p>
+                    <span class="small fw-bold text-secondary">v4.2.0-stable</span>
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <p class="text-secondary mb-0" style="font-size: 10px;">© 2024 SIMA Software Ecosystem. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+</main>

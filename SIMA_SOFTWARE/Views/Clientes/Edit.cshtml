@@ -1,0 +1,29 @@
+﻿@model SIMA_SOFTWARE.Models.ViewModels.ClienteViewModel
+
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <h2 class="text-white">Editar Cliente</h2>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+
+            <form asp-action="Edit">
+
+                <input type="hidden" asp-for="IdCliente" />
+
+                <partial name="_FormCliente" model="Model" />
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-secondary">← Volver</a>
+                    <button type="submit" class="btn btn-warning">✏️ Guardar Cambios</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
