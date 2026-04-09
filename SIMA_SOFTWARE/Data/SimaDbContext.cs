@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SIMA_Software.Models;
 using SIMA_SOFTWARE.Models;
 
 namespace SIMA_SOFTWARE.Data

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SIMA_Software.Models
+namespace SIMA_SOFTWARE.Models
 {
 
     public class Direccion
@@ -11,6 +11,6 @@ namespace SIMA_Software.Models
         public string? Calle { get; set; }
         public string? NroPuerta { get; set; }
 
-        public ICollection<Cliente>? Clientes { get; set; }
+        public List<Cliente>? Clientes { get; set; }
     }
 }

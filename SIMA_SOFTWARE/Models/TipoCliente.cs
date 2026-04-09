@@ -2,7 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace SIMA_Software.Models
+namespace SIMA_SOFTWARE.Models
 {
     public class TipoCliente
     {
@@ -10,6 +10,6 @@ namespace SIMA_Software.Models
         public int IdTipoCliente { get; set; }
         public string? Categoria { get; set; }
 
-        public ICollection<Cliente>? Clientes { get; set; }
+        public List<Cliente>? Clientes { get; set; }
     }
 }

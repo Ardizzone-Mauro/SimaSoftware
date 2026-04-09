@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using SIMA_Software.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace SIMA_SOFTWARE.Models
