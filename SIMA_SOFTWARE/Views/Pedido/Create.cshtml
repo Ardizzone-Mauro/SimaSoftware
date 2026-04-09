@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Registrar Venta";
+}
+
+<div class="container mt-4">
+    <div class="card shadow p-4">
+        <h2 class="text-center mb-4">Registrar Venta</h2>
+
+        <div class="mb-3">
+            <label>Cliente</label>
+            <select class="form-control" id="clienteSelect">
+                @foreach (var c in ViewBag.Clientes)
+                {
+                    <option value="@c.IdCliente">@c.Nombre</option>
+                }
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label>Producto</label>
+                <select class="form-control" id="productoSelect">
+                    @foreach (var p in ViewBag.Productos)
+                    {
+                        <option value="@p.IdProducto" data-precio="@p.Precio">
+                            @p.Nombre
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label>Cantidad</label>
+                <input type="number" class="form-control" id="cantidad" />
+            </div>
+
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-success w-100" onclick="agregarItem()">Agregar</button>
+            </div>
+        </div>
+
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="detalle"></tbody>
+        </table>
+
+        <div class="text-end total-box">
+            Total: $<span id="total">0</span>
+        </div>
+
+        <button class="btn btn-venta w-100 mt-4" onclick="guardarPedido()">
+            💾 Generar Factura
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/pedido.js"></script>
+}
