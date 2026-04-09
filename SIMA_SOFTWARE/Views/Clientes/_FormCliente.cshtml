@@ -1,0 +1,81 @@
+﻿
+@{
+}
+@model SIMA_SOFTWARE.Models.ViewModels.ClienteViewModel
+
+<div class="card shadow-lg border-0">
+    <div class="card-body">
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row">
+
+            <!-- CLIENTE -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="Nombre" class="form-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Telefono" class="form-label"></label>
+                <input asp-for="Telefono" class="form-control" />
+            </div>
+
+            <!-- DIRECCIÓN -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="Calle" class="form-label"></label>
+                <input asp-for="Calle" class="form-control" />
+                <span asp-validation-for="Calle" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="NroPuerta" class="form-label"></label>
+                <input asp-for="NroPuerta" class="form-control" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Barrio" class="form-label"></label>
+                <input asp-for="Barrio" class="form-control" />
+                <span asp-validation-for="Barrio" class="text-danger"></span>
+            </div>
+
+            <!-- CUENTA -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="Saldo" class="form-label"></label>
+                <input asp-for="Saldo" class="form-control" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="CondicionesPago" class="form-label"></label>
+                <input asp-for="CondicionesPago" class="form-control" />
+                <span asp-validation-for="CondicionesPago" class="text-danger"></span>
+            </div>
+
+            <!-- TIPO CLIENTE -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="TipoClienteId" class="form-label"></label>
+                <select asp-for="TipoClienteId" class="form-select" asp-items="Model.TiposCliente">
+                </select>
+                    <option value=""></option>
+            </div>
+
+            <!-- ESTADO -->
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Estado</label>
+                <select asp-for="Activo" class="form-select">
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                </select>
+            </div>
+
+        </div>
+
+    </div>
+</div>

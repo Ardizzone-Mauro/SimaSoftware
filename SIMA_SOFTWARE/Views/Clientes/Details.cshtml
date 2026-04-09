@@ -1,0 +1,88 @@
+﻿@model SIMA_SOFTWARE.Models.Cliente
+
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <!-- HEADER -->
+    <div class="mb-4">
+        <h2 class="text-white">Detalle del Cliente</h2>
+        <p class="text-black">Información del cliente</p>
+    </div>
+
+    <!-- CARD -->
+    <div class="card shadow-lg border-0">
+        <div class="card-body colo">
+
+            <div class="row">
+
+                <!-- NOMBRE -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input class="form-control " value="@Model.Nombre" readonly />
+                </div>
+
+                <!-- EMAIL -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Email</label>
+                    <input class="form-control " value="@Model.Email" readonly />
+                </div>
+
+                <!-- TELÉFONO -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Teléfono</label>
+                    <input class="form-control" value="@Model.Telefono" readonly />
+                </div>
+
+                <!-- DIRECCIÓN -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Dirección</label>
+                    <input class="form-control"
+                           value="@Model.Direccion?.Barrio - @Model.Direccion?.Calle @Model.Direccion?.NroPuerta"
+                           readonly />
+                </div>
+
+                <!-- TIPO CLIENTE -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Tipo Cliente</label>
+                    <input class="form-control" value="@Model.TipoCliente?.Categoria" readonly />
+                </div>
+
+                <!-- SALDO -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Saldo</label>
+                    <input class="form-control" value="$ @Model.Cuenta?.Saldo" readonly />
+                </div>
+
+                <!-- CONDICIÓN DE PAGO -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Condición de Pago</label>
+                    <input class="form-control" value="@Model.Cuenta?.CondicionesPago" readonly />
+                </div>
+
+                <!-- ESTADO -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Estado</label>
+                    <input class="form-control"
+                           value="@(Model.Activo ? "Activo" : "Inactivo")"
+                           readonly />
+                </div>
+
+            </div>
+
+            <!-- BOTONES -->
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-secondary">
+                    ← Volver
+                </a>
+
+                <a asp-action="Edit" asp-route-id="@Model.IdCliente" class="btn btn-warning">
+                    ✏️ Editar
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
