@@ -9,7 +9,7 @@ namespace SIMA_Software.Models
         public string? Nombre { get; set; }
         public decimal Precio { get; set; }
 
-        public string? UrlImagen { get; set; }
+        
 
         public ICollection<Inventario>? Inventarios { get; set; }
         public ICollection<PedidoProducto>? PedidoProductos { get; set; }

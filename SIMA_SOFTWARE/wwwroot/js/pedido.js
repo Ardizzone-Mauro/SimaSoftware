@@ -1,14 +1,16 @@
-﻿let total = 0;
-let items = [];
+﻿let items = [];
+let total = 0;
 
 function agregarItem() {
     let select = document.getElementById("productoSelect");
+
     let producto = select.options[select.selectedIndex].text;
     let precio = parseFloat(select.options[select.selectedIndex].dataset.precio);
+    let idProducto = parseInt(select.value);
     let cantidad = parseInt(document.getElementById("cantidad").value);
 
     if (!cantidad || cantidad <= 0) {
-        alert("Ingrese una cantidad válida");
+        alert("Ingrese cantidad válida");
         return;
     }
 
@@ -16,7 +18,7 @@ function agregarItem() {
     total += subtotal;
 
     items.push({
-        idProducto: parseInt(select.value),
+        idProducto: idProducto,
         cantidad: cantidad,
         precio: precio
     });
@@ -29,9 +31,7 @@ function agregarItem() {
         <td>$${precio}</td>
         <td>$${subtotal}</td>
         <td>
-            <button class="btn btn-danger btn-sm" onclick="eliminarFila(this, ${subtotal})">
-                ❌
-            </button>
+            <button class="btn btn-danger btn-sm" onclick="eliminarFila(this, ${subtotal})">❌</button>
         </td>
     `;
 
@@ -50,29 +50,24 @@ function actualizarTotal() {
 }
 
 function guardarPedido() {
-    let clienteId = document.getElementById("clienteSelect").value;
+    let idCliente = document.getElementById("clienteSelect").value;
 
     if (items.length === 0) {
-        alert("Agregá al menos un producto");
+        alert("Agregá productos");
         return;
     }
 
-    let data = {
-        idCliente: parseInt(clienteId),
-        detalles: items
-    };
-
     fetch('/Pedido/Guardar', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            idCliente: parseInt(idCliente),
+            detalles: items
+        })
     })
         .then(res => res.json())
         .then(res => {
             alert("Venta guardada correctamente");
             location.reload();
-        })
-        .catch(err => console.error(err));
+        });
 }

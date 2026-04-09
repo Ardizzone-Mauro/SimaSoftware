@@ -1,0 +1,32 @@
+﻿@model IEnumerable<dynamic>
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+
+        <h2 class="text-center mb-4">📊 Pedidos</h2>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.IdPedido</td>
+                        <td>@p.Fecha.ToShortDateString()</td>
+                        <td>@p.Cliente</td>
+                        <td>$@p.Total</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
