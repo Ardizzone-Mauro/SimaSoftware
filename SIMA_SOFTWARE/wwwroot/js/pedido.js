@@ -4,24 +4,30 @@ let total = 0;
 function agregarItem() {
     let select = document.getElementById("productoSelect");
 
+    let idProducto = parseInt(select.value);
     let producto = select.options[select.selectedIndex].text;
     let precio = parseFloat(select.options[select.selectedIndex].dataset.precio);
-    let idProducto = parseInt(select.value);
     let cantidad = parseInt(document.getElementById("cantidad").value);
 
     if (!cantidad || cantidad <= 0) {
-        alert("Ingrese cantidad válida");
+        alert("Ingrese una cantidad válida");
         return;
     }
 
     let subtotal = precio * cantidad;
     total += subtotal;
 
-    items.push({
+    // 👉 guardamos también el índice para poder eliminar bien
+    let item = {
         idProducto: idProducto,
         cantidad: cantidad,
-        precio: precio
-    });
+        precio: precio,
+        subtotal: subtotal
+    };
+
+    items.push(item);
+
+    let index = items.length - 1;
 
     let fila = document.createElement("tr");
 
@@ -31,17 +37,29 @@ function agregarItem() {
         <td>$${precio}</td>
         <td>$${subtotal}</td>
         <td>
-            <button class="btn btn-danger btn-sm" onclick="eliminarFila(this, ${subtotal})">❌</button>
+            <button class="btn btn-danger btn-sm" onclick="eliminarItem(${index}, this)">
+                ❌
+            </button>
         </td>
     `;
 
     document.getElementById("detalle").appendChild(fila);
     actualizarTotal();
+
+    // limpiar input
+    document.getElementById("cantidad").value = "";
 }
 
-function eliminarFila(btn, subtotal) {
+function eliminarItem(index, btn) {
+    // restar total
+    total -= items[index].subtotal;
+
+    // eliminar del array
+    items.splice(index, 1);
+
+    // eliminar fila visual
     btn.closest("tr").remove();
-    total -= subtotal;
+
     actualizarTotal();
 }
 
@@ -52,22 +70,59 @@ function actualizarTotal() {
 function guardarPedido() {
     let idCliente = document.getElementById("clienteSelect").value;
 
+    if (!idCliente) {
+        alert("Seleccione un cliente");
+        return;
+    }
+
     if (items.length === 0) {
-        alert("Agregá productos");
+        alert("Agregá al menos un producto");
         return;
     }
 
     fetch('/Pedido/Guardar', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             idCliente: parseInt(idCliente),
             detalles: items
         })
     })
-        .then(res => res.json())
         .then(res => {
-            alert("Venta guardada correctamente");
-            location.reload();
+            if (!res.ok) throw new Error("Error en servidor");
+            return res.json();
+        })
+        .then(data => {
+            if (data.ok) {
+                alert("✅ Venta guardada correctamente");
+
+                // 🔥 redirige al listado
+                window.location.href = "/Pedido/Index";
+            } else {
+                alert("❌ Error al guardar");
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            alert("❌ Error en la petición");
         });
+    function cancelarPedido(id) {
+
+        if (!confirm("¿Seguro que querés cancelar el pedido?")) return;
+
+        fetch('/Pedido/Cancelar?id=' + id, {
+            method: 'POST'
+        })
+            .then(() => {
+                alert("Pedido cancelado");
+                location.reload();
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Error al cancelar");
+            });
+    }
+
 }
