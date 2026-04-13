@@ -31,6 +31,32 @@ namespace SIMA_SOFTWARE.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // PEDIDO → CLIENTE (Muchos a 1)
+
+            modelBuilder.Entity<Pedido>()
+               .HasOne(p => p.Cliente)
+               .WithMany(c => c.Pedidos)
+               .HasForeignKey(p => p.IdCliente)
+               .OnDelete(DeleteBehavior.Restrict); //  evita borrado en cascada
+
+
+            // PEDIDO → PEDIDO PRODUCTO (1 a muchos)
+
+            modelBuilder.Entity<PedidoProducto>()
+               .HasOne(pp => pp.Pedido)
+               .WithMany(p => p.PedidoProductos)
+               .HasForeignKey(pp => pp.IdPedido)
+               .OnDelete(DeleteBehavior.Cascade); // opcional
+
+            // BAJA LÓGICA GLOBAL (Pedido)
+
+            modelBuilder.Entity<Pedido>()
+                .HasQueryFilter(p => p.Activo); //  SOLO trae activos por defecto
+
+
+
+            //............................................................
+
             // Configurar precisión de propiedades decimal
             modelBuilder.Entity<Cuenta>()
                 .Property(c => c.Saldo)
