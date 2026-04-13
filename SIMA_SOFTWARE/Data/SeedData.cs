@@ -21,7 +21,7 @@ namespace SIMA_SOFTWARE.Data
 
             foreach (var rol in ListadoRoles)
             {
-                var roleExist = await roleManager.RoleExistsAsync(rol);
+                bool roleExist = await roleManager.RoleExistsAsync(rol);
                 if (!roleExist)
                 {
                     // Crea los roles en la tabla AspNetRoles de SQL Server
