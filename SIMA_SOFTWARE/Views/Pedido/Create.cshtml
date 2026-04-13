@@ -1,0 +1,70 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<header class="mb-4">
+    <h1 class="fw-black text-light">Nueva Venta</h1>
+    <p class="text-secondary">Registrar pedido</p>
+</header>
+<p style="color:white;">Clientes cargados: @ViewBag.CantidadClientes</p>
+
+<div class="custom-card p-4">
+
+    <div class="mb-3">
+        <label class="text-light">Cliente</label>
+        <select class="form-control" id="clienteSelect">
+            @foreach (var c in ViewBag.Clientes)
+            {
+                <option value="@c.IdCliente">@c.Nombre</option>
+            }
+        </select>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <label class="text-light">Producto</label>
+            <select class="form-control" id="productoSelect">
+                @foreach (var p in ViewBag.Productos)
+                {
+                    <option value="@p.IdProducto" data-precio="@p.Precio">
+                        @p.Nombre
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="text-light">Cantidad</label>
+            <input type="number" class="form-control" id="cantidad" />
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end">
+            <button class="btn btn-success w-100" onclick="agregarItem()">Agregar</button>
+        </div>
+    </div>
+
+    <table class="table table-custom mt-4">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Subtotal</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="detalle"></tbody>
+    </table>
+
+    <div class="text-end total-box">
+        Total: $<span id="total">0</span>
+    </div>
+
+    <button class="btn btn-success w-100 mt-4" onclick="guardarPedido()">
+        💾 Generar Factura
+    </button>
+</div>
+
+@section Scripts {
+    <script src="~/js/pedido.js"></script>
+}
