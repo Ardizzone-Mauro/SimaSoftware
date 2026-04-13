@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SIMA_SOFTWARE.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador del Sistema, Cliente")]
     public class DashboardController : Controller
     {
         public IActionResult Index()

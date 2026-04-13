@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SIMA_SOFTWARE.Data;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace SIMA_SOFTWARE.Controllers
 {
+    [Authorize(Roles = "Administrador del Sistema")]
     public class ClientesController : Controller
     {
         private readonly SimaDbContext _context;

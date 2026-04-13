@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SIMA_SOFTWARE.Data;
@@ -8,6 +9,7 @@ using SIMA_SOFTWARE.Services;
 
 namespace SIMA_SOFTWARE.Controllers
 {
+    
     public class UsuarioController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -31,22 +33,42 @@ namespace SIMA_SOFTWARE.Controllers
             return View();
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel Usuario)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(Usuario);
+
+            var resultado = await _signInManager.PasswordSignInAsync(
+                Usuario.Email,
+                Usuario.Clave,
+                Usuario.Recordarme,
+                lockoutOnFailure: false
+            );
+
+            if (resultado.Succeeded)
             {
-                var resultado = await _signInManager.PasswordSignInAsync(Usuario.Email, Usuario.Clave, Usuario.Recordarme, lockoutOnFailure: false);
-                if (resultado.Succeeded)
-                {
-                    return RedirectToAction("Index", "Dashboard");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Inicio de sesión fallido");
-                }
+
+                return RedirectToAction("Index", "Dashboard");
             }
+
+            if (resultado.IsLockedOut)
+            {
+                ModelState.AddModelError(string.Empty, "Usuario bloqueado. Intentá más tarde.");
+                return View(Usuario);
+            }
+
+            if (resultado.IsNotAllowed)
+            {
+                ModelState.AddModelError(string.Empty, "Usuario no permitido.");
+                return View(Usuario);
+            }
+
+            // ❌ ERROR PRINCIPAL
+            ModelState.AddModelError(string.Empty, "Email o contraseña incorrectos");
+
             return View(Usuario);
         }
 

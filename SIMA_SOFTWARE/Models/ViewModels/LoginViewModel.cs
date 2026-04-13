@@ -14,7 +14,8 @@ namespace SIMA_SOFTWARE.Models.ViewModels
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "La clave es obligatoria")]
         public string Clave { get; set; }
-
+        
+        [DisplayName("Recordarme")]
         public bool Recordarme { get; set; }
     }
 }

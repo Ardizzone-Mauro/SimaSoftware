@@ -20,11 +20,10 @@
             <p class="text-secondary small">Iniciar sesión</p>
         </div>
         <!-- Error Message for .NET Identity -->
-        @* <div class="alert alert-danger" id="login-error-alert" role="alert">
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <span>Cuenta bloqueada temporalmente</span>
-        </div> *@
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
         <form method="post">
+            <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
             <div class="mb-3">
                 <label asp-for="Email" class="form-label" ></label>
                     
@@ -43,11 +42,10 @@
             </div>
             <div class="mb-4 d-flex justify-content-between align-items-center">
                 <div class="form-check">
-                    <input class="form-check-input" asp-for="Recordarme" />
-                    <label class="form-check-label text-light small" >
-                        Recordarme
-                    </label>
+                    <input asp-for="Recordarme" class="form-check-input" />
+                    <label asp-for="Recordarme" class="form-check-label text-light small" ></label>      
                 </div>
+             
                 <a class="forgot-password" href="/Usuario/RecuperarCuenta" id="forgot-password">¿Olvidó su contraseña?</a>
             </div>
             <button class="btn btn-primary w-100" type="submit">
