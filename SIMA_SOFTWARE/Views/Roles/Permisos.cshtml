@@ -1,0 +1,113 @@
+﻿
+@{
+}
+
+
+@model SIMA_SOFTWARE.Models.ViewModels.RolPermisoViewModel
+
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<main class="main-content">
+
+    <header class="mb-5">
+        <h1 class="text-white">Roles y Permisos</h1>
+        <p class="text-secondary">Configurá accesos por rol</p>
+    </header>
+
+    <div class="custom-card p-4">
+
+        <!-- SELECT ROL -->
+        <form asp-action="GuardarPermisosRol" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-4">
+                <label class="text-light">Seleccionar Rol</label>
+                <select name="rol" class="form-select">
+
+                    @foreach (var rol in Model.Roles)
+                    {
+                        <option value="@rol" selected="@(rol == Model.RolSeleccionado)">
+                            @rol
+                        </option>
+                    }
+
+                </select>
+            </div>
+
+            <div class="row">
+
+                <!-- USUARIOS -->
+                <div class="col-md-4">
+                    <h6 class="text-info">Usuarios</h6>
+
+                    @foreach (var p in Model.TodosLosPermisos.Where(x => x.StartsWith("Usuarios")))
+                    {
+                        var check = Model.PermisosSeleccionados.Contains(p);
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="permisosSeleccionados"
+                                   value="@p"
+                                   checked="@(check)" />
+
+                            <label class="text-light small">@p.Split('.')[1]</label>
+                        </div>
+                    }
+                </div>
+
+                <!-- PRODUCTOS -->
+                <div class="col-md-4">
+                    <h6 class="text-warning">Productos</h6>
+
+                    @foreach (var p in Model.TodosLosPermisos.Where(x => x.StartsWith("Productos")))
+                    {
+                        var check = Model.PermisosSeleccionados.Contains(p);
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="permisosSeleccionados"
+                                   value="@p"
+                                   checked="@(check)" />
+
+                            <label class="text-light small">@p.Split('.')[1]</label>
+                        </div>
+                    }
+                </div>
+
+                <!-- VENTAS -->
+                <div class="col-md-4">
+                    <h6 class="text-success">Ventas</h6>
+
+                    @foreach (var p in Model.TodosLosPermisos.Where(x => x.StartsWith("Ventas")))
+                    {
+                        var check = Model.PermisosSeleccionados.Contains(p);
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="permisosSeleccionados"
+                                   value="@p"
+                                   checked="@(check)" />
+
+                            <label class="text-light small">@p.Split('.')[1]</label>
+                        </div>
+                    }
+                </div>
+
+            </div>
+
+            <div class="text-end mt-4">
+                <button class="btn btn-success">
+                    Guardar Permisos
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</main>
