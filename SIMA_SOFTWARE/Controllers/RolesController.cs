@@ -7,7 +7,7 @@ using SIMA_SOFTWARE.Models.ViewModels;
 
 namespace SIMA_SOFTWARE.Controllers
 {
-    [Authorize(Roles = "Administrador del Sistema")]
+    //[Authorize(Roles = "Administrador del Sistema")]
     public class RolesController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

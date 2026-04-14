@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SIMA_SOFTWARE.Controllers
 {
-    [Authorize(Roles = "Administrador del Sistema")]
+    //[Authorize(Roles = "Administrador del Sistema")]
     public class ClientesController : Controller
     {
         private readonly SimaDbContext _context;

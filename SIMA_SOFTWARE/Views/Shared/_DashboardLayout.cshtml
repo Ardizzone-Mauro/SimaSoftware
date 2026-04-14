@@ -64,8 +64,8 @@
             </a>
 
 
-            @if(SignInManager.IsSignedIn(User) && UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrador del Sistema").Result)
-                {
+            @* @if(SignInManager.IsSignedIn(User) && UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrador del Sistema").Result)
+                { *@
                      <a class="nav-link" asp-controller="Roles" asp-action="Index">
                 <span class="material-symbols-outlined">group</span>
                 Usuarios y Roles
@@ -76,7 +76,7 @@
                 Permisos
             </a>
 
-                }
+                @* } *@
 
            
             
