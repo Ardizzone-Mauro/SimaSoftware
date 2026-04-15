@@ -2,6 +2,7 @@
 @inject SignInManager<SIMA_SOFTWARE.Models.ApplicationUser> SignInManager
 @inject UserManager<SIMA_SOFTWARE.Models.ApplicationUser> UserManager
 
+
 @{
 }
 <html>
@@ -42,7 +43,16 @@
             <div class="d-flex align-items-center gap-3 ms-2">
                 <div class="text-end d-none d-sm-block">
                     <p class="mb-0 fw-bold small text-light">@User.Identity?.Name</p>
-                    <p class="mb-0 text-success fw-bold" style="font-size: 10px;">Administrador</p>
+                    @{
+                        var user = await UserManager.GetUserAsync(User);
+                        var roles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
+                    }
+                    <div class="d-flex gap-1 flex-wrap">
+                        @foreach(var role in roles)
+                        {
+                            <span class="badge bg-success">@role</span>
+                        }
+                    </div>
                 </div>
                 <img alt="Avatar" class="rounded-circle border border-2 border-secondary" height="40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASQEu93ZUjOPhNYVLSCv8sJkJwbo5hAldXanHCVmGXtXgOEJQee5Nj8fiOY41AcqwB6FtdCkjnz4W64wgp4e69cTAnNIG64gIizRrwuag_wbnQNItNWMejbKPuTK2PEHbipZqjPC0irrFtUyQXCL06dwKw1ovhu9kBY-hl_c1mGZ76SQTwvdeqfs9uybe18jmCM0O4Vn7MmM-sl59egGZGvi2Tz4WhnKYl9aEag-LOJ12He4cVaBCZmYhF2N8OySBS_cRYNboyklLA" width="40" />
             </div>
