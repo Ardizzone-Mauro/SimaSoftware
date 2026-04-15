@@ -1,0 +1,88 @@
+/* Estilos personalizados para DataTables en tema oscuro */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_paginate {
+    color: #fff;
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    background-color: #212529;
+    color: #fff;
+    border: 1px solid #495057;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus,
+.dataTables_wrapper .dataTables_length select:focus {
+    background-color: #212529;
+    color: #fff;
+    border-color: #198754;
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+.dataTables_wrapper .paginate_button.active {
+    background-color: #198754 !important;
+}
+
+.dataTables_wrapper .paginate_button:hover {
+    background-color: #157347 !important;
+}
+
+/* Asegurar compatibilidad con tablas responsive */
+table.dataTable.no-footer {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.table-custom td, .table-custom th {
+    vertical-align: middle;
+}
+
+/* --- Nuevos estilos para comportamiento fijo y sticky --- */
+
+/* Navbar fija en la parte superior */
+.top-navbar.fixed-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+}
+
+/* Ajuste global para que el contenido no quede bajo la navbar fija. Ajusta si tu navbar tiene otra altura. */
+body {
+    padding-top: 70px; /* ajusta según la altura real de la navbar */
+}
+
+/* Contenedor de la tabla con altura y ancho fijo; solo las filas se desplazan */
+.table-scroll {
+    height: 400px; /* alto fijo; cambia según necesites */
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: auto;
+    width: 100%;
+    max-width: 1000px; /* ancho máximo fijo; ajusta o elimina si prefieres otro valor */
+}
+
+/* Forzar layout fijo para que las celdas no expandan la tabla */
+.table-custom {
+    table-layout: fixed;
+    width: 100%;
+}
+
+/* Sticky header dentro del contenedor scrollable */
+#clientesTable thead th {
+    position: sticky;
+    top: 0; /* se pega al tope del contenedor .table-scroll */
+    z-index: 5;
+    background-color: rgba(11,18,32,0.95); /* fondo oscuro para el encabezado */
+    color: #fff;
+}
+
+/* Truncar texto que exceda el ancho de la celda */
+.table-custom td, .table-custom th {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

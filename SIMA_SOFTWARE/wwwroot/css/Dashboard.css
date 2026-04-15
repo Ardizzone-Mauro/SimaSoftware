@@ -3,6 +3,7 @@
     --bs-body-bg: #020617;
     --bs-body-color: #e2e8f0;
     --sidebar-width: 260px;
+    --main-content-width:250px
     --emerald-primary: #10b981;
     --surface-bg: #0f172a;
     --border-color: #1e293b;
@@ -98,8 +99,8 @@ h1, h2, h3, .font-headline {
 
 /* Main Content Layout */
 .main-content {
-    margin-left: var(--sidebar-width);
-    padding: 6rem 2rem 2rem;
+    margin-left: 150px;
+    padding: 3rem ;
 }
 
 /* Card Styles */
