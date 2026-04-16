@@ -10,6 +10,7 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using iText.Kernel.Font;
 
 namespace SIMA_SOFTWARE.Controllers
 {
@@ -169,7 +170,7 @@ namespace SIMA_SOFTWARE.Controllers
         }
 
         // ===============================
-        // 🔹 EDITAR PEDIDO (HU02)
+        // 🔹 GET EDITAR PEDIDO
         // ===============================
         public IActionResult Edit(int id)
         {
@@ -178,6 +179,11 @@ namespace SIMA_SOFTWARE.Controllers
 
             if (pedido == null)
                 return NotFound();
+
+            // 👈 agregar esto
+            ViewBag.Productos = _context.Productos
+                .Select(p => new { p.IdProducto, p.Nombre, p.Precio })
+                .ToList();
 
             var vm = new PedidoViewModel
             {
@@ -194,10 +200,12 @@ namespace SIMA_SOFTWARE.Controllers
 
                 Detalles = _context.PedidoProductos
                     .Where(p => p.IdPedido == id)
+                    .Include(d => d.Producto)
                     .Select(d => new PedidoDetalleViewModel
                     {
                         IdProducto = d.IdProducto,
                         Cantidad = d.Cantidad,
+                        NombreProducto = d.Producto!.Nombre,
                         Precio = d.PrecioUnitario
                     }).ToList()
             };
@@ -212,7 +220,8 @@ namespace SIMA_SOFTWARE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(PedidoViewModel vm)
         {
-            if (!ModelState.IsValid)
+            // Helper para recargar el VM en caso de error
+            void RecargarVM()
             {
                 vm.Clientes = _context.Clientes
                     .Select(c => new SelectListItem
@@ -226,10 +235,18 @@ namespace SIMA_SOFTWARE.Controllers
                     .Select(d => new PedidoDetalleViewModel
                     {
                         IdProducto = d.IdProducto,
+                        NombreProducto = d.Producto.Nombre, // 👈 nombre, no ID
                         Cantidad = d.Cantidad,
                         Precio = d.PrecioUnitario
                     }).ToList();
+            }
+            // Antes del if (!ModelState.IsValid)
+            foreach (var key in ModelState.Keys.Where(k => k.Contains("NombreProducto")).ToList())
+                ModelState.Remove(key);
 
+            if (!ModelState.IsValid)
+            {
+                RecargarVM();
                 return View(vm);
             }
 
@@ -243,40 +260,46 @@ namespace SIMA_SOFTWARE.Controllers
                 if (pedido == null)
                     return NotFound();
 
-                // actualizar cliente
+                // 1️⃣ Actualizar cliente
                 pedido.IdCliente = vm.IdCliente;
 
-                // devolver stock viejo
+                // 2️⃣ Traer detalles viejos
                 var detallesViejos = _context.PedidoProductos
+                    .Include(p => p.Producto)
                     .Where(p => p.IdPedido == vm.IdPedido)
                     .ToList();
 
+                // 3️⃣ Devolver stock viejo al inventario
+                foreach (var viejo in detallesViejos)
+                {
+                    var inv = _context.Inventarios
+                        .FirstOrDefault(i => i.IdProducto == viejo.IdProducto);
+
+                    if (inv != null)
+                        inv.Stock += viejo.Cantidad; // 👈 devolver stock
+                }
+
+                // 4️⃣ Eliminar detalles viejos
+                _context.PedidoProductos.RemoveRange(detallesViejos); // 👈 esto faltaba
+
+                // 5️⃣ Validar stock y agregar nuevos detalles
                 foreach (var item in vm.Detalles)
                 {
                     var inv = _context.Inventarios
                         .FirstOrDefault(i => i.IdProducto == item.IdProducto);
 
-                    // 🔴 VALIDACIÓN
+                    var nombreProducto = _context.Productos
+                        .Where(p => p.IdProducto == item.IdProducto)
+                        .Select(p => p.Nombre)
+                        .FirstOrDefault() ?? item.IdProducto.ToString();
+
                     if (inv == null || inv.Stock < item.Cantidad)
                     {
-                        ModelState.AddModelError("", $"Stock insuficiente para el producto seleccionado {item.IdProducto}");
+                        ModelState.AddModelError("",
+                            $"Stock insuficiente para '{nombreProducto}'. Stock disponible: {inv?.Stock ?? 0}");
 
-                        vm.Clientes = _context.Clientes
-                            .Select(c => new SelectListItem
-                            {
-                                Value = c.IdCliente.ToString(),
-                                Text = c.Nombre
-                            }).ToList();
-
-                        vm.Detalles = _context.PedidoProductos
-                            .Where(p => p.IdPedido == vm.IdPedido)
-                            .Select(d => new PedidoDetalleViewModel
-                            {
-                                IdProducto = d.IdProducto,
-                                Cantidad = d.Cantidad,
-                                Precio = d.PrecioUnitario
-                            }).ToList();
-
+                        await transaction.RollbackAsync(); // 👈 rollback antes de volver
+                        RecargarVM();
                         return View(vm);
                     }
 
@@ -289,13 +312,17 @@ namespace SIMA_SOFTWARE.Controllers
                         Descuento = 0
                     });
 
-                    // descontar stock
+                    // 6️⃣ Descontar stock nuevo
                     inv.Stock -= item.Cantidad;
                 }
+
+                // 7️⃣ Recalcular total del pedido
+           
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
+                TempData["mensaje"] = "Pedido actualizado correctamente ✅";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -311,6 +338,7 @@ namespace SIMA_SOFTWARE.Controllers
 
             var detalles = _context.PedidoProductos
                 .Where(d => d.IdPedido == id)
+                .Include(d => d.Producto) // 👈 IMPORTANTE
                 .ToList();
 
             using (MemoryStream ms = new MemoryStream())
@@ -320,35 +348,53 @@ namespace SIMA_SOFTWARE.Controllers
                 Document doc = new Document(pdf);
 
                 // 🧾 TITULO
-                doc.Add(new Paragraph("FACTURA"));
+                doc.Add(new Paragraph("FACTURA")
+    .SetTextAlignment(TextAlignment.CENTER)
+    .SetFontSize(20)
+    .SetFont(PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD))
+);
 
+                doc.Add(new Paragraph(" "));
+
+                // 🧾 DATOS
                 doc.Add(new Paragraph($"Pedido N°: {id}"));
                 doc.Add(new Paragraph($"Cliente: {cliente.Nombre}"));
-                doc.Add(new Paragraph($"Fecha: {pedido.Fecha.ToString("dd/MM/yyyy")}"));
+                doc.Add(new Paragraph($"Fecha: {pedido.Fecha:dd/MM/yyyy}"));
 
                 doc.Add(new Paragraph(" "));
 
                 // 🧾 TABLA
-                Table table = new Table(3);
+                Table table = new Table(4).UseAllAvailableWidth();
 
                 table.AddHeaderCell("Producto");
                 table.AddHeaderCell("Cantidad");
-                table.AddHeaderCell("Precio");
+                table.AddHeaderCell("Precio Unit.");
+                table.AddHeaderCell("Subtotal");
 
                 decimal total = 0;
 
                 foreach (var d in detalles)
                 {
-                    table.AddCell(d.IdProducto.ToString());
+                    var nombre = d.Producto?.Nombre ?? "Sin nombre";
+                    var subtotal = d.Cantidad * d.PrecioUnitario;
+
+                    table.AddCell(nombre);
                     table.AddCell(d.Cantidad.ToString());
                     table.AddCell(d.PrecioUnitario.ToString("C"));
+                    table.AddCell(subtotal.ToString("C"));
 
-                    total += d.Cantidad * d.PrecioUnitario;
+                    total += subtotal;
                 }
 
                 doc.Add(table);
 
-                doc.Add(new Paragraph($"TOTAL: ${total}"));
+                doc.Add(new Paragraph(" "));
+
+                // 🧾 TOTAL
+                doc.Add(new Paragraph($"TOTAL: {total.ToString("C")}")
+    .SetTextAlignment(TextAlignment.RIGHT)
+    .SetFont(PdfFontFactory.CreateFont(iText.IO.Font.Constants.StandardFonts.HELVETICA_BOLD))
+);
 
                 doc.Close();
 
