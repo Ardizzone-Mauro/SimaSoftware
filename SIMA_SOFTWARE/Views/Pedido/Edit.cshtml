@@ -1,55 +1,115 @@
 ﻿@model SIMA_SOFTWARE.Models.ViewModels.PedidoViewModel
-
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
-<h2 class="text-white mb-4">Editar Pedido</h2>
+<header class="mb-4">
+    <h1 class="fw-black text-light">Editar Pedido</h1>
+    <p class="text-secondary">Modificar pedido #@Model.IdPedido</p>
+</header>
 
-<div asp-validation-summary="All" class="text-danger"></div>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p class="mb-0">@error.ErrorMessage</p>
+        }
+    </div>
+}
 
 <form asp-action="Edit" method="post">
-
     <input type="hidden" asp-for="IdPedido" />
 
     <!-- CLIENTE -->
-    <div class="mb-3">
-        <label class="text-light">Cliente</label>
-
-        <select asp-for="IdCliente" asp-items="Model.Clientes" class="form-control">
-        </select>
+    <div class="custom-card p-4 mb-4" style="height:auto;">
+        <label class="text-light fw-bold mb-2">Cliente</label>
+        <select asp-for="IdCliente" asp-items="Model.Clientes" class="form-control"></select>
     </div>
 
     <!-- DETALLE -->
-    <table class="table table-dark">
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @for (int i = 0; i < Model.Detalles.Count; i++)
-            {
+    <div class="custom-card p-4">
+        <table class="table table-custom mt-2">
+            <thead>
                 <tr>
-                    <td>
-                        @Model.Detalles[i].IdProducto
-                        <input type="hidden" asp-for="Detalles[i].IdProducto" />
-                    </td>
-                    <td>
-                        <input type="number"
-                               asp-for="Detalles[i].Cantidad"
-                               class="form-control" />
-                        <input type="hidden" asp-for="Detalles[i].Precio" />
-                    </td>
+                    <th>Producto</th>
+                    <th>Precio Unit.</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                    <th>Eliminar</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
 
-    <button type="submit" class="btn btn-success w-100 mt-3">
-        💾 Guardar Cambios
-    </button>
+            <!-- 🔥 ACA VA EL ID -->
+            <tbody id="filasDetalle">
 
+                @for (int i = 0; i < Model.Detalles.Count; i++)
+                {
+                    <!-- 🔥 ACA VA EL ID DE LA FILA -->
+                    <tr id="fila-@i">
+                        <td>
+                            <select class="form-control producto-select"
+                                    name="Detalles[@i].IdProducto"
+                                    onchange="actualizarFila(this, @i)">
+                                @foreach (var p in ViewBag.Productos)
+                                {
+                                    if (p.IdProducto == Model.Detalles[i].IdProducto)
+                                    {
+                                        <option value="@p.IdProducto" data-precio="@p.Precio" selected>@p.Nombre</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@p.IdProducto" data-precio="@p.Precio">@p.Nombre</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+
+                        <td id="precio-@i">
+                            $ @Model.Detalles[i].Precio
+                            <input type="hidden"
+                                   name="Detalles[@i].Precio"
+                                   id="precioHidden-@i"
+                                   value="@Model.Detalles[i].Precio" />
+                        </td>
+
+                        <td>
+                            <input type="number"
+                                   name="Detalles[@i].Cantidad"
+                                   value="@Model.Detalles[i].Cantidad"
+                                   class="form-control"
+                                   style="width:100px;"
+                                   min="1"
+                                   onchange="actualizarSubtotal(@i)" />
+                        </td>
+
+                        <td id="subtotal-@i">
+                            $ @Model.Detalles[i].Subtotal
+                        </td>
+
+                        <td>
+                            <button type="button"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="eliminarFila(@i)">
+                                ✕
+                            </button>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+        <!-- TOTAL -->
+        <div class="text-end mt-3 me-2">
+            <h5 class="text-white" id="totalBox">
+                Total: $ @Model.Detalles.Sum(d => d.Subtotal)
+            </h5>
+        </div>
+
+        <!-- GUARDAR -->
+        <button type="submit" class="btn btn-emerald w-100 mt-3">
+            💾 Guardar Cambios
+        </button>
+    </div>
 </form>
