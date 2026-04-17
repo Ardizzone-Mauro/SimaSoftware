@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
-<div class="container-fluid mt-4">
+<main class="main-content">
 
     <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -22,9 +22,9 @@
         <div class="card-body">
 
             <div class="table-responsive">
-                <table class="table table-dark  table-hover align-middle text-white table-custom">
+                <table id="clientesTable" class="table table-dark table-hover align-middle text-white table-custom">
 
-                    <thead >
+                    <thead>
                         <tr>
                             <th>Nombre</th>
                             <th>Email</th>
@@ -96,4 +96,9 @@
         </div>
     </div>
 
-</div>
+
+
+@section Scripts {
+    <!-- Scripts para DataTables cargados desde el layout; aquí solo por si quieres scripts específicos de esta vista -->
+}
+</main>
