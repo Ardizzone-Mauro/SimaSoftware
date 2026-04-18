@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
+<main class="main-content">
 <header class="mb-4">
     <h1 class="fw-black text-light">Editar Pedido</h1>
     <p class="text-secondary">Modificar pedido #@Model.IdPedido</p>
@@ -29,6 +30,7 @@
 
     <!-- DETALLE -->
     <div class="custom-card p-4">
+       <div class="table-responsive">
         <table class="table table-custom mt-2">
             <thead>
                 <tr>
@@ -108,8 +110,10 @@
         </div>
 
         <!-- GUARDAR -->
-        <button type="submit" class="btn btn-emerald w-100 mt-3">
+        <button type="submit" class="btn btn-success w-100 mt-3">
             💾 Guardar Cambios
         </button>
+        </div>
     </div>
 </form>
+</main>

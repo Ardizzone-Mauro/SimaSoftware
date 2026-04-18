@@ -2,6 +2,8 @@
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
+<main class="main-content">
+
 <header class="mb-4">
     <h1 class="fw-black text-light">Nueva Venta</h1>
     <p class="text-secondary">Registrar pedido</p>
@@ -32,17 +34,18 @@
                 }
             </select>
         </div>
-
+        <div class="row g-3">
         <div class="col-md-3">
             <label class="text-light">Cantidad</label>
             <input type="number" class="form-control" id="cantidad" />
         </div>
-
+        
         <div class="col-md-3 d-flex align-items-end">
-            <button class="btn btn-success w-100" onclick="agregarItem()">Agregar</button>
+        <button class="btn btn-success w-100" onclick="agregarItem()">Agregar</button>
         </div>
     </div>
-
+    </div>
+    <div class="table-responsive">
     <table class="table table-custom mt-4">
         <thead>
             <tr>
@@ -55,12 +58,13 @@
         </thead>
         <tbody id="detalle"></tbody>
     </table>
+        </div>
 
     <div class="text-end total-box">
         Total: $<span id="total">0</span>
     </div>
 
-    <button class="btn btn-success w-100 mt-4" onclick="guardarPedido()">
+    <button class="btn btn-success w-100" onclick="guardarPedido()">
         💾 Generar Factura
     </button>
 </div>
@@ -68,3 +72,4 @@
 @section Scripts {
     <script src="~/js/pedido.js"></script>
 }
+</main>
