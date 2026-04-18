@@ -3,7 +3,7 @@
     --bs-body-bg: #020617;
     --bs-body-color: #e2e8f0;
     --sidebar-width: 260px;
-    --main-content-width:250px
+    --main-content-width: 250px;
     --emerald-primary: #10b981;
     --surface-bg: #0f172a;
     --border-color: #1e293b;
@@ -23,7 +23,7 @@ h1, h2, h3, .font-headline {
     vertical-align: middle;
 }
 
-/* Sidebar Styles */
+/* ================= SIDEBAR ================= */
 .sidebar {
     width: var(--sidebar-width);
     height: 100vh;
@@ -61,12 +61,12 @@ h1, h2, h3, .font-headline {
         border-radius: 0.5rem 0 0 0.5rem;
     }
 
-/* Top Navbar Styles */
+/* ================= NAVBAR ================= */
 .top-navbar {
     height: 4rem;
     position: fixed;
     top: 0;
-    left: 0;
+    left: var(--sidebar-width);
     right: 0;
     z-index: 1040;
     background-color: rgba(15, 23, 42, 0.8);
@@ -97,21 +97,19 @@ h1, h2, h3, .font-headline {
         outline: none;
     }
 
-/* Main Content Layout */
+/* ================= MAIN CONTENT ================= */
 .main-content {
-    margin-left: 150px;
-    padding: 3rem ;
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
 }
 
-/* Card Styles */
+/* ================= CARDS ================= */
 .custom-card {
     background-color: var(--surface-bg);
     border: 1px solid var(--border-color);
     border-radius: 1rem;
     padding: 1.5rem;
-    position: relative;
     overflow: hidden;
-    height: 100%;
 }
 
 .metric-icon-bg {
@@ -123,26 +121,24 @@ h1, h2, h3, .font-headline {
     color: var(--emerald-primary);
 }
 
-.btn-emerald {
+/* ================= BOTONES ================= */
+
+/* Usamos Bootstrap pero lo adaptamos a tu tema */
+.btn-success {
     background-color: var(--emerald-primary);
+    border-color: var(--emerald-primary);
     color: white;
-    border: none;
-    font-weight: 700;
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.75rem;
-    transition: transform 0.2s;
 }
 
-    .btn-emerald:hover {
+    .btn-success:hover {
         background-color: #059669;
-        color: white;
-        transform: scale(0.98);
+        border-color: #059669;
     }
 
-/* HEADER */
+/* ================= TABLAS ================= */
 .table-custom thead th {
-    background-color: black; /* oscuro fuerte */
-    color: navajowhite; /* azul */
+    background-color: black;
+    color: navajowhite;
     font-weight: 700;
     font-size: 1rem;
     text-transform: uppercase;
@@ -151,20 +147,20 @@ h1, h2, h3, .font-headline {
     padding: 1rem 1.5rem;
 }
 
-/* CELDAS */
 .table-custom tbody td {
     background-color: transparent;
     border-bottom: 1px solid var(--border-color);
     padding: 1rem 1.5rem;
     vertical-align: middle;
     font-size: 0.875rem;
-    color: #f1f5f9; /* 👈 agregá esta línea */
+    color: #f1f5f9;
 }
-/* Hover más marcado */
+
 .table-hover tbody tr:hover {
     background-color: #1e293b;
 }
 
+/* ================= BADGES ================= */
 .badge-status {
     font-size: 0.65rem;
     font-weight: 700;
@@ -173,7 +169,7 @@ h1, h2, h3, .font-headline {
     text-transform: uppercase;
 }
 
-/* Timeline Styles */
+/* ================= TIMELINE ================= */
 .timeline {
     position: relative;
     padding-left: 2rem;
@@ -202,9 +198,39 @@ h1, h2, h3, .font-headline {
     height: 0.75rem;
     border-radius: 50%;
     border: 3px solid var(--surface-bg);
-    z-index: 1;
 }
 
+/* ================= FORMULARIOS ================= */
+.form-control,
+.form-select {
+    background-color: #1e293b;
+    color: #f1f5f9;
+    border: 1px solid var(--border-color);
+}
+
+    .form-control::placeholder {
+        color: #94a3b8;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        background-color: #1e293b;
+        color: #fff;
+        border-color: var(--emerald-primary);
+        box-shadow: none;
+    }
+
+    .form-control[readonly] {
+        background-color: #0f172a;
+        color: #cbd5f5;
+    }
+
+    .form-control:disabled {
+        background-color: #020617;
+        color: #64748b;
+    }
+
+/* ================= RESPONSIVE ================= */
 @media (max-width: 992px) {
     .sidebar {
         transform: translateX(-100%);
@@ -218,37 +244,3 @@ h1, h2, h3, .font-headline {
         left: 0;
     }
 }
-
-/* INPUTS DARK MODE (GLOBAL) */
-.form-control,
-.form-select {
-    background-color: #1e293b;
-    color: #f1f5f9;
-    border: 1px solid var(--border-color);
-}
-
-    .form-control::placeholder {
-        color: #94a3b8;
-    }
-
-    /* FOCUS */
-    .form-control:focus,
-    .form-select:focus {
-        background-color: #1e293b;
-        color: #fff;
-        border-color: var(--emerald-primary);
-        box-shadow: none;
-    }
-
-    /* READONLY */
-    .form-control[readonly] {
-        background-color: #0f172a;
-        color: #cbd5f5;
-    }
-
-    /* DISABLED */
-    .form-control:disabled {
-        background-color: #020617;
-        color: #64748b;
-    }
-
