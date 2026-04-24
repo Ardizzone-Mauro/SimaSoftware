@@ -17,6 +17,7 @@ namespace SIMA_SOFTWARE.Data
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Inventario> Inventarios { get; set; }
         public DbSet<Stock> Stocks { get; set; }
+        public DbSet<Deposito> Depositos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<PedidoProducto> PedidoProductos { get; set; }
         public DbSet<Factura> Facturas { get; set; }
@@ -54,6 +55,29 @@ namespace SIMA_SOFTWARE.Data
                 .HasQueryFilter(p => p.Activo); //  SOLO trae activos por defecto
 
 
+            // INVENTARIO → PRODUCTO (Muchos a 1)
+            modelBuilder.Entity<Inventario>()
+                .HasOne(i => i.Producto)
+                .WithMany(p => p.Inventarios)
+                .HasForeignKey(i => i.IdProducto)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            // INVENTARIO → DEPOSITO (Muchos a 1)
+            modelBuilder.Entity<Inventario>()
+                .HasOne(i => i.Deposito)
+                .WithMany(d => d.Inventarios)
+                .HasForeignKey(i => i.IdDeposito)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // STOCK → INVENTARIO (Muchos a 1)
+            modelBuilder.Entity<Stock>()
+                .HasOne(s => s.Inventario)
+                .WithMany(i => i.Stocks)
+                .HasForeignKey(s => s.IdInventario)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             //............................................................
 
@@ -86,11 +110,15 @@ namespace SIMA_SOFTWARE.Data
             modelBuilder.Entity<Producto>()
                 .Property(p => p.Precio)
                 .HasPrecision(18, 2);
-
+            
             modelBuilder.Entity<Stock>()
                 .Property(s => s.PrecioUnitario)
                 .HasPrecision(18, 2);
 
+            //  EVITA DUPLICADOS DE PRODUCTO EN EL MISMO DEPÓSITO
+            modelBuilder.Entity<Inventario>()
+                .HasIndex(i => new { i.IdProducto, i.IdDeposito })
+                .IsUnique();
             // Aquí puedes agregar más configuraciones específicas si lo necesitas
         }
     }

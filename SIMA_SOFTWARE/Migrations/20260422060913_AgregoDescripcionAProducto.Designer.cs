@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIMA_SOFTWARE.Data;
 
@@ -11,9 +12,11 @@ using SIMA_SOFTWARE.Data;
 namespace SIMA_SOFTWARE.Migrations
 {
     [DbContext(typeof(SimaDbContext))]
-    partial class SimaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260422060913_AgregoDescripcionAProducto")]
+    partial class AgregoDescripcionAProducto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,23 +341,6 @@ namespace SIMA_SOFTWARE.Migrations
                     b.ToTable("Cuentas");
                 });
 
-            modelBuilder.Entity("SIMA_SOFTWARE.Models.Deposito", b =>
-                {
-                    b.Property<int>("IdDeposito")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdDeposito"));
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("IdDeposito");
-
-                    b.ToTable("Depositos");
-                });
-
             modelBuilder.Entity("SIMA_SOFTWARE.Models.DetalleFactura", b =>
                 {
                     b.Property<int>("IdDetalleFactura")
@@ -534,10 +520,10 @@ namespace SIMA_SOFTWARE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdInventario"));
 
-                    b.Property<int>("IdDeposito")
+                    b.Property<int>("IdProducto")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdProducto")
+                    b.Property<int?>("ProductoIdProducto")
                         .HasColumnType("int");
 
                     b.Property<int>("Stock")
@@ -545,10 +531,7 @@ namespace SIMA_SOFTWARE.Migrations
 
                     b.HasKey("IdInventario");
 
-                    b.HasIndex("IdDeposito");
-
-                    b.HasIndex("IdProducto", "IdDeposito")
-                        .IsUnique();
+                    b.HasIndex("ProductoIdProducto");
 
                     b.ToTable("Inventarios");
                 });
@@ -662,6 +645,7 @@ namespace SIMA_SOFTWARE.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Precio")
@@ -693,13 +677,16 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Property<int>("IdInventario")
                         .HasColumnType("int");
 
+                    b.Property<int?>("InventarioIdInventario")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("PrecioUnitario")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("IdStock");
 
-                    b.HasIndex("IdInventario");
+                    b.HasIndex("InventarioIdInventario");
 
                     b.ToTable("Stocks");
                 });
@@ -860,19 +847,9 @@ namespace SIMA_SOFTWARE.Migrations
 
             modelBuilder.Entity("SIMA_SOFTWARE.Models.Inventario", b =>
                 {
-                    b.HasOne("SIMA_SOFTWARE.Models.Deposito", "Deposito")
-                        .WithMany("Inventarios")
-                        .HasForeignKey("IdDeposito")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("SIMA_SOFTWARE.Models.Producto", "Producto")
                         .WithMany("Inventarios")
-                        .HasForeignKey("IdProducto")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Deposito");
+                        .HasForeignKey("ProductoIdProducto");
 
                     b.Navigation("Producto");
                 });
@@ -924,9 +901,7 @@ namespace SIMA_SOFTWARE.Migrations
                 {
                     b.HasOne("SIMA_SOFTWARE.Models.Inventario", "Inventario")
                         .WithMany("Stocks")
-                        .HasForeignKey("IdInventario")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InventarioIdInventario");
 
                     b.Navigation("Inventario");
                 });
@@ -946,11 +921,6 @@ namespace SIMA_SOFTWARE.Migrations
             modelBuilder.Entity("SIMA_SOFTWARE.Models.Cuenta", b =>
                 {
                     b.Navigation("Clientes");
-                });
-
-            modelBuilder.Entity("SIMA_SOFTWARE.Models.Deposito", b =>
-                {
-                    b.Navigation("Inventarios");
                 });
 
             modelBuilder.Entity("SIMA_SOFTWARE.Models.DetalleProducto", b =>
