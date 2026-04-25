@@ -1,0 +1,105 @@
+﻿@model SIMA_SOFTWARE.Models.ViewModels.ProductoViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+<main class="main-content">
+    <div class="container-fluid p-0">
+
+        <h1 class="page-title">Editar Producto</h1>
+
+        <div class="custom-card p-4">
+
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+
+                <input type="hidden" asp-for="IdProducto" />
+
+                <div class="row g-4">
+
+                    <!-- NOMBRE -->
+                    <div class="col-md-12">
+                        <input asp-for="Nombre" class="form-control" />
+                    </div>
+
+                    <!-- PRECIO -->
+                    <div class="col-md-3">
+                        <input asp-for="Precio" class="form-control" />
+                    </div>
+
+                    <!-- DEPOSITO -->
+                    <div class="col-md-3">
+                        <select asp-for="IdDeposito" class="form-select" asp-items="ViewBag.Depositos"></select>
+                    </div>
+
+                    <!-- STOCK -->
+                    <div class="col-md-3">
+                        <input asp-for="StockInicial" class="form-control" />
+                    </div>
+
+                    <!-- DESCRIPCION -->
+                    <div class="col-12">
+                        <textarea asp-for="Descripcion" class="form-control"></textarea>
+                    </div>
+
+                    <!-- IMAGEN / DROPZONE -->
+                    <div class="col-md-8">
+                        <label class="form-label text-light">Imagen del Producto</label>
+
+                        <!-- INPUT REAL (OCULTO) -->
+                        <input asp-for="Imagen"
+                               type="file"
+                               id="inputImagen"
+                               class="d-none"
+                               accept="image/*"
+                               onchange="previewImagen(event)" />
+
+                        <!-- UI VISUAL -->
+                        <div onclick="document.getElementById('inputImagen').click()"
+                             class="border-2 border-dashed rounded-4 p-4 text-center"
+                             style="border-color:#1e293b; background:#020617; cursor:pointer; transition:0.3s;"
+                             onmouseover="this.style.borderColor='#10b981'"
+                             onmouseout="this.style.borderColor='#1e293b'">
+
+                            <div class="mb-2">
+                                <span class="material-symbols-outlined" style="font-size:40px; color:#64748b;">
+                                    cloud_upload
+                                </span>
+                            </div>
+
+                            <p class="mb-1" style="font-size:13px; font-weight:600; color:#cbd5f5;">
+                                Hacé click para subir
+                            </p>
+
+                            <p style="font-size:11px; color:#64748b;">
+                                PNG, JPG o WebP (Max. 5MB)
+                            </p>
+                        </div>
+
+                        <!-- VALIDACIÓN -->
+                        <span asp-validation-for="Imagen" class="text-danger"></span>
+                    </div>
+
+                    <!-- PREVIEW -->
+                    <div class="col-md-4 text-center ">
+                        <img id="preview"
+                             src="/img/no-image.png"
+                             style="max-width:200px; border-radius:12px; border:1px solid #1e293b;" />
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn btn-success mt-4">
+                    Guardar Cambios
+                </button>
+
+            </form>
+        </div>
+    </div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+</main>

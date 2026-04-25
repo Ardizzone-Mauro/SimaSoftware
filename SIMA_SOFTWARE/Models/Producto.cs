@@ -8,9 +8,8 @@ namespace SIMA_SOFTWARE.Models
         public int IdProducto { get; set; }
         public string? Nombre { get; set; }
         public decimal Precio { get; set; }
+        public string? Descripcion { get; set; }
         public string? UrlImagen { get; set; } = null;
-
-
 
         public ICollection<Inventario>? Inventarios { get; set; }
         public ICollection<PedidoProducto>? PedidoProductos { get; set; }

@@ -1,0 +1,32 @@
+﻿@model SIMA_SOFTWARE.Models.ViewModels.ProductoViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+<main class="main-content">
+    <div class="container-fluid p-0">
+
+        <h1 class="page-title">Detalle del Producto</h1>
+            <div class="custom-card p-4">
+
+            <h3>@Model.Nombre</h3>
+
+            <img src="@(Model.UrlImagenExistente ?? "/img/no-image.png")"
+                 style="max-width:250px; border-radius:10px;" />
+
+            <p><strong>Precio:</strong> $@Model.Precio</p>
+            <p><strong>Stock:</strong> @Model.StockInicial</p>
+            <p><strong>Descripción:</strong> @Model.Descripcion</p>
+
+            <a asp-action="Edit" asp-route-id="@Model.IdProducto" class="btn btn-success">
+                Editar
+            </a>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Volver
+            </a>
+
+            </div>
+    </div>
+</main>

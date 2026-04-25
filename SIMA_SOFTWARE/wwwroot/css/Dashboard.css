@@ -230,6 +230,27 @@ h1, h2, h3, .font-headline {
         color: #64748b;
     }
 
+/* ================= BADGE  STOCK ================= */
+.badge-stock {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #10b981;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-low {
+    background: #f59e0b;
+}
+
+.badge-out {
+    background: #ef4444;
+}
+
 /* ================= RESPONSIVE ================= */
 @media (max-width: 992px) {
     .sidebar {

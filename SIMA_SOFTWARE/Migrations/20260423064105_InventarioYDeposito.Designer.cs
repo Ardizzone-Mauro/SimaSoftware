@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIMA_SOFTWARE.Data;
 
@@ -11,9 +12,11 @@ using SIMA_SOFTWARE.Data;
 namespace SIMA_SOFTWARE.Migrations
 {
     [DbContext(typeof(SimaDbContext))]
-    partial class SimaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260423064105_InventarioYDeposito")]
+    partial class InventarioYDeposito
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -252,9 +255,6 @@ namespace SIMA_SOFTWARE.Migrations
 
                     b.Property<int>("CuentaId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Cuit")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DireccionId")
                         .HasColumnType("int");
@@ -517,19 +517,8 @@ namespace SIMA_SOFTWARE.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Numero")
-                        .HasColumnType("int");
-
                     b.Property<int?>("PedidoIdPedido")
                         .HasColumnType("int");
-
-                    b.Property<string>("PuntoVenta")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tipo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdFactura");
 

@@ -1,0 +1,130 @@
+﻿@model IEnumerable<SIMA_SOFTWARE.Models.ViewModels.ProductoViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<main class="main-content">
+    <div class="container-fluid p-0">
+        <!-- Header Section -->
+        <div class="row align-items-end mb-5 gy-4">
+            <div class="col-lg-8">
+                <nav class="breadcrumb-text">
+                    <span>Inventario</span>
+                    <span class="material-symbols-outlined" style="font-size: 12px;">chevron_right</span>
+                    <span class="breadcrumb-active">Stock Actual</span>
+                </nav>
+                <h1 class="page-title">Catálogo de Hilados</h1>
+                <p class="page-desc text-secondary">Explora nuestra colección premium de hilados.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="d-flex gap-3 justify-content-lg-end">
+                    <button class="btn btn-dark d-flex align-items-center gap-2 px-3 py-2 border-secondary border-opacity-25 bg-slate-800" style="background: #1e293b; font-size: 14px; font-weight: 600;">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">filter_list</span>
+                        Filtros Avanzados
+                    </button>
+                    <div class="col-lg-4 text-lg-end">
+                        <a asp-action="Create" class="btn btn-success">
+                            ➕ Nuevo Producto
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Filter Ribbon -->
+        <div class="filter-ribbon">
+            <button class="btn btn-pill btn-pill-active">Todos los Hilados</button>
+            <button class="btn btn-pill btn-pill-outline">Lanas Naturales</button>
+            <button class="btn btn-pill btn-pill-outline">Algodón Orgánico</button>
+            <button class="btn btn-pill btn-pill-outline">Sintéticos Premium</button>
+            <button class="btn btn-pill btn-pill-outline">Mezclas Especiales</button>
+            <button class="btn btn-pill btn-pill-outline">Línea de Verano</button>
+        </div>
+        <!-- Products Grid -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="product-card">
+
+                        <!-- IMAGEN -->
+                        <div class="card-img-wrapper">
+
+                            <img class="card-img-top"
+                                 src="@(string.IsNullOrEmpty(item.UrlImagenExistente)
+                                                              ? "/img/no-image.png"
+                                                              : item.UrlImagenExistente)"
+                                                                alt="@item.Nombre" />
+
+                        @if (item.StockTotal == 0)
+                            {
+                                <span class="badge-stock badge-out">Sin Stock</span>
+                            }
+                            else if (item.StockTotal <= 5)
+                            {
+                                <span class="badge-stock badge-low">Stock Bajo</span>
+                            }
+                            else
+                            {
+                                <span class="badge-stock">En Stock</span>
+                            }
+                            <!-- ACCIONES (hover) -->
+                            <div class="hover-action d-flex flex-column gap-2 p-2">
+
+                                <a asp-action="Details" asp-route-id="@item.IdProducto"
+                                   class="btn btn-primary btn-sm">
+                                    🔍 Ver
+                                </a>
+
+                                <a asp-action="Edit" asp-route-id="@item.IdProducto"
+                                   class="btn btn-warning btn-sm">
+                                    ✏️ Editar
+                                </a>
+
+                                <a asp-action="Delete" asp-route-id="@item.IdProducto"
+                                   class="btn btn-danger btn-sm">
+                                    🗑 Eliminar
+                                </a>
+
+                            </div>
+
+
+                        </div>
+
+                        <!-- BODY -->
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h3 class="product-name">@item.Nombre</h3>
+                                <span class="product-price">$@item.Precio</span>
+                            </div>
+
+                            <div class="card-footer-custom d-flex justify-content-evenly">
+                                <span class="ref-text">Ref: @item.IdProducto</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                        }
+
+        </div>
+            
+            <!-- Add New Placeholder -->
+            <div class="col">
+                <div class="product-card card-add">
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Pagination Section -->
+        <div class="mt-5 text-center">
+            <hr style="border-top: 1px solid var(--sima-border); width: 100%; margin: 3rem 0;" />
+            <p class="text-secondary mb-4" style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;">Mostrando 5 de 142 productos</p>
+            <button class="btn-load-more">Cargar más productos</button>
+        </div>
+    </div>
+</main>

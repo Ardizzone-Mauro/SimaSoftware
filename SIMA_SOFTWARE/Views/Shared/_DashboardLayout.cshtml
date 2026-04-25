@@ -21,7 +21,8 @@
     <!-- DataTables CSS (global) -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
-    <link href="~/css/dashboard.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+    <link rel="stylesheet" href="~/css/productos.css" />
     @* <link rel="stylesheet" href="~/css/datatables-clientes.css" /> *@
 </head>
 <body>
@@ -99,7 +100,7 @@
             
             
             
-            <a class="nav-link" href="#">
+            <a class="nav-link"  asp-controller="Productos" asp-action="Index">
                 <span class="material-symbols-outlined">inventory_2</span>
                 Productos
             </a>
@@ -143,8 +144,8 @@
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
 
-    <!-- Script de inicialización específico para clientes -->
-    <script src="~/js/datatables-clientes.js"></script>
+    @* <!-- Script de inicialización específico para clientes -->
+    <script src="~/js/datatables-clientes.js"></script> *@
 
     @RenderSection("Scripts", required: false)
 </body>

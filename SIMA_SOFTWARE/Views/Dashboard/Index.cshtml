@@ -1,4 +1,4 @@
-﻿
+﻿@model SIMA_SOFTWARE.Models.ViewModels.DashboardViewModel
 
 
 @{
@@ -18,10 +18,13 @@
             <div class="custom-card">
                 <span class="material-symbols-outlined metric-icon-bg">group</span>
                 <p class="text-uppercase small fw-bold text-secondary mb-1" style="font-size: 10px;">Total Clientes</p>
-                <h3 class="fw-black text-white mb-2">1,284</h3>
+                <h3 class="fw-black text-white mb-2">
+                    @Model.TotalClientes
+                </h3>
+
                 <div class="d-flex align-items-center gap-1 text-success small fw-bold">
                     <span class="material-symbols-outlined fs-6">trending_up</span>
-                    +12% este mes
+                    Datos en tiempo real
                 </div>
             </div>
         </div>
@@ -29,21 +32,27 @@
             <div class="custom-card">
                 <span class="material-symbols-outlined metric-icon-bg">shopping_bag</span>
                 <p class="text-uppercase small fw-bold text-secondary mb-1" style="font-size: 10px;">Pedidos Activos</p>
-                <h3 class="fw-black text-white mb-2">42</h3>
+                <h3 class="fw-black text-white mb-2">
+                    @Model.PedidosActivos
+                </h3>
+
                 <div class="d-flex align-items-center gap-1 text-success small fw-bold">
                     <span class="material-symbols-outlined fs-6">arrow_forward</span>
-                    8 listos para envío
+                    @Model.PedidosListosEnvio listos para envío
                 </div>
             </div>
         </div>
         <div class="col-12 col-md-6 col-xl-3">
             <div class="custom-card">
                 <span class="material-symbols-outlined metric-icon-bg">inventory</span>
-                <p class="text-uppercase small fw-bold text-secondary mb-1" style="font-size: 10px;">Stock de Artículos</p>
-                <h3 class="fw-black text-white mb-2">3,502</h3>
+                <p class="text-uppercase small fw-bold text-secondary mb-1" style="font-size: 10px;">Stock Total</p>
+                <h3 class="fw-black text-white mb-2">
+                    @Model.StockTotal
+                </h3>
+
                 <div class="d-flex align-items-center gap-1 text-warning small fw-bold">
                     <span class="material-symbols-outlined fs-6">warning</span>
-                    12 bajo mínimos
+                    @Model.StockBajo bajo mínimos
                 </div>
             </div>
         </div>
@@ -51,10 +60,19 @@
             <div class="custom-card">
                 <span class="material-symbols-outlined metric-icon-bg">payments</span>
                 <p class="text-uppercase small fw-bold text-secondary mb-1" style="font-size: 10px;">Ingresos Mensuales</p>
-                <h3 class="fw-black text-white mb-2">€48,250</h3>
-                <div class="d-flex align-items-center gap-1 text-success small fw-bold">
-                    <span class="material-symbols-outlined fs-6">trending_up</span>
-                    +8.4% vs mes anterior
+                <h3 class="fw-black text-white mb-2">
+                    $@Model.IngresosMensuales.ToString("N0")
+                </h3>
+
+                <div class="d-flex align-items-center gap-1
+    @(Model.VariacionIngresos >= 0 ? "text-success" : "text-danger")
+    small fw-bold">
+
+                    <span class="material-symbols-outlined fs-6">
+                        @(Model.VariacionIngresos >= 0 ? "trending_up" : "trending_down")
+                    </span>
+
+                    @Model.VariacionIngresos.ToString("0.##")% vs mes anterior
                 </div>
             </div>
         </div>
@@ -82,61 +100,87 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
+                        
                         <tbody>
-                            <tr>
-                                <td class="text-secondary fw-medium">#ORD-7281</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 10px;">AL</div>
-                                        <span class="fw-semibold text-light">Alejandro López</span>
-                                    </div>
-                                </td>
-                                <td><span class="badge-status bg-success bg-opacity-10 text-success border border-success border-opacity-25">Completado</span></td>
-                                <td class="fw-bold text-light">€1,240.00</td>
-                                <td class="text-secondary">12/10/2023</td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-link text-secondary p-1"><span class="material-symbols-outlined fs-5">edit</span></button>
-                                        <button class="btn btn-link text-danger p-1"><span class="material-symbols-outlined fs-5">delete</span></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-secondary fw-medium">#ORD-7282</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 10px;">MS</div>
-                                        <span class="fw-semibold text-light">María Sánchez</span>
-                                    </div>
-                                </td>
-                                <td><span class="badge-status bg-info bg-opacity-10 text-info border border-info border-opacity-25">En Proceso</span></td>
-                                <td class="fw-bold text-light">€850.50</td>
-                                <td class="text-secondary">12/10/2023</td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-link text-secondary p-1"><span class="material-symbols-outlined fs-5">edit</span></button>
-                                        <button class="btn btn-link text-danger p-1"><span class="material-symbols-outlined fs-5">delete</span></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-secondary fw-medium">#ORD-7283</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 10px;">RP</div>
-                                        <span class="fw-semibold text-light">Ricardo Pérez</span>
-                                    </div>
-                                </td>
-                                <td><span class="badge-status bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">Pendiente</span></td>
-                                <td class="fw-bold text-light">€2,100.00</td>
-                                <td class="text-secondary">13/10/2023</td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-link text-secondary p-1"><span class="material-symbols-outlined fs-5">edit</span></button>
-                                        <button class="btn btn-link text-danger p-1"><span class="material-symbols-outlined fs-5">delete</span></button>
-                                    </div>
-                                </td>
-                            </tr>
+                            @foreach (var item in Model.PedidosRecientes)
+                            {
+                                <tr>
+                                    <!-- ID -->
+                                    <td class="text-secondary fw-medium">
+                                        #ORD-@item.IdPedido
+                                    </td>
+
+                                    <!-- CLIENTE -->
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+
+                                            <!-- Iniciales -->
+                                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                                 style="width: 28px; height: 28px; font-size: 10px;">
+
+                                                @(item.ClienteNombre != null
+                                                                                            ? item.ClienteNombre.Substring(0, 2).ToUpper()
+                                                                                            : "NA")
+                                        </div>
+
+                                            <span class="fw-semibold text-light">
+                                                @item.ClienteNombre
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- ESTADO -->
+                                    <td>
+                                    @if (item.Estado == "Entregado")
+                                        {
+                                            <span class="badge-status bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                                Completado
+                                            </span>
+                                        }
+                                        else if (item.Estado == "Listo")
+                                        {
+                                            <span class="badge-status bg-info bg-opacity-10 text-info border border-info border-opacity-25">
+                                                Listo
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge-status bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
+                                                Pendiente
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <!-- TOTAL -->
+                                    <td class="fw-bold text-light">
+                                        $@item.Total.ToString("N2")
+                                    </td>
+
+                                    <!-- FECHA -->
+                                    <td class="text-secondary">
+                                        @item.Fecha.ToString("dd/MM/yyyy")
+                                    </td>
+
+                                    <!-- ACCIONES -->
+                                    <td>
+                                        <div class="d-flex gap-2">
+
+                                            <a asp-controller="Pedidos" asp-action="Edit" asp-route-id="@item.IdPedido"
+                                               class="btn btn-link text-secondary p-1">
+                                                <span class="material-symbols-outlined fs-5">edit</span>
+                                            </a>
+
+                                            <a asp-controller="Pedidos" asp-action="Delete" asp-route-id="@item.IdPedido"
+                                               class="btn btn-link text-danger p-1">
+                                                <span class="material-symbols-outlined fs-5">delete</span>
+                                            </a>
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            }
+                        
                         </tbody>
                     </table>
                 </div>
