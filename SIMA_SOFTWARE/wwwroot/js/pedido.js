@@ -48,6 +48,8 @@ function agregarItem() {
 
     // limpiar input
     document.getElementById("cantidad").value = "";
+
+   
 }
 
 function eliminarItem(index, btn) {

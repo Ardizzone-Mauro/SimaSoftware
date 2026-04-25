@@ -1,0 +1,162 @@
+﻿@model SIMA_SOFTWARE.Models.Factura
+
+@{
+    Layout = null;
+    var numeroFormateado = $"{Model.PuntoVenta}-{Model.Numero.ToString("00000000")}";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Factura</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .empresa {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .factura-box {
+            border: 2px solid black;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .tipo {
+            font-size: 40px;
+            font-weight: bold;
+            border: 2px solid black;
+            padding: 10px;
+            width: 80px;
+            text-align: center;
+        }
+
+        .flex {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tabla {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+            .tabla th, .tabla td {
+                border: 1px solid black;
+                padding: 8px;
+            }
+
+        .total {
+            text-align: right;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .afip {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- EMPRESA -->
+    <div class="header">
+        <div class="empresa">SIMA SOFTWARE S.A.</div>
+        <div>CUIT: 30-99999999-9</div>
+        <div>Ingresos Brutos: 123456</div>
+        <div>Inicio de Actividades: 01/01/2024</div>
+        <div>Dirección: Córdoba, Argentina</div>
+    </div>
+
+    <div style="text-align: right; margin-bottom: 20px;">
+        <button onclick="window.print()" style="
+        padding:10px 15px;
+        background:#000;
+        color:#fff;
+        border:none;
+        cursor:pointer;
+    ">
+            🖨️ Descargar / Imprimir
+        </button>
+    </div>
+
+    <!-- FACTURA -->
+    <div class="factura-box">
+
+        <div class="flex">
+            <div class="tipo">A</div>
+
+            <div>
+                <h2>FACTURA</h2>
+                <strong>N° @numeroFormateado</strong>
+                <br />
+                Fecha: @Model.FechaEmision.ToString("dd/MM/yyyy")
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- CLIENTE -->
+        <div>
+            <strong>Cliente:</strong> @Model.Cliente?.Nombre <br />
+            
+        </div>
+
+        <!-- DETALLE -->
+        <table class="tabla">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cant.</th>
+                    <th>Precio</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model.DetallesFactura != null && Model.DetallesFactura.Any())
+                {
+                    foreach (var d in Model.DetallesFactura)
+                    {
+                        <tr>
+                            <td>@d.DetalleProducto?.Producto?.Nombre</td>
+                            <td>@d.DetalleProducto?.Cantidad</td>
+                            <td>$ @d.DetalleProducto?.PrecioUnitario</td>
+                            <td>$ @(d.DetalleProducto?.Cantidad * d.DetalleProducto?.PrecioUnitario)</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <!-- TOTALES -->
+        <div class="total">
+            Neto: $ @(Model.MontoTotal - Model.Impuestos) <br />
+            IVA (21%): $ @Model.Impuestos <br />
+            <strong>TOTAL: $ @Model.MontoTotal</strong>
+        </div>
+
+    </div>
+
+    <!-- AFIP -->
+    <div class="afip">
+        Comprobante no fiscal - Simulación AFIP <br />
+        www.afip.gob.ar
+    </div>
+
+</body>
+</html>

@@ -39,6 +39,7 @@ namespace SIMA_SOFTWARE.Models
         // Identity
         public string? ApplicationUserId { get; set; }
         public ApplicationUser? User { get; set; }
+        
 
         //  BAJA LÓGICA
         public bool Activo { get; set; } = true;

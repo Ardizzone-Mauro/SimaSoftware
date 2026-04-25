@@ -17,6 +17,9 @@ namespace SIMA_SOFTWARE.Models
 
         public Cliente? Cliente { get; set; }
         public Pedido? Pedido { get; set; }
+        public int Numero { get; set; }
+        public string PuntoVenta { get; set; } = "0001";
+        public string Tipo { get; set; } = "A";
 
         public ICollection<DetalleFactura>? DetallesFactura { get; set; }
     }

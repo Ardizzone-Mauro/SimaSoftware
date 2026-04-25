@@ -68,6 +68,11 @@ namespace SIMA_SOFTWARE.Data
             modelBuilder.Entity<DetalleProducto>()
                 .Property(d => d.Descuento)
                 .HasPrecision(18, 2);
+            modelBuilder.Entity<DetalleProducto>()
+                .HasOne(dp => dp.Producto)
+                .WithMany()
+                .HasForeignKey(dp => dp.IdProducto)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Factura>()
                 .Property(f => f.Impuestos)
@@ -90,6 +95,18 @@ namespace SIMA_SOFTWARE.Data
             modelBuilder.Entity<Stock>()
                 .Property(s => s.PrecioUnitario)
                 .HasPrecision(18, 2);
+            modelBuilder.Entity<Factura>()
+                .HasOne(f => f.Cliente)
+                .WithMany()
+                .HasForeignKey(f => f.IdCliente)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Factura>()
+                .HasOne(f => f.Pedido)
+                .WithMany()
+                .HasForeignKey(f => f.IdPedido)
+                .OnDelete(DeleteBehavior.Restrict);
+    
 
             // Aquí puedes agregar más configuraciones específicas si lo necesitas
         }

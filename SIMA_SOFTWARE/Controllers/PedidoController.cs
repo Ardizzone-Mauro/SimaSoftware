@@ -69,6 +69,9 @@ namespace SIMA_SOFTWARE.Controllers
                 })
                 .ToList();
 
+            ViewBag.Clientes = _context.Clientes.ToList();
+            ViewBag.Productos = _context.Productos.ToList();
+
             return View(pedidos);
         }
 

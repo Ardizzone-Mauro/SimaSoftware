@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<SIMA_SOFTWARE.Models.ViewModels.PedidoViewModel>
 
+
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
@@ -20,6 +21,7 @@
         <a asp-action="Create" class="btn btn-success">
             + Nuevo Pedido
         </a>
+        
     </div>
 
     <div class="card shadow-lg border-0">
@@ -66,7 +68,7 @@
 
                     <thead>
                         <tr>
-                            <th>Pedido numero</th>
+                            <th>Pedido</th>
                             <th>Cliente</th>
                             <th>Fecha</th>
                             <th>Total</th>
@@ -110,9 +112,11 @@
                                             ❌ Cancelar
                                         </a>
 
-                                        <a asp-action="Factura" asp-route-id="@item.IdPedido"
-                                           class="btn btn-sm btn-primary">
-                                            📄 Factura
+                                        <a asp-controller="Facturacion"
+                                           asp-action="Generar"
+                                           asp-route-idPedido="@item.IdPedido"
+                                           class="btn btn-sm btn-success">
+                                            🧾 Facturar
                                         </a>
                                     </td>
                                 </tr>
