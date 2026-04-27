@@ -10,7 +10,7 @@
 
         <h3 class="text-danger mb-3">¿Eliminar producto?</h3>
         <p class="text-secondary mb-4">
-            Esta acción no se puede deshacer.
+            Se eliminara del catalogo actual de productos
         </p>
 
         <p class="text-light"><strong>Nombre:</strong> @Model.Nombre</p>
@@ -25,11 +25,10 @@
         }
 
         <form asp-action="Delete" method="post" class="mt-4">
-            <input type="hidden" asp-for="IdProducto" />
+            <input type="hidden" name="id" value="@Model.IdProducto" />
 
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-danger"
-                        onclick="return confirm('¿Seguro que querés eliminar este producto?')">
+                <button type="submit" class="btn btn-danger">
                     🗑 Eliminar
                 </button>
 

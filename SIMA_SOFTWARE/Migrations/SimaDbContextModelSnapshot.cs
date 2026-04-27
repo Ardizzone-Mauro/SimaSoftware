@@ -253,9 +253,6 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Property<int>("CuentaId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Cuit")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("DireccionId")
                         .HasColumnType("int");
 
@@ -414,6 +411,8 @@ namespace SIMA_SOFTWARE.Migrations
 
                     b.HasKey("IdDetalleProducto");
 
+                    b.HasIndex("IdProducto");
+
                     b.HasIndex("ProductoIdProducto");
 
                     b.ToTable("DetalleProductos");
@@ -520,9 +519,6 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Property<int>("Numero")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PedidoIdPedido")
-                        .HasColumnType("int");
-
                     b.Property<string>("PuntoVenta")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -535,7 +531,9 @@ namespace SIMA_SOFTWARE.Migrations
 
                     b.HasIndex("ClienteIdCliente");
 
-                    b.HasIndex("PedidoIdPedido");
+                    b.HasIndex("IdCliente");
+
+                    b.HasIndex("IdPedido");
 
                     b.ToTable("Facturas");
                 });
@@ -674,6 +672,12 @@ namespace SIMA_SOFTWARE.Migrations
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Eliminado")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("FechaEliminacion")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
@@ -836,6 +840,12 @@ namespace SIMA_SOFTWARE.Migrations
             modelBuilder.Entity("SIMA_SOFTWARE.Models.DetalleProducto", b =>
                 {
                     b.HasOne("SIMA_SOFTWARE.Models.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("IdProducto")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SIMA_SOFTWARE.Models.Producto", null)
                         .WithMany("DetallesProducto")
                         .HasForeignKey("ProductoIdProducto");
 
@@ -859,13 +869,21 @@ namespace SIMA_SOFTWARE.Migrations
 
             modelBuilder.Entity("SIMA_SOFTWARE.Models.Factura", b =>
                 {
-                    b.HasOne("SIMA_SOFTWARE.Models.Cliente", "Cliente")
+                    b.HasOne("SIMA_SOFTWARE.Models.Cliente", null)
                         .WithMany("Facturas")
                         .HasForeignKey("ClienteIdCliente");
 
+                    b.HasOne("SIMA_SOFTWARE.Models.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("IdCliente")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("SIMA_SOFTWARE.Models.Pedido", "Pedido")
                         .WithMany()
-                        .HasForeignKey("PedidoIdPedido");
+                        .HasForeignKey("IdPedido")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Cliente");
 

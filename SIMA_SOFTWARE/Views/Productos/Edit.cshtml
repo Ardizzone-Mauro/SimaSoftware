@@ -19,27 +19,35 @@
 
                     <!-- NOMBRE -->
                     <div class="col-md-12">
+                        <label asp-for="Nombre" class="form-label text-light"></label>
                         <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
                     </div>
 
                     <!-- PRECIO -->
                     <div class="col-md-3">
+                        <label asp-for="Precio" class="form-label text-light"></label>
                         <input asp-for="Precio" class="form-control" />
+                        <span asp-validation-for="Precio" class="text-danger"></span>
                     </div>
 
-                    <!-- DEPOSITO -->
+                    <!--DEPOSITO-->
                     <div class="col-md-3">
+                        <label class="text-light">Depósito</label>
                         <select asp-for="IdDeposito" class="form-select" asp-items="ViewBag.Depositos"></select>
                     </div>
 
                     <!-- STOCK -->
                     <div class="col-md-3">
+                        <label asp-for="StockInicial" class="form-label text-light"></label>
                         <input asp-for="StockInicial" class="form-control" />
+                        <span asp-validation-for="StockInicial" class="text-danger"></span>
                     </div>
 
-                    <!-- DESCRIPCION -->
+                    <!-- DESCRIPCIÓN -->
                     <div class="col-12">
-                        <textarea asp-for="Descripcion" class="form-control"></textarea>
+                        <label asp-for="Descripcion" class="form-label text-light"></label>
+                        <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
                     </div>
 
                     <!-- IMAGEN / DROPZONE -->
@@ -88,6 +96,7 @@
                     </div>
 
                 </div>
+                
 
                 <button type="submit" class="btn btn-success mt-4">
                     Guardar Cambios
