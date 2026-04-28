@@ -46,23 +46,65 @@
                 <span class="material-symbols-outlined">help</span>
             </button>
             <div class="vr mx-2 bg-secondary opacity-25" style="height: 24px;"></div>
-            <div class="d-flex align-items-center gap-3 ms-2">
-                <div class="text-end d-none d-sm-block">
-                    <p class="mb-0 fw-bold small text-light">@User.Identity?.Name</p>
-                    @{
-                        var user = await UserManager.GetUserAsync(User);
-                        var roles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
-                    }
-                    <div class="d-flex gap-1 flex-wrap">
-                        @foreach(var role in roles)
-                        {
-                            <span class="badge bg-success">@role</span>
-                        }
-                    </div>
+            <div class="d-flex align-items-center gap-2">
+
+                <!-- Dropdown usuario -->
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle d-flex align-items-center p-0"
+                            data-bs-toggle="dropdown">
+
+                        <img class="rounded-circle border border-2 border-secondary"
+                             height="50"
+                             width="50"
+                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuASQEu93ZUjOPhNYVLSCv8sJkJwbo5hAldXanHCVmGXtXgOEJQee5Nj8fiOY41AcqwB6FtdCkjnz4W64wgp4e69cTAnNIG64gIizRrwuag_wbnQNItNWMejbKPuTK2PEHbipZqjPC0irrFtUyQXCL06dwKw1ovhu9kBY-hl_c1mGZ76SQTwvdeqfs9uybe18jmCM0O4Vn7MmM-sl59egGZGvi2Tz4WhnKYl9aEag-LOJ12He4cVaBCZmYhF2N8OySBS_cRYNboyklLA" />
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <span class="dropdown-item-text fw-bold">
+                                @User.Identity?.Name
+                            </span>
+                        </li>
+
+                        <li>
+                            @{
+                                var user = await UserManager.GetUserAsync(User);
+                                var roles = user != null
+                                ? await UserManager.GetRolesAsync(user)
+                                : new List<string>();
+                            }
+
+                            <div class="px-3 py-2 d-flex gap-1 flex-wrap">
+                                @foreach (var role in roles)
+                                {
+                                    <span class="badge bg-success">@role</span>
+                                }
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <img alt="Avatar" class="rounded-circle border border-2 border-secondary" height="40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASQEu93ZUjOPhNYVLSCv8sJkJwbo5hAldXanHCVmGXtXgOEJQee5Nj8fiOY41AcqwB6FtdCkjnz4W64wgp4e69cTAnNIG64gIizRrwuag_wbnQNItNWMejbKPuTK2PEHbipZqjPC0irrFtUyQXCL06dwKw1ovhu9kBY-hl_c1mGZ76SQTwvdeqfs9uybe18jmCM0O4Vn7MmM-sl59egGZGvi2Tz4WhnKYl9aEag-LOJ12He4cVaBCZmYhF2N8OySBS_cRYNboyklLA" width="40" />
+
+                <!-- Logout -->
+                <form asp-controller="Usuario"
+                      asp-action="Logout"
+                      method="post"
+                      class="d-flex align-items-center m-0">
+
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit"
+                            class="btn btn-link text-secondary p-2 rounded-circle hover-bg-dark d-flex align-items-center justify-content-center"
+                            title="Cerrar sesión">
+
+                        <span class="material-symbols-outlined">
+                            logout
+                        </span>
+                    </button>
+                </form>
+
             </div>
         </div>
+               
     </nav>
     <!-- Sidebar -->
     <aside class="sidebar">
