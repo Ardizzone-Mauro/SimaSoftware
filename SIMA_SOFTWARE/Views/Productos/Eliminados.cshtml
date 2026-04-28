@@ -1,0 +1,92 @@
+﻿@model IEnumerable<SIMA_SOFTWARE.Models.Producto>
+
+@{
+    ViewData["Title"] = "Productos Eliminados";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<main class="main-content">
+    <div class="container-fluid p-0">
+
+        <!-- HEADER -->
+        <div class="row align-items-end mb-5">
+            <div class="col-lg-8">
+                <h1 class="page-title text-danger">Productos Eliminados</h1>
+                <p class="text-secondary">Podés restaurar productos eliminados</p>
+            </div>
+
+            <div class="col-lg-4 text-end">
+                <a asp-action="Index" class="btn btn-secondary">
+                    ← Volver al catálogo
+                </a>
+            </div>
+        </div>
+
+        <!-- GRID -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="product-card" style="opacity:0.7; border:1px solid #dc3545;">
+
+                        <!-- IMAGEN -->
+                        <div class="card-img-wrapper">
+
+                            <img class="card-img-top"
+                                 src="@(string.IsNullOrEmpty(item.UrlImagen)
+                                                                         ? "/img/no-image.png"
+                                                                         : item.UrlImagen)"
+                             alt="@item.Nombre" />
+
+                            <!-- BADGE ELIMINADO -->
+                            <span class="badge-stock badge-out" style="background:#dc3545;">
+                                Eliminado
+                            </span>
+
+                            <!-- ACCIONES -->
+                            <div class="hover-action d-flex flex-column gap-2 p-2">
+
+                                <form asp-action="Restaurar" method="post">
+                                    <input type="hidden" name="id" value="@item.IdProducto" />
+
+                                    <button type="submit"
+                                            class="btn btn-success btn-sm"
+                                            onclick="return confirm('¿Restaurar este producto?')">
+                                        🔄 Restaurar
+                                    </button>
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                        <!-- BODY -->
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h3 class="product-name">@item.Nombre</h3>
+                                <span class="product-price">$@item.Precio</span>
+                            </div>
+
+                            <div class="card-footer-custom d-flex justify-content-between">
+                                <span class="ref-text">Ref: @item.IdProducto</span>
+
+                            @if (item.FechaEliminacion != null)
+                                {
+                                    <span class="text-danger" style="font-size:12px;">
+                                        🕒 @item.FechaEliminacion.Value.ToString("dd/MM/yyyy")
+                                    </span>
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</main>

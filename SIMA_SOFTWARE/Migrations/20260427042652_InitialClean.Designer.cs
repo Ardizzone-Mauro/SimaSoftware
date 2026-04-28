@@ -12,8 +12,8 @@ using SIMA_SOFTWARE.Data;
 namespace SIMA_SOFTWARE.Migrations
 {
     [DbContext(typeof(SimaDbContext))]
-    [Migration("20260407031553_OTP")]
-    partial class OTP
+    [Migration("20260427042652_InitialClean")]
+    partial class InitialClean
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,6 +239,61 @@ namespace SIMA_SOFTWARE.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Cliente", b =>
+                {
+                    b.Property<int>("IdCliente")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCliente"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CuentaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DireccionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Telefono")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("TipoClienteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdCliente");
+
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique()
+                        .HasFilter("[ApplicationUserId] IS NOT NULL");
+
+                    b.HasIndex("CuentaId");
+
+                    b.HasIndex("DireccionId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("TipoClienteId");
+
+                    b.ToTable("Clientes");
+                });
+
             modelBuilder.Entity("SIMA_SOFTWARE.Models.CodigoRecuperacion", b =>
                 {
                     b.Property<int>("Id")
@@ -266,65 +321,7 @@ namespace SIMA_SOFTWARE.Migrations
                     b.ToTable("CodigosRecuperacion");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Cliente", b =>
-                {
-                    b.Property<int>("IdCliente")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCliente"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("CuentaIdCuenta")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DireccionIdDireccion")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("IdCuenta")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdDireccion")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdTipoCliente")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Telefono")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int?>("TipoClienteIdTipoCliente")
-                        .HasColumnType("int");
-
-                    b.HasKey("IdCliente");
-
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique()
-                        .HasFilter("[ApplicationUserId] IS NOT NULL");
-
-                    b.HasIndex("CuentaIdCuenta");
-
-                    b.HasIndex("DireccionIdDireccion");
-
-                    b.HasIndex("TipoClienteIdTipoCliente");
-
-                    b.ToTable("Clientes");
-                });
-
-            modelBuilder.Entity("SIMA_Software.Models.Cuenta", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Cuenta", b =>
                 {
                     b.Property<int>("IdCuenta")
                         .ValueGeneratedOnAdd()
@@ -344,7 +341,24 @@ namespace SIMA_SOFTWARE.Migrations
                     b.ToTable("Cuentas");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.DetalleFactura", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Deposito", b =>
+                {
+                    b.Property<int>("IdDeposito")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdDeposito"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdDeposito");
+
+                    b.ToTable("Depositos");
+                });
+
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.DetalleFactura", b =>
                 {
                     b.Property<int>("IdDetalleFactura")
                         .ValueGeneratedOnAdd()
@@ -373,7 +387,7 @@ namespace SIMA_SOFTWARE.Migrations
                     b.ToTable("DetalleFacturas");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.DetalleProducto", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.DetalleProducto", b =>
                 {
                     b.Property<int>("IdDetalleProducto")
                         .ValueGeneratedOnAdd()
@@ -400,12 +414,14 @@ namespace SIMA_SOFTWARE.Migrations
 
                     b.HasKey("IdDetalleProducto");
 
+                    b.HasIndex("IdProducto");
+
                     b.HasIndex("ProductoIdProducto");
 
                     b.ToTable("DetalleProductos");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Direccion", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Direccion", b =>
                 {
                     b.Property<int>("IdDireccion")
                         .ValueGeneratedOnAdd()
@@ -427,7 +443,7 @@ namespace SIMA_SOFTWARE.Migrations
                     b.ToTable("Direcciones");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Envio", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Envio", b =>
                 {
                     b.Property<int>("IdEnvio")
                         .ValueGeneratedOnAdd()
@@ -459,7 +475,7 @@ namespace SIMA_SOFTWARE.Migrations
                     b.ToTable("Envios");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Estado", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Estado", b =>
                 {
                     b.Property<int>("IdEstado")
                         .ValueGeneratedOnAdd()
@@ -475,7 +491,7 @@ namespace SIMA_SOFTWARE.Migrations
                     b.ToTable("Estados");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Factura", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Factura", b =>
                 {
                     b.Property<int>("IdFactura")
                         .ValueGeneratedOnAdd()
@@ -503,19 +519,29 @@ namespace SIMA_SOFTWARE.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("PedidoIdPedido")
+                    b.Property<int>("Numero")
                         .HasColumnType("int");
+
+                    b.Property<string>("PuntoVenta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdFactura");
 
                     b.HasIndex("ClienteIdCliente");
 
-                    b.HasIndex("PedidoIdPedido");
+                    b.HasIndex("IdCliente");
+
+                    b.HasIndex("IdPedido");
 
                     b.ToTable("Facturas");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Inventario", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Inventario", b =>
                 {
                     b.Property<int>("IdInventario")
                         .ValueGeneratedOnAdd()
@@ -523,10 +549,10 @@ namespace SIMA_SOFTWARE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdInventario"));
 
-                    b.Property<int>("IdProducto")
+                    b.Property<int>("IdDeposito")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductoIdProducto")
+                    b.Property<int>("IdProducto")
                         .HasColumnType("int");
 
                     b.Property<int>("Stock")
@@ -534,12 +560,15 @@ namespace SIMA_SOFTWARE.Migrations
 
                     b.HasKey("IdInventario");
 
-                    b.HasIndex("ProductoIdProducto");
+                    b.HasIndex("IdDeposito");
+
+                    b.HasIndex("IdProducto", "IdDeposito")
+                        .IsUnique();
 
                     b.ToTable("Inventarios");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Notificacion", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Notificacion", b =>
                 {
                     b.Property<int>("IdNotificacion")
                         .ValueGeneratedOnAdd()
@@ -571,7 +600,7 @@ namespace SIMA_SOFTWARE.Migrations
                     b.ToTable("Notificaciones");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Pedido", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Pedido", b =>
                 {
                     b.Property<int>("IdPedido")
                         .ValueGeneratedOnAdd()
@@ -579,8 +608,12 @@ namespace SIMA_SOFTWARE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPedido"));
 
-                    b.Property<int?>("ClienteIdCliente")
-                        .HasColumnType("int");
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
@@ -590,12 +623,12 @@ namespace SIMA_SOFTWARE.Migrations
 
                     b.HasKey("IdPedido");
 
-                    b.HasIndex("ClienteIdCliente");
+                    b.HasIndex("IdCliente");
 
                     b.ToTable("Pedidos");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.PedidoProducto", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.PedidoProducto", b =>
                 {
                     b.Property<int>("IdPedidoProducto")
                         .ValueGeneratedOnAdd()
@@ -616,9 +649,6 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Property<int>("IdProducto")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PedidoIdPedido")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("PrecioUnitario")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -628,20 +658,29 @@ namespace SIMA_SOFTWARE.Migrations
 
                     b.HasKey("IdPedidoProducto");
 
-                    b.HasIndex("PedidoIdPedido");
+                    b.HasIndex("IdPedido");
 
                     b.HasIndex("ProductoIdProducto");
 
                     b.ToTable("PedidoProductos");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Producto", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Producto", b =>
                 {
                     b.Property<int>("IdProducto")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdProducto"));
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Eliminado")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("FechaEliminacion")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("nvarchar(max)");
@@ -658,7 +697,7 @@ namespace SIMA_SOFTWARE.Migrations
                     b.ToTable("Productos");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Stock", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Stock", b =>
                 {
                     b.Property<int>("IdStock")
                         .ValueGeneratedOnAdd()
@@ -675,21 +714,18 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Property<int>("IdInventario")
                         .HasColumnType("int");
 
-                    b.Property<int?>("InventarioIdInventario")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("PrecioUnitario")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("IdStock");
 
-                    b.HasIndex("InventarioIdInventario");
+                    b.HasIndex("IdInventario");
 
                     b.ToTable("Stocks");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.TipoCliente", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.TipoCliente", b =>
                 {
                     b.Property<int>("IdTipoCliente")
                         .ValueGeneratedOnAdd()
@@ -756,23 +792,29 @@ namespace SIMA_SOFTWARE.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Cliente", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Cliente", b =>
                 {
                     b.HasOne("SIMA_SOFTWARE.Models.ApplicationUser", "User")
                         .WithOne("ClienteUser")
-                        .HasForeignKey("SIMA_Software.Models.Cliente", "ApplicationUserId");
+                        .HasForeignKey("SIMA_SOFTWARE.Models.Cliente", "ApplicationUserId");
 
-                    b.HasOne("SIMA_Software.Models.Cuenta", "Cuenta")
+                    b.HasOne("SIMA_SOFTWARE.Models.Cuenta", "Cuenta")
                         .WithMany("Clientes")
-                        .HasForeignKey("CuentaIdCuenta");
+                        .HasForeignKey("CuentaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("SIMA_Software.Models.Direccion", "Direccion")
+                    b.HasOne("SIMA_SOFTWARE.Models.Direccion", "Direccion")
                         .WithMany("Clientes")
-                        .HasForeignKey("DireccionIdDireccion");
+                        .HasForeignKey("DireccionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("SIMA_Software.Models.TipoCliente", "TipoCliente")
+                    b.HasOne("SIMA_SOFTWARE.Models.TipoCliente", "TipoCliente")
                         .WithMany("Clientes")
-                        .HasForeignKey("TipoClienteIdTipoCliente");
+                        .HasForeignKey("TipoClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Cuenta");
 
@@ -783,13 +825,13 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.DetalleFactura", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.DetalleFactura", b =>
                 {
-                    b.HasOne("SIMA_Software.Models.DetalleProducto", "DetalleProducto")
+                    b.HasOne("SIMA_SOFTWARE.Models.DetalleProducto", "DetalleProducto")
                         .WithMany("DetallesFactura")
                         .HasForeignKey("DetalleProductoIdDetalleProducto");
 
-                    b.HasOne("SIMA_Software.Models.Factura", "Factura")
+                    b.HasOne("SIMA_SOFTWARE.Models.Factura", "Factura")
                         .WithMany("DetallesFactura")
                         .HasForeignKey("FacturaIdFactura");
 
@@ -798,22 +840,28 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Navigation("Factura");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.DetalleProducto", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.DetalleProducto", b =>
                 {
-                    b.HasOne("SIMA_Software.Models.Producto", "Producto")
+                    b.HasOne("SIMA_SOFTWARE.Models.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("IdProducto")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SIMA_SOFTWARE.Models.Producto", null)
                         .WithMany("DetallesProducto")
                         .HasForeignKey("ProductoIdProducto");
 
                     b.Navigation("Producto");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Envio", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Envio", b =>
                 {
-                    b.HasOne("SIMA_Software.Models.Estado", "Estado")
+                    b.HasOne("SIMA_SOFTWARE.Models.Estado", "Estado")
                         .WithMany("Envios")
                         .HasForeignKey("EstadoIdEstado");
 
-                    b.HasOne("SIMA_Software.Models.Pedido", "Pedido")
+                    b.HasOne("SIMA_SOFTWARE.Models.Pedido", "Pedido")
                         .WithMany("Envios")
                         .HasForeignKey("PedidoIdPedido");
 
@@ -822,37 +870,55 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Navigation("Pedido");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Factura", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Factura", b =>
                 {
-                    b.HasOne("SIMA_Software.Models.Cliente", "Cliente")
+                    b.HasOne("SIMA_SOFTWARE.Models.Cliente", null)
                         .WithMany("Facturas")
                         .HasForeignKey("ClienteIdCliente");
 
-                    b.HasOne("SIMA_Software.Models.Pedido", "Pedido")
+                    b.HasOne("SIMA_SOFTWARE.Models.Cliente", "Cliente")
                         .WithMany()
-                        .HasForeignKey("PedidoIdPedido");
+                        .HasForeignKey("IdCliente")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SIMA_SOFTWARE.Models.Pedido", "Pedido")
+                        .WithMany()
+                        .HasForeignKey("IdPedido")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Cliente");
 
                     b.Navigation("Pedido");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Inventario", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Inventario", b =>
                 {
-                    b.HasOne("SIMA_Software.Models.Producto", "Producto")
+                    b.HasOne("SIMA_SOFTWARE.Models.Deposito", "Deposito")
                         .WithMany("Inventarios")
-                        .HasForeignKey("ProductoIdProducto");
+                        .HasForeignKey("IdDeposito")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SIMA_SOFTWARE.Models.Producto", "Producto")
+                        .WithMany("Inventarios")
+                        .HasForeignKey("IdProducto")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Deposito");
 
                     b.Navigation("Producto");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Notificacion", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Notificacion", b =>
                 {
-                    b.HasOne("SIMA_Software.Models.Cliente", "Cliente")
+                    b.HasOne("SIMA_SOFTWARE.Models.Cliente", "Cliente")
                         .WithMany()
                         .HasForeignKey("ClienteIdCliente");
 
-                    b.HasOne("SIMA_Software.Models.Pedido", "Pedido")
+                    b.HasOne("SIMA_SOFTWARE.Models.Pedido", "Pedido")
                         .WithMany()
                         .HasForeignKey("PedidoIdPedido");
 
@@ -861,22 +927,26 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Navigation("Pedido");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Pedido", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Pedido", b =>
                 {
-                    b.HasOne("SIMA_Software.Models.Cliente", "Cliente")
+                    b.HasOne("SIMA_SOFTWARE.Models.Cliente", "Cliente")
                         .WithMany("Pedidos")
-                        .HasForeignKey("ClienteIdCliente");
+                        .HasForeignKey("IdCliente")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Cliente");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.PedidoProducto", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.PedidoProducto", b =>
                 {
-                    b.HasOne("SIMA_Software.Models.Pedido", "Pedido")
+                    b.HasOne("SIMA_SOFTWARE.Models.Pedido", "Pedido")
                         .WithMany("PedidoProductos")
-                        .HasForeignKey("PedidoIdPedido");
+                        .HasForeignKey("IdPedido")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("SIMA_Software.Models.Producto", "Producto")
+                    b.HasOne("SIMA_SOFTWARE.Models.Producto", "Producto")
                         .WithMany("PedidoProductos")
                         .HasForeignKey("ProductoIdProducto");
 
@@ -885,11 +955,13 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Navigation("Producto");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Stock", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Stock", b =>
                 {
-                    b.HasOne("SIMA_Software.Models.Inventario", "Inventario")
+                    b.HasOne("SIMA_SOFTWARE.Models.Inventario", "Inventario")
                         .WithMany("Stocks")
-                        .HasForeignKey("InventarioIdInventario");
+                        .HasForeignKey("IdInventario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Inventario");
                 });
@@ -899,51 +971,56 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Navigation("ClienteUser");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Cliente", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Cliente", b =>
                 {
                     b.Navigation("Facturas");
 
                     b.Navigation("Pedidos");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Cuenta", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Cuenta", b =>
                 {
                     b.Navigation("Clientes");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.DetalleProducto", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Deposito", b =>
+                {
+                    b.Navigation("Inventarios");
+                });
+
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.DetalleProducto", b =>
                 {
                     b.Navigation("DetallesFactura");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Direccion", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Direccion", b =>
                 {
                     b.Navigation("Clientes");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Estado", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Estado", b =>
                 {
                     b.Navigation("Envios");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Factura", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Factura", b =>
                 {
                     b.Navigation("DetallesFactura");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Inventario", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Inventario", b =>
                 {
                     b.Navigation("Stocks");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Pedido", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Pedido", b =>
                 {
                     b.Navigation("Envios");
 
                     b.Navigation("PedidoProductos");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.Producto", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Producto", b =>
                 {
                     b.Navigation("DetallesProducto");
 
@@ -952,7 +1029,7 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Navigation("PedidoProductos");
                 });
 
-            modelBuilder.Entity("SIMA_Software.Models.TipoCliente", b =>
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.TipoCliente", b =>
                 {
                     b.Navigation("Clientes");
                 });

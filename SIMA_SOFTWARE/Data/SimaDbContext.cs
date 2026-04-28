@@ -54,6 +54,11 @@ namespace SIMA_SOFTWARE.Data
             modelBuilder.Entity<Pedido>()
                 .HasQueryFilter(p => p.Activo); //  SOLO trae activos por defecto
 
+            // BAJA LÓGICA GLOBAL (Producto)
+
+            modelBuilder.Entity<Producto>()
+                .HasQueryFilter(p => !p.Eliminado);
+
 
             // INVENTARIO → PRODUCTO (Muchos a 1)
             modelBuilder.Entity<Inventario>()

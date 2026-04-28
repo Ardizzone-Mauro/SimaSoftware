@@ -24,7 +24,8 @@ namespace SIMA_SOFTWARE.Controllers
         public async Task<IActionResult> Index()
         {
             var productos = await _context.Productos
-                .Include(p => p.Inventarios) // 👈 CLAVE
+                .Where(p => !p.Eliminado) // 
+                .Include(p => p.Inventarios) //
                 .Select(p => new ProductoViewModel
                 {
                     IdProducto = p.IdProducto,
@@ -255,20 +256,42 @@ namespace SIMA_SOFTWARE.Controllers
         }
 
         // GET: Productos/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var producto = await _context.Productos
+        //        .FirstOrDefaultAsync(m => m.IdProducto == id);
+
+        //    if (producto == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var model = new ProductoViewModel
+        //    {
+        //        IdProducto = producto.IdProducto,
+        //        Nombre = producto.Nombre ?? "",
+        //        Precio = producto.Precio,
+        //        UrlImagenExistente = producto.UrlImagen,
+        //        Descripcion = producto.Descripcion
+        //    };
+
+        //    return View(model);
+        //}
+
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var producto = await _context.Productos
-                .FirstOrDefaultAsync(m => m.IdProducto == id);
+                .FirstOrDefaultAsync(p => p.IdProducto == id);
 
-            if (producto == null)
-            {
-                return NotFound();
-            }
+            if (producto == null) return NotFound();
 
             var model = new ProductoViewModel
             {
@@ -282,27 +305,84 @@ namespace SIMA_SOFTWARE.Controllers
             return View(model);
         }
 
-        // POST: Productos/Delete/5
-        [HttpPost, ActionName("Delete")]
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Restaurar(int id)
         {
-            var producto = await _context.Productos.FindAsync(id);
+            var producto = await _context.Productos
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(p => p.IdProducto == id);
 
             if (producto == null)
             {
                 return NotFound();
             }
 
-            _context.Productos.Remove(producto);
+            producto.Eliminado = false;
+            producto.FechaEliminacion = null;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Eliminados));
+        }
+
+
+
+        // POST: Productos/Delete/5
+        //    [HttpPost, ActionName("Delete")]
+        //    [ValidateAntiForgeryToken]
+        //    public async Task<IActionResult> DeleteConfirmed(int id)
+        //    {
+        //        var producto = await _context.Productos.FindAsync(id);
+
+        //        if (producto == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        _context.Productos.Remove(producto);
+        //        await _context.SaveChangesAsync();
+
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    private bool ProductoExists(int id)
+        //    {
+        //        return _context.Productos.Any(e => e.IdProducto == id);
+        //    }
+        //}
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var producto = await _context.Productos
+                .FirstOrDefaultAsync(p => p.IdProducto == id);
+
+            if (producto == null)
+            {
+                return NotFound();
+            }
+
+            // 🔥 BORRADO LÓGICO
+            producto.Eliminado = true;
+            producto.FechaEliminacion = DateTime.Now;
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductoExists(int id)
+
+        public async Task<IActionResult> Eliminados()
         {
-            return _context.Productos.Any(e => e.IdProducto == id);
+            var productosEliminados = await _context.Productos
+                .IgnoreQueryFilters()
+                .Where(p => p.Eliminado)
+                .ToListAsync();
+
+            return View(productosEliminados);
         }
-    }
+    } 
 }
