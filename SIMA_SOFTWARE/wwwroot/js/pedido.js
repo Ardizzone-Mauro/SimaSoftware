@@ -69,7 +69,22 @@ function actualizarTotal() {
     document.getElementById("total").innerText = total.toFixed(2);
 }
 
+function limpiarPedido() {
+
+    items = [];
+
+    total = 0;
+
+    document.getElementById("detalle").innerHTML = "";
+
+    actualizarTotal();
+
+    document.getElementById("clienteSelect").value = "";
+
+    document.getElementById("cantidad").value = "";
+}
 function guardarPedido() {
+
     let idCliente = document.getElementById("clienteSelect").value;
 
     if (!idCliente) {
@@ -92,24 +107,32 @@ function guardarPedido() {
             detalles: items
         })
     })
-        .then(res => {
-            if (!res.ok) throw new Error("Error en servidor");
-            return res.json();
-        })
-        .then(data => {
-            if (data.ok) {
-                alert("✅ Venta guardada correctamente");
+        .then(async res => {
 
-                // 🔥 redirige al listado
-                window.location.href = "/Pedido/Index";
-            } else {
-                alert("❌ Error al guardar");
+            const texto = await res.text();
+
+            console.log("RESPUESTA:");
+            console.log(texto);
+
+            let data = JSON.parse(texto);
+
+            // ❌ ERROR CONTROLADO
+            if (!data.ok) {
+
+                alert("❌ " + data.mensaje);
+                limpiarPedido();
+
+                return;
             }
+
+            // ✅ OK
+            alert("✅ Venta guardada correctamente");
+
+            window.location.href = "/Pedido/Index";
         })
-        .catch(error => {
-            console.error(error);
-            alert("❌ Error en la petición");
-        });
+        
+}
+
     function cancelarPedido(id) {
 
         if (!confirm("¿Seguro que querés cancelar el pedido?")) return;
@@ -127,4 +150,3 @@ function guardarPedido() {
             });
     }
 
-}

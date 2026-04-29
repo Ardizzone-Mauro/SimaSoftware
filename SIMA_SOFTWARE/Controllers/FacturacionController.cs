@@ -92,7 +92,7 @@ namespace SIMA_SOFTWARE.Controllers
             _context.Facturas.Add(factura);
             _context.SaveChanges();
 
-            // 🧾 detalles factura (opcional pero PRO)
+            // 🧾 detalles factura 
             foreach (var d in detalles)
             {
                 var detalleProducto = new DetalleProducto

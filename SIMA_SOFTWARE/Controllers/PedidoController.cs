@@ -90,51 +90,103 @@ namespace SIMA_SOFTWARE.Controllers
             return View();
         }
 
-        // ===============================
-        // 🔹 GUARDAR PEDIDO + STOCK (HU01)
-        // ===============================
+        
+        
+        //metodo guardar
+        
         [HttpPost]
         public IActionResult Guardar([FromBody] PedidoRequest data)
         {
+            using var transaction = _context.Database.BeginTransaction();
+
             try
             {
+                // =========================
+                // VALIDAR STOCK
+                // =========================
+                foreach (var item in data.Detalles)
+                {
+                    var inventario = _context.Inventarios
+                        .FirstOrDefault(i => i.IdProducto == item.IdProducto);
+
+                    if (inventario == null)
+                    {
+                        return Json(new
+                        {
+                            ok = false,
+                            mensaje = $"No existe inventario para el producto ID {item.IdProducto}"
+                        });
+                    }
+
+                    int stockActual = inventario.Stock;
+
+                    if (stockActual < item.Cantidad)
+                    {
+                        var producto = _context.Productos
+                            .FirstOrDefault(p => p.IdProducto == item.IdProducto);
+
+                        return Json(new
+                        {
+                            ok = false,
+                            mensaje = $"Stock insuficiente para {producto?.Nombre}. Disponible: {stockActual}"
+                        });
+                    }
+                }
+
+                // =========================
+                // CREAR PEDIDO
+                // =========================
                 var pedido = new Pedido
                 {
                     Fecha = DateTime.Now,
-                    IdCliente = data.IdCliente
+                    IdCliente = data.IdCliente,
+                    Estado = "Pendiente",
+                    Activo = true
                 };
 
                 _context.Pedidos.Add(pedido);
+
                 _context.SaveChanges();
 
+                // =========================
+                // DETALLES + DESCONTAR STOCK
+                // =========================
                 foreach (var item in data.Detalles)
                 {
-                    var detalle = new PedidoProducto
+                    _context.PedidoProductos.Add(new PedidoProducto
                     {
                         IdPedido = pedido.IdPedido,
                         IdProducto = item.IdProducto,
                         Cantidad = item.Cantidad,
                         PrecioUnitario = item.Precio,
                         Descuento = 0
-                    };
+                    });
 
-                    _context.PedidoProductos.Add(detalle);
-
-                    // 🔻 descontar stock
                     var inventario = _context.Inventarios
                         .FirstOrDefault(i => i.IdProducto == item.IdProducto);
 
-                    if (inventario != null)
-                        inventario.Stock -= item.Cantidad;
+                    inventario.Stock -= item.Cantidad;
                 }
 
                 _context.SaveChanges();
 
-                return Json(new { ok = true });
+                transaction.Commit();
+
+                return Json(new
+                {
+                    ok = true,
+                    mensaje = "Pedido creado correctamente"
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                transaction.Rollback();
+
+                return Json(new
+                {
+                    ok = false,
+                    mensaje = ex.ToString()
+                });
             }
         }
 
