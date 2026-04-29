@@ -38,7 +38,7 @@ method: 'POST',
         }
         else
         {
-            alert("Error al guardar");
+            alert("Stock Insuficiente");
         }
     })
     .catch(error => {

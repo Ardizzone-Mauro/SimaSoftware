@@ -22,15 +22,28 @@ namespace SIMA_SOFTWARE.Controllers
         // =========================
         // 🔹 LISTADO FACTURAS
         // =========================
-        public IActionResult Index()
+        public IActionResult Index(int? clienteId, DateTime? fechaDesde, DateTime? fechaHasta)
         {
-            var facturas = _context.Facturas
+            var query = _context.Facturas
                 .Include(f => f.Cliente)
-                .Include(f => f.Pedido)
+                .AsQueryable();
+
+            if (clienteId.HasValue)
+                query = query.Where(f => f.IdCliente == clienteId);
+
+            if (fechaDesde.HasValue)
+                query = query.Where(f => f.FechaEmision >= fechaDesde);
+
+            if (fechaHasta.HasValue)
+                query = query.Where(f => f.FechaEmision <= fechaHasta);
+
+            var facturas = query
                 .OrderByDescending(f => f.FechaEmision)
                 .ToList();
 
-            return View(facturas ?? new List<Factura>());
+            ViewBag.Clientes = _context.Clientes.ToList();
+
+            return View(facturas);
         }
 
         // =========================

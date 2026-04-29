@@ -52,22 +52,27 @@ namespace SIMA_SOFTWARE.Controllers
             }
 
             var pedidos = query
-                .Select(p => new PedidoViewModel
-                {
-                    IdPedido = p.IdPedido,
-                    Fecha = p.Fecha,
-                    Estado = p.Estado,
+     .Select(p => new PedidoViewModel
+     {
+         IdPedido = p.IdPedido,
+         Fecha = p.Fecha,
+         Estado = p.Estado,
 
-                    ClienteNombre = _context.Clientes
-                        .Where(c => c.IdCliente == p.IdCliente)
-                        .Select(c => c.Nombre)
-                        .FirstOrDefault(),
+         ClienteNombre = _context.Clientes
+             .Where(c => c.IdCliente == p.IdCliente)
+             .Select(c => c.Nombre)
+             .FirstOrDefault(),
 
-                    Total = _context.PedidoProductos
-                        .Where(pp => pp.IdPedido == p.IdPedido)
-                        .Sum(pp => pp.Cantidad * pp.PrecioUnitario)
-                })
-                .ToList();
+         TipoCliente = _context.Clientes
+             .Where(c => c.IdCliente == p.IdCliente)
+             .Select(c => c.TipoCliente.Categoria)
+             .FirstOrDefault(),
+
+         Total = _context.PedidoProductos
+             .Where(pp => pp.IdPedido == p.IdPedido)
+             .Sum(pp => pp.Cantidad * pp.PrecioUnitario)
+     })
+     .ToList();
 
             ViewBag.Clientes = _context.Clientes.ToList();
             ViewBag.Productos = _context.Productos.ToList();
@@ -80,7 +85,9 @@ namespace SIMA_SOFTWARE.Controllers
         // ===============================
         public IActionResult Create()
         {
-            var clientes = _context.Clientes.ToList();
+            var clientes = _context.Clientes
+                .Include(c => c.TipoCliente)
+                .ToList();
             var productos = _context.Productos.ToList();
 
             ViewBag.Clientes = clientes;
@@ -90,10 +97,10 @@ namespace SIMA_SOFTWARE.Controllers
             return View();
         }
 
-        
-        
+
+
         //metodo guardar
-        
+
         [HttpPost]
         public IActionResult Guardar([FromBody] PedidoRequest data)
         {
@@ -102,36 +109,64 @@ namespace SIMA_SOFTWARE.Controllers
             try
             {
                 // =========================
-                // VALIDAR STOCK
+                // VALIDACIONES GENERALES
                 // =========================
+
+                if (data.IdCliente <= 0)
+                {
+                    return Json(new { ok = false, mensaje = "Cliente inválido" });
+                }
+
+                if (data.Detalles == null || !data.Detalles.Any())
+                {
+                    return Json(new { ok = false, mensaje = "Debe agregar al menos un producto" });
+                }
+
                 foreach (var item in data.Detalles)
                 {
-                    var inventario = _context.Inventarios
-                        .FirstOrDefault(i => i.IdProducto == item.IdProducto);
-
-                    if (inventario == null)
+                    if (item.Cantidad <= 0)
                     {
-                        return Json(new
-                        {
-                            ok = false,
-                            mensaje = $"No existe inventario para el producto ID {item.IdProducto}"
-                        });
-                    }
-
-                    int stockActual = inventario.Stock;
-
-                    if (stockActual < item.Cantidad)
-                    {
-                        var producto = _context.Productos
-                            .FirstOrDefault(p => p.IdProducto == item.IdProducto);
-
-                        return Json(new
-                        {
-                            ok = false,
-                            mensaje = $"Stock insuficiente para {producto?.Nombre}. Disponible: {stockActual}"
-                        });
+                        return Json(new { ok = false, mensaje = "Cantidad inválida" });
                     }
                 }
+
+                // =========================
+// VALIDAR STOCK AGRUPADO
+// =========================
+var agrupados = data.Detalles
+    .GroupBy(d => d.IdProducto)
+    .Select(g => new
+    {
+        IdProducto = g.Key,
+        CantidadTotal = g.Sum(x => x.Cantidad)
+    });
+
+foreach (var item in agrupados)
+{
+    var inventario = _context.Inventarios
+        .FirstOrDefault(i => i.IdProducto == item.IdProducto);
+
+    if (inventario == null)
+    {
+        return Json(new
+        {
+            ok = false,
+            mensaje = $"No existe inventario para producto {item.IdProducto}"
+        });
+    }
+
+    if (inventario.Stock < item.CantidadTotal)
+    {
+        var producto = _context.Productos
+            .FirstOrDefault(p => p.IdProducto == item.IdProducto);
+
+        return Json(new
+        {
+            ok = false,
+            mensaje = $"Stock insuficiente para {producto?.Nombre}. Disponible: {inventario.Stock}"
+        });
+    }
+}
 
                 // =========================
                 // CREAR PEDIDO
@@ -140,52 +175,53 @@ namespace SIMA_SOFTWARE.Controllers
                 {
                     Fecha = DateTime.Now,
                     IdCliente = data.IdCliente,
-                    Estado = "Pendiente",
+                    Estado = "Pendiente", // 🔥 importante
                     Activo = true
                 };
 
                 _context.Pedidos.Add(pedido);
-
                 _context.SaveChanges();
 
                 // =========================
-                // DETALLES + DESCONTAR STOCK
+                // GUARDAR DETALLES + DESCONTAR STOCK
                 // =========================
                 foreach (var item in data.Detalles)
                 {
-                    _context.PedidoProductos.Add(new PedidoProducto
+                    var inventario = _context.Inventarios
+                        .First(i => i.IdProducto == item.IdProducto);
+
+                    inventario.Stock -= item.Cantidad;
+
+                    var detalle = new PedidoProducto
                     {
                         IdPedido = pedido.IdPedido,
                         IdProducto = item.IdProducto,
                         Cantidad = item.Cantidad,
                         PrecioUnitario = item.Precio,
                         Descuento = 0
-                    });
+                    };
 
-                    var inventario = _context.Inventarios
-                        .FirstOrDefault(i => i.IdProducto == item.IdProducto);
-
-                    inventario.Stock -= item.Cantidad;
+                    _context.PedidoProductos.Add(detalle);
                 }
 
                 _context.SaveChanges();
 
+                // =========================
+                // COMMIT
+                // =========================
                 transaction.Commit();
 
-                return Json(new
-                {
-                    ok = true,
-                    mensaje = "Pedido creado correctamente"
-                });
+                return Json(new { ok = true });
             }
             catch (Exception ex)
             {
                 transaction.Rollback();
 
-                return Json(new
+                return StatusCode(500, new
                 {
                     ok = false,
-                    mensaje = ex.ToString()
+                    mensaje = "Stock insuficiente",
+                    error = ex.Message
                 });
             }
         }
