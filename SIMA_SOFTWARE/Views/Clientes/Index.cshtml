@@ -2,6 +2,10 @@
 
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    var totalClientes = Model?.Count() ?? 0;
+    var clientesActivos = Model?.Count(c => c.Activo) ?? 0;
+    var clientesInactivos = Model?.Count(c => !c.Activo) ?? 0;
 }
 
 <main class="main-content">
@@ -9,26 +13,108 @@
     <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-white">Clientes</h2>
+
         <a asp-action="Create" class="btn btn-success">
             + Nuevo Cliente
         </a>
     </div>
-    <a asp-action="Index" asp-route-activos="true" class="btn btn-success">Activos</a>
-    <a asp-action="Index" asp-route-activos="false" class="btn btn-danger">Inactivos</a>
-    <a asp-action="Index" class="btn btn-secondary">Todos</a>
 
-    <!-- CARD -->
+    @if (TempData["mensaje"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["mensaje"]
+        </div>
+    }
+
+    <!-- 🔍 FILTROS -->
+    <form method="get" class="mb-4">
+
+        <div class="d-flex gap-2">
+
+            <!-- ACTIVOS -->
+            <a asp-action="Index"
+               asp-route-activos="true"
+               class="btn btn-success d-flex align-items-center justify-content-center"
+               title="Clientes activos">
+
+                <span class="material-symbols-outlined">
+                    check_circle
+                </span>
+
+            </a>
+
+            <!-- INACTIVOS -->
+            <a asp-action="Index"
+               asp-route-activos="false"
+               class="btn btn-danger d-flex align-items-center justify-content-center"
+               title="Clientes inactivos">
+
+                <span class="material-symbols-outlined">
+                    cancel
+                </span>
+
+            </a>
+
+            <!-- TODOS -->
+            <a asp-action="Index"
+               class="btn btn-secondary d-flex align-items-center justify-content-center"
+               title="Todos los clientes">
+
+                <span class="material-symbols-outlined">
+                    groups
+                </span>
+
+            </a>
+
+        </div>
+
+    </form>
+
+    <!-- 🔥 RESUMEN -->
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body">
+                    <h6>Clientes Activos</h6>
+                    <h3>@clientesActivos</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body">
+                    <h6>Clientes Inactivos</h6>
+                    <h3>@clientesInactivos</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body">
+                    <h6>Total Clientes</h6>
+                    <h3>@totalClientes</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 🔥 TABLA -->
     <div class="card shadow-lg border-0">
         <div class="card-body">
 
             <div class="table-responsive">
-                <table id="clientesTable" class="table table-dark table-hover align-middle text-white table-custom">
+
+                <table id="clientesTable"
+                       class="table table-dark table-hover align-middle text-white">
 
                     <thead>
                         <tr>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Teléfono</th>
+                            <th>Cliente</th>
+                            <th>Contacto</th>
                             <th>Dirección</th>
                             <th>Tipo</th>
                             <th>Saldo</th>
@@ -38,70 +124,136 @@
                     </thead>
 
                     <tbody>
-                        @foreach (var item in Model)
+
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <!-- CLIENTE -->
+                                    <td>
+                                        <span class="fw-bold">
+                                            @item.Nombre
+                                        </span>
+
+                                        <br />
+
+                                        <small class="text-secondary">
+                                            ID: @item.IdCliente
+                                        </small>
+                                    </td>
+
+                                    <!-- CONTACTO -->
+                                    <td>
+                                        @item.Email
+
+                                        <br />
+
+                                        <small class="text-secondary">
+                                            @item.Telefono
+                                        </small>
+                                    </td>
+
+                                    <!-- DIRECCION -->
+                                    <td>
+                                        @item.Direccion?.Barrio
+
+                                        <br />
+
+                                        <small class="text-secondary">
+                                            @item.Direccion?.Calle @item.Direccion?.NroPuerta
+                                        </small>
+                                    </td>
+
+                                    <!-- TIPO -->
+                                    <td>
+                                        <span class="badge bg-primary">
+                                            @item.TipoCliente?.Categoria
+                                        </span>
+                                    </td>
+
+                                    <!-- SALDO -->
+                                    <td class="fw-bold text-success">
+                                        $ @(item.Cuenta?.Saldo ?? 0)
+                                    </td>
+
+                                    <!-- ESTADO -->
+                                    <td>
+                                        @if (item.Activo)
+                                        {
+                                            <span class="badge bg-success">
+                                                Activo
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">
+                                                Inactivo
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <!-- ACCIONES -->
+                                    <td class="text-end">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.IdCliente"
+                                           class="btn btn-sm btn-info">
+                                            👁
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.IdCliente"
+                                           class="btn btn-sm btn-warning">
+                                            ✏️
+                                        </a>
+
+                                        @if (item.Activo)
+                                        {
+                                            <a asp-action="Delete"
+                                               asp-route-id="@item.IdCliente"
+                                               class="btn btn-sm btn-danger">
+                                                ❌
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Activar"
+                                               asp-route-id="@item.IdCliente"
+                                               class="btn btn-sm btn-success">
+                                                ✅
+                                            </a>
+                                        }
+
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>@item.Nombre</td>
-                                <td>@item.Email</td>
-                                <td>@item.Telefono</td>
-
-                                <td>
-                                    @item.Direccion?.Barrio - @item.Direccion?.Calle @item.Direccion?.NroPuerta
-                                </td>
-
-                                <td>
-                                    <span class="badge bg-primary">
-                                        @item.TipoCliente?.Categoria
-                                    </span>
-                                </td>
-
-                                <td>
-                                    $ @item.Cuenta?.Saldo
-                                </td>
-
-                                <td>
-                                    @if (item.Activo)
-                                    {
-                                        <span class="badge bg-success">Activo</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger">Inactivo</span>
-                                    }
-                                </td>
-
-                                <td class="text-end">
-                                    <a asp-action="Details" asp-route-id="@item.IdCliente" class="btn btn-sm btn-info">Ver</a>
-                                    <a asp-action="Edit" asp-route-id="@item.IdCliente" class="btn btn-sm btn-warning">Editar</a>
-                                    @if (item.Activo)
-                                    {
-                                        <a asp-action="Delete" asp-route-id="@item.IdCliente" class="btn btn-sm  btn-danger ">
-                                            Desactivar
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a asp-action="Activar" asp-route-id="@item.IdCliente" class="btn btn-sm w-auto btn-success ">
-                                            Activar
-                                        </a>
-                                    }
+                                <td colspan="7"
+                                    class="text-center text-secondary">
+                                    No hay clientes registrados
                                 </td>
                             </tr>
                         }
+
                     </tbody>
 
                 </table>
+
             </div>
 
         </div>
     </div>
 
-
+</main>
 
 @section Scripts {
-    <!-- Scripts para DataTables cargados desde el layout; aquí solo por si quieres scripts específicos de esta vista -->
-    
+
     <script src="~/js/datatables-clientes.js"></script>
 
 }
-</main>
