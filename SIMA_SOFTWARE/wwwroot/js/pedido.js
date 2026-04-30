@@ -14,77 +14,73 @@ function agregarItem() {
         return;
     }
 
-    let subtotal = precio * cantidad;
-    total += subtotal;
+    if (!idProducto) {
+        alert("Seleccioná un producto");
+        return;
+    }
 
-    // 👉 guardamos también el índice para poder eliminar bien
-    let item = {
-        idProducto: idProducto,
-        cantidad: cantidad,
-        precio: precio,
-        subtotal: subtotal
-    };
+    // 🔥 Verificar si el producto ya existe
+    let existente = items.find(i => i.idProducto === idProducto);
 
-    items.push(item);
+    if (existente) {
+        existente.cantidad += cantidad;
+        existente.subtotal = existente.cantidad * existente.precio;
+    } else {
+        items.push({
+            idProducto: idProducto,
+            cantidad: cantidad,
+            precio: precio,
+            subtotal: precio * cantidad
+        });
+    }
 
-    let index = items.length - 1;
-
-    let fila = document.createElement("tr");
-
-    fila.innerHTML = `
-        <td>${producto}</td>
-        <td>${cantidad}</td>
-        <td>$${precio}</td>
-        <td>$${subtotal}</td>
-        <td>
-            <button class="btn btn-danger btn-sm" onclick="eliminarItem(${index}, this)">
-                ❌
-            </button>
-        </td>
-    `;
-
-    document.getElementById("detalle").appendChild(fila);
-    actualizarTotal();
+    renderTabla();
 
     // limpiar input
     document.getElementById("cantidad").value = "";
-
-   
 }
 
-function eliminarItem(index, btn) {
-    // restar total
-    total -= items[index].subtotal;
+function renderTabla() {
+    let tbody = document.getElementById("detalle");
+    tbody.innerHTML = "";
 
-    // eliminar del array
-    items.splice(index, 1);
+    total = 0;
 
-    // eliminar fila visual
-    btn.closest("tr").remove();
+    items.forEach((item, index) => {
+        let fila = document.createElement("tr");
+
+        let producto = document.querySelector(`#productoSelect option[value="${item.idProducto}"]`).text;
+
+        total += item.subtotal;
+
+        fila.innerHTML = `
+            <td>${producto}</td>
+            <td>${item.cantidad}</td>
+            <td>$${item.precio}</td>
+            <td>$${item.subtotal}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" onclick="eliminarItem(${index})">
+                    ❌
+                </button>
+            </td>
+        `;
+
+        tbody.appendChild(fila);
+    });
 
     actualizarTotal();
+}
+
+function eliminarItem(index) {
+    items.splice(index, 1);
+    renderTabla();
 }
 
 function actualizarTotal() {
     document.getElementById("total").innerText = total.toFixed(2);
 }
 
-function limpiarPedido() {
-
-    items = [];
-
-    total = 0;
-
-    document.getElementById("detalle").innerHTML = "";
-
-    actualizarTotal();
-
-    document.getElementById("clienteSelect").value = "";
-
-    document.getElementById("cantidad").value = "";
-}
 function guardarPedido() {
-
     let idCliente = document.getElementById("clienteSelect").value;
 
     if (!idCliente) {
@@ -107,46 +103,20 @@ function guardarPedido() {
             detalles: items
         })
     })
-        .then(async res => {
-
-            const texto = await res.text();
-
-            console.log("RESPUESTA:");
-            console.log(texto);
-
-            let data = JSON.parse(texto);
-
-            // ❌ ERROR CONTROLADO
-            if (!data.ok) {
-
-                alert("❌ " + data.mensaje);
-                limpiarPedido();
-
-                return;
+        .then(res => {
+            if (!res.ok) throw new Error("Error en servidor");
+            return res.json();
+        })
+        .then(data => {
+            if (data.ok) {
+                alert("✅ Venta guardada correctamente");
+                window.location.href = "/Pedido/Index";
+            } else {
+                alert("❌ Stock insuficiente");
             }
-
-            // ✅ OK
-            alert("✅ Venta guardada correctamente");
-
-            window.location.href = "/Pedido/Index";
         })
-        
+        .catch(error => {
+            console.error(error);
+            alert("❌ Error en la petición");
+        });
 }
-
-    function cancelarPedido(id) {
-
-        if (!confirm("¿Seguro que querés cancelar el pedido?")) return;
-
-        fetch('/Pedido/Cancelar?id=' + id, {
-            method: 'POST'
-        })
-            .then(() => {
-                alert("Pedido cancelado");
-                location.reload();
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Error al cancelar");
-            });
-    }
-

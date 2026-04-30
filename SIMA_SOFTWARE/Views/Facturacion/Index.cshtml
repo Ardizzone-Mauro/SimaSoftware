@@ -19,6 +19,56 @@
         </div>
     }
 
+    <a href="/Pedido/Index" class="btn btn-outline-light mb-3">
+        ← Volver a pedidos
+    </a>
+
+    <!-- 🔍 FILTROS -->
+    <form method="get" class="mb-4">
+        <div class="row g-2">
+
+            <!-- CLIENTE -->
+            <div class="col-md-4">
+                <select name="clienteId" class="form-control">
+                    <option value="">Todos los clientes</option>
+
+                    @foreach (var c in ViewBag.Clientes)
+                    {
+                        var selected = Context.Request.Query["clienteId"] == c.IdCliente.ToString();
+
+                        <option value="@c.IdCliente" selected="@(selected)">
+                            @c.Nombre
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <!-- FECHA DESDE -->
+            <div class="col-md-3">
+                <input type="date"
+                       name="fechaDesde"
+                       class="form-control"
+                       value="@Context.Request.Query["fechaDesde"]" />
+            </div>
+
+            <!-- FECHA HASTA -->
+            <div class="col-md-3">
+                <input type="date"
+                       name="fechaHasta"
+                       class="form-control"
+                       value="@Context.Request.Query["fechaHasta"]" />
+            </div>
+
+            <!-- BOTON -->
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    🔍 Filtrar
+                </button>
+            </div>
+
+        </div>
+    </form>
+
     <!-- 🔥 RESUMEN -->
     <div class="row mb-4">
 
@@ -56,7 +106,7 @@
         <div class="card-body">
 
             <div class="table-responsive">
-                <table class="table table-dark table-hover align-middle text-white">
+                <table id="facturasTable" class="table table-dark table-hover align-middle text-white">
 
                     <thead>
                         <tr>
@@ -104,7 +154,6 @@
                                            class="btn btn-sm btn-outline-light">
                                             👁 Ver
                                         </a>
-                                       
                                     </td>
                                 </tr>
                             }
@@ -126,3 +175,7 @@
     </div>
 
 </main>
+
+@section Scripts {
+    <script src="~/js/datatables-facturacion.js"></script>
+}

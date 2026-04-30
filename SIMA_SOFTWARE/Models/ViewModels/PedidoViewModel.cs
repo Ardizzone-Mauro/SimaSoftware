@@ -9,6 +9,7 @@ namespace SIMA_SOFTWARE.Models.ViewModels
         public int IdCliente { get; set; }
 
         public string? ClienteNombre { get; set; }
+        public string? TipoCliente { get; set; }
 
         public List<SelectListItem>? Clientes { get; set; }
 

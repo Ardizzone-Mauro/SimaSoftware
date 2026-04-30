@@ -7,6 +7,10 @@
 
 <main class="main-content">
 
+    <a href="/Pedido/Index" class="btn btn-outline-light mb-3">
+        ← Volver a pedidos
+    </a>
+
     <header class="mb-4">
         <h1 class="fw-black text-light">Nueva Venta</h1>
         <p class="text-secondary">Registrar pedido</p>
@@ -18,16 +22,25 @@
 
         <!-- 🔍 CLIENTE -->
         <div class="mb-3">
+
+            <label class="text-light">Tipo de cliente</label>
+            <select id="tipoClienteFiltro" class="form-control mb-2">
+                <option value="">Todos</option>
+                <option value="Minorista">Minorista</option>
+                <option value="Mayorista">Mayorista</option>
+            </select>
+
             <label class="text-light">Cliente</label>
             <select class="form-control" id="clienteSelect">
                 <option></option>
                 @foreach (var c in ViewBag.Clientes)
                 {
-                    <option value="@c.IdCliente">
-                        @c.Nombre
+                    <option value="@c.IdCliente" data-tipo="@c.TipoCliente?.Categoria">
+                        @c.Nombre (@c.TipoCliente?.Categoria)
                     </option>
                 }
             </select>
+
         </div>
 
         <!-- 🔍 PRODUCTO -->
@@ -45,10 +58,10 @@
                 </select>
             </div>
 
-            <div class="row g-3">
+            <div class="row g-3 mt-2">
                 <div class="col-md-3">
                     <label class="text-light">Cantidad</label>
-                    <input type="number" class="form-control" id="cantidad" />
+                    <input type="number" min="1" class="form-control" id="cantidad" />
                 </div>
 
                 <div class="col-md-3 d-flex align-items-end">
@@ -85,79 +98,100 @@
 
 </main>
 
-<!-- 🔽 SCRIPTS -->
 @section Scripts {
 
     <script src="~/js/pedido.js"></script>
 
-    <!-- 🔽 jQuery (necesario para Select2) -->
+    <!-- 🔽 jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- 🔽 SELECT2 JS -->
+    <!-- 🔽 SELECT2 -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
-        $(document).ready(function () {
+               $(document).ready(function () {
 
-            // 🔍 BUSCADOR CLIENTES
             $('#clienteSelect').select2({
                 placeholder: "Buscar cliente...",
                 allowClear: true,
                 width: '100%'
             });
 
-            // 🔍 BUSCADOR PRODUCTOS
             $('#productoSelect').select2({
                 placeholder: "Buscar producto...",
                 allowClear: true,
                 width: '100%'
             });
 
+            let clientesOriginales = [];
+
+            $('#clienteSelect option').each(function () {
+                if ($(this).val()) {
+                    clientesOriginales.push({
+                        id: $(this).val(),
+                        text: $(this).text(),
+                        tipo: $(this).data('tipo')
+                    });
+                }
+            });
+
+            $('#tipoClienteFiltro').on('change', function () {
+
+                let tipo = $(this).val();
+
+                let filtrados = clientesOriginales.filter(c =>
+                    !tipo || c.tipo === tipo
+                );
+
+                $('#clienteSelect').empty().append('<option></option>');
+
+                filtrados.forEach(c => {
+                    $('#clienteSelect').append(
+                        new Option(c.text, c.id)
+                    );
+                });
+
+                $('#clienteSelect').val(null).trigger('change');
+            });
+
         });
     </script>
 }
+
 <style>
-    /* Caja del select */
     .select2-container--default .select2-selection--single {
         background-color: #000 !important;
         border: 1px solid #444 !important;
     }
 
-        /* Texto seleccionado */
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             color: #fff !important;
         }
 
-    /* Flechita */
     .select2-container--default .select2-selection__arrow b {
         border-color: #fff transparent transparent transparent !important;
     }
 
-    /* Dropdown (lista) */
     .select2-container--default .select2-dropdown {
         background-color: #000 !important;
         border: 1px solid #444 !important;
     }
 
-    /* Opciones */
     .select2-container--default .select2-results__option {
         color: #fff !important;
     }
 
-    /* Opción al pasar el mouse */
     .select2-container--default .select2-results__option--highlighted {
         background-color: #0d6efd !important;
         color: #fff !important;
     }
 
-    /* Input de búsqueda */
     .select2-search__field {
         background-color: #000 !important;
         color: #fff !important;
         border: 1px solid #444 !important;
     }
 
-    /* Placeholder */
     .select2-container--default .select2-selection--single .select2-selection__placeholder {
         color: #aaa !important;
     }
