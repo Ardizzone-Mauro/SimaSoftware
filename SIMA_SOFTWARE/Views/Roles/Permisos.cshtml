@@ -16,25 +16,40 @@
         <p class="text-secondary">Configurá accesos por rol</p>
     </header>
 
-    <div class="custom-card p-4">
+    @* CAMBIAR ROL *@
 
-        <!-- SELECT ROL -->
-        <form asp-action="GuardarPermisosRol" method="post">
-            @Html.AntiForgeryToken()
+    <form asp-action="Permisos" method="get">
 
-            <div class="mb-4">
-                <label class="text-light">Seleccionar Rol</label>
-                <select name="rol" class="form-select">
+        <div class="mb-4">
+            <label class="text-light">Seleccionar Rol</label>
 
-                    @foreach (var rol in Model.Roles)
-                    {
-                        <option value="@rol" selected="@(rol == Model.RolSeleccionado)">
-                            @rol
-                        </option>
-                    }
+            <select name="rol"
+                    class="form-select"
+                    onchange="this.form.submit()">
 
-                </select>
-            </div>
+                @foreach (var rol in Model.Roles)
+                {
+                    <option value="@rol"
+                            selected="@(rol == Model.RolSeleccionado)">
+                        @rol
+                    </option>
+                }
+
+            </select>
+        </div>
+
+    </form>
+    
+    @* GUARDAR PERMISOS *@
+
+    <form asp-action="GuardarPermisosRol" method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="rol"
+               value="@Model.RolSeleccionado" />
+        
 
             <div class="row">
 
@@ -51,7 +66,7 @@
                                    type="checkbox"
                                    name="permisosSeleccionados"
                                    value="@p"
-                                   checked="@(check)" />
+                                   @(check ? "checked" : "") />
 
                             <label class="text-light small">@p.Split('.')[1]</label>
                         </div>
@@ -71,7 +86,7 @@
                                    type="checkbox"
                                    name="permisosSeleccionados"
                                    value="@p"
-                                   checked="@(check)" />
+                                   @(check ? "checked" : "") /> 
 
                             <label class="text-light small">@p.Split('.')[1]</label>
                         </div>
@@ -91,7 +106,7 @@
                                    type="checkbox"
                                    name="permisosSeleccionados"
                                    value="@p"
-                                   checked="@(check)" />
+                                   @(check ? "checked" : "") />
 
                             <label class="text-light small">@p.Split('.')[1]</label>
                         </div>

@@ -87,7 +87,9 @@ namespace SIMA_SOFTWARE.Controllers
 
         public async Task<IActionResult> Permisos(string rol)
         {
-            var roles = _roleManager.Roles.Select(r => r.Name).ToList();
+            var roles = _roleManager.Roles
+                .Select(r => r.Name)
+                .ToList();
 
             if (string.IsNullOrEmpty(rol))
                 rol = roles.FirstOrDefault();
@@ -96,15 +98,44 @@ namespace SIMA_SOFTWARE.Controllers
 
             var claims = await _roleManager.GetClaimsAsync(role);
 
+            // 🔥 LISTA COMPLETA DE PERMISOS
+            var todosLosPermisos = new List<string>
+    {
+        // Usuarios
+        "Usuarios.Ver",
+        "Usuarios.Crear",
+        "Usuarios.Editar",
+        "Usuarios.Eliminar",
+
+        // Productos
+        "Productos.Ver",
+        "Productos.Crear",
+        "Productos.Editar",
+        "Productos.Eliminar",
+
+        // Ventas
+        "Ventas.Ver",
+        "Ventas.Crear",
+        "Ventas.Editar",
+        "Ventas.Eliminar"
+    };
+
             var vm = new RolPermisoViewModel
             {
                 RolSeleccionado = rol,
+
                 Roles = roles,
+
+                // 🔥 IMPORTANTE
+                TodosLosPermisos = todosLosPermisos,
+
                 PermisosSeleccionados = claims
                     .Where(c => c.Type == "Permiso")
                     .Select(c => c.Value)
                     .ToList(),
-                CantidadUsuarios = (await _userManager.GetUsersInRoleAsync(rol)).Count
+
+                CantidadUsuarios = (await _userManager
+                    .GetUsersInRoleAsync(rol)).Count
             };
 
             return View(vm);
@@ -146,7 +177,7 @@ namespace SIMA_SOFTWARE.Controllers
                 }
             }
 
-            return RedirectToAction("Index", new { rol });
+            return RedirectToAction("Permisos", new { rol });
         }
 
       
