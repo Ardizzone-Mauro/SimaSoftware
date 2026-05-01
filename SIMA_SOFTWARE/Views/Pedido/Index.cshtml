@@ -134,13 +134,15 @@
                                     <td class="text-end">
                                         <a asp-action="Edit"
                                            asp-route-id="@item.IdPedido"
-                                           class="btn btn-sm btn-warning">
+                                           class="btn btn-sm btn-warning"
+                                           title="Editar">
                                             ✏️
                                         </a>
 
                                         <a asp-action="Cancelar"
                                            asp-route-id="@item.IdPedido"
                                            class="btn btn-sm btn-danger"
+                                           title="Cancelar"
                                            onclick="return confirm('¿Seguro que querés cancelar este pedido?')">
                                             ❌
                                         </a>
@@ -148,7 +150,8 @@
                                         <a asp-controller="Facturacion"
                                            asp-action="Generar"
                                            asp-route-idPedido="@item.IdPedido"
-                                           class="btn btn-sm btn-success">
+                                           class="btn btn-sm btn-success"
+                                           title="Generar Factura">
                                             🧾
                                         </a>
                                     </td>
