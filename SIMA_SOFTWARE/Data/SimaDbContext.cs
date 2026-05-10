@@ -142,6 +142,13 @@ namespace SIMA_SOFTWARE.Data
                 .HasIndex(i => new { i.IdProducto, i.IdDeposito })
                 .IsUnique();
             // Aquí puedes agregar más configuraciones específicas si lo necesitas
+
+            // PEDIDO → ENVIO (1 a muchos)
+            modelBuilder.Entity<Envio>()
+                .HasOne(e => e.Pedido)
+                .WithMany(p => p.Envios)
+                .HasForeignKey(e => e.IdPedido)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
