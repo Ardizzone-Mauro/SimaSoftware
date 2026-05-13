@@ -144,11 +144,19 @@ namespace SIMA_SOFTWARE.Data
             // Aquí puedes agregar más configuraciones específicas si lo necesitas
 
             // PEDIDO → ENVIO (1 a muchos)
+            // ENVIO -> PEDIDO
             modelBuilder.Entity<Envio>()
                 .HasOne(e => e.Pedido)
                 .WithMany(p => p.Envios)
                 .HasForeignKey(e => e.IdPedido)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // ENVIO -> ESTADO
+            modelBuilder.Entity<Envio>()
+                .HasOne(e => e.Estado)
+                .WithMany()
+                .HasForeignKey(e => e.IdEstado);
+
         }
     }
 }

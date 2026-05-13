@@ -39,7 +39,7 @@
                             <option value="En Proceso">En Proceso</option>
                             <option value="Enviado">Enviado</option>
                             <option value="Entregado">Entregado</option>
-                            <option value="Finalizado">Finalizado</option>
+                            <option value="Facturado">Facturado</option>
                             <option value="Cancelado">Cancelado</option>
                         </select>
                     </div>
@@ -110,19 +110,24 @@
                                                 case "Pendiente":
                                                     clase = "bg-warning text-dark";
                                                     break;
+
                                                 case "En Proceso":
                                                     clase = "bg-info text-dark";
                                                     break;
+
                                                 case "Enviado":
                                                     clase = "bg-primary";
                                                     break;
+
                                                 case "Entregado":
                                                     clase = "bg-success";
                                                     break;
+
                                                 case "Cancelado":
                                                     clase = "bg-danger";
                                                     break;
-                                                case "Finalizado":
+
+                                                case "Facturado":
                                                     clase = "bg-dark";
                                                     break;
                                             }

@@ -464,6 +464,8 @@ namespace SIMA_SOFTWARE.Migrations
 
                     b.HasIndex("EstadoIdEstado");
 
+                    b.HasIndex("IdEstado");
+
                     b.HasIndex("IdPedido");
 
                     b.ToTable("Envios");
@@ -851,9 +853,13 @@ namespace SIMA_SOFTWARE.Migrations
 
             modelBuilder.Entity("SIMA_SOFTWARE.Models.Envio", b =>
                 {
-                    b.HasOne("SIMA_SOFTWARE.Models.Estado", "Estado")
+                    b.HasOne("SIMA_SOFTWARE.Models.Estado", null)
                         .WithMany("Envios")
                         .HasForeignKey("EstadoIdEstado");
+
+                    b.HasOne("SIMA_SOFTWARE.Models.Estado", "Estado")
+                        .WithMany()
+                        .HasForeignKey("IdEstado");
 
                     b.HasOne("SIMA_SOFTWARE.Models.Pedido", "Pedido")
                         .WithMany("Envios")

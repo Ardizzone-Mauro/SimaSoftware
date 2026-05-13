@@ -1,0 +1,97 @@
+﻿@model SIMA_SOFTWARE.Models.Envio
+
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<main class="main-content">
+
+    <header class="mb-4">
+        <h1 class="fw-black text-light">Editar Envío</h1>
+
+        <p class="text-secondary">
+            Modificar envío #@Model.IdEnvio
+        </p>
+    </header>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p class="mb-0">@error.ErrorMessage</p>
+            }
+        </div>
+    }
+
+    <div class="custom-card p-4">
+
+        <form asp-action="Edit" method="post">
+
+            <input type="hidden" asp-for="IdEnvio" />
+
+            <!-- PEDIDO -->
+            <div class="mb-3">
+                <label class="form-label text-light fw-bold">
+                    Pedido
+                </label>
+
+                <select asp-for="IdPedido"
+                        asp-items="ViewBag.Pedidos"
+                        class="form-control">
+
+                    <option value="">
+                        Seleccionar pedido
+                    </option>
+
+                </select>
+            </div>
+
+            <!-- ESTADO -->
+            <div class="mb-3">
+                <label class="form-label text-light fw-bold">
+                    Estado
+                </label>
+
+                <select asp-for="IdEstado"
+                        asp-items="ViewBag.Estados"
+                        class="form-control">
+
+                    <option value="">
+                        Seleccionar estado
+                    </option>
+
+                </select>
+            </div>
+
+            <!-- FECHA -->
+            <div class="mb-4">
+                <label class="form-label text-light fw-bold">
+                    Fecha
+                </label>
+
+                <input asp-for="Fecha"
+                       type="date"
+                       class="form-control" />
+            </div>
+
+            <!-- BOTONES -->
+            <div class="d-flex gap-2">
+
+                <button type="submit"
+                        class="btn btn-success">
+                    💾 Guardar Cambios
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-secondary">
+                    ← Volver
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</main>

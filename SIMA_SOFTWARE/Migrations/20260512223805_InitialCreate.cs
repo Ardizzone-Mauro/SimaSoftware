@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SIMA_SOFTWARE.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialClean : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -412,8 +412,7 @@ namespace SIMA_SOFTWARE.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IdPedido = table.Column<int>(type: "int", nullable: false),
-                    IdEstado = table.Column<int>(type: "int", nullable: false),
-                    PedidoIdPedido = table.Column<int>(type: "int", nullable: true),
+                    IdEstado = table.Column<int>(type: "int", nullable: true),
                     EstadoIdEstado = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -425,10 +424,16 @@ namespace SIMA_SOFTWARE.Migrations
                         principalTable: "Estados",
                         principalColumn: "IdEstado");
                     table.ForeignKey(
-                        name: "FK_Envios_Pedidos_PedidoIdPedido",
-                        column: x => x.PedidoIdPedido,
+                        name: "FK_Envios_Estados_IdEstado",
+                        column: x => x.IdEstado,
+                        principalTable: "Estados",
+                        principalColumn: "IdEstado");
+                    table.ForeignKey(
+                        name: "FK_Envios_Pedidos_IdPedido",
+                        column: x => x.IdPedido,
                         principalTable: "Pedidos",
-                        principalColumn: "IdPedido");
+                        principalColumn: "IdPedido",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -644,9 +649,14 @@ namespace SIMA_SOFTWARE.Migrations
                 column: "EstadoIdEstado");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Envios_PedidoIdPedido",
+                name: "IX_Envios_IdEstado",
                 table: "Envios",
-                column: "PedidoIdPedido");
+                column: "IdEstado");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Envios_IdPedido",
+                table: "Envios",
+                column: "IdPedido");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Facturas_ClienteIdCliente",

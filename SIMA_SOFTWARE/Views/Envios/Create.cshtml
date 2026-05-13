@@ -1,0 +1,124 @@
+﻿@model SIMA_SOFTWARE.Models.Envio
+
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<main class="main-content">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-white fw-bold mb-1">
+                Nuevo Envío
+            </h2>
+
+            <p class="text-secondary mb-0">
+                Registrar envío de pedido
+            </p>
+        </div>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            ← Volver
+        </a>
+    </div>
+
+    <!-- CARD -->
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+
+            <form asp-action="Create" method="post">
+
+                <!-- VALIDACIONES -->
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger">
+                </div>
+
+                <!-- PEDIDO -->
+                <div class="mb-3">
+                    <label asp-for="IdPedido"
+                           class="form-label text-light fw-bold">
+                        Pedido
+                    </label>
+
+                    <select asp-for="IdPedido"
+                            asp-items="ViewBag.Pedidos"
+                            class="form-control">
+
+                        <option value="">
+                            Seleccionar pedido
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="IdPedido"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <!-- ESTADO -->
+                <div class="mb-3">
+                    <label asp-for="IdEstado"
+                           class="form-label text-light fw-bold">
+                        Estado
+                    </label>
+
+                    <select asp-for="IdEstado"
+                            asp-items="ViewBag.Estados"
+                            class="form-control">
+
+                        <option value="">
+                            Seleccionar estado
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="IdEstado"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <!-- FECHA -->
+                <div class="mb-4">
+                    <label asp-for="Fecha"
+                           class="form-label text-light fw-bold">
+                        Fecha
+                    </label>
+
+                    <input asp-for="Fecha"
+                           type="date"
+                           class="form-control" />
+
+                    <span asp-validation-for="Fecha"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <!-- BOTONES -->
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-success">
+                        💾 Guardar Envío
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary">
+                        Cancelar
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</main>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,116 @@
+﻿@model SIMA_SOFTWARE.Models.Envio
+
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<main class="main-content">
+
+    <header class="mb-4">
+        <h1 class="fw-black text-light">
+            Detalle del Envío
+        </h1>
+
+        <p class="text-secondary">
+            Información completa del envío #@Model.IdEnvio
+        </p>
+    </header>
+
+    <div class="custom-card p-4">
+
+        <div class="row">
+
+            <!-- ID -->
+            <div class="col-md-6 mb-4">
+                <label class="text-secondary small">
+                    ID ENVÍO
+                </label>
+
+                <div class="text-white fs-5 fw-bold">
+                    #@Model.IdEnvio
+                </div>
+            </div>
+
+            <!-- FECHA -->
+            <div class="col-md-6 mb-4">
+                <label class="text-secondary small">
+                    FECHA
+                </label>
+
+                <div class="text-white fs-5">
+                    @Model.Fecha.ToString("dd/MM/yyyy")
+                </div>
+            </div>
+
+            <!-- PEDIDO -->
+            <div class="col-md-6 mb-4">
+                <label class="text-secondary small">
+                    PEDIDO
+                </label>
+
+                <div class="text-white fs-5 fw-bold">
+                    #@Model.IdPedido
+                </div>
+            </div>
+
+            <!-- CLIENTE -->
+            <div class="col-md-6 mb-4">
+                <label class="text-secondary small">
+                    CLIENTE
+                </label>
+
+                <div class="text-white fs-5">
+                    @Model.Pedido?.Cliente?.Nombre
+                </div>
+            </div>
+
+            <!-- ESTADO -->
+            <div class="col-md-12 mb-4">
+                <label class="text-secondary small">
+                    ESTADO
+                </label>
+
+                <div>
+                    @{
+                        var clase = "bg-secondary";
+
+                        if (Model.Estado?.Descripcion == "Pendiente")
+                            clase = "bg-warning text-dark";
+
+                        else if (Model.Estado?.Descripcion == "Enviado")
+                            clase = "bg-primary";
+
+                        else if (Model.Estado?.Descripcion == "Entregado")
+                            clase = "bg-success";
+
+                        else if (Model.Estado?.Descripcion == "Cancelado")
+                            clase = "bg-danger";
+                    }
+
+                    <span class="badge @clase fs-6">
+                        @Model.Estado?.Descripcion
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BOTONES -->
+        <div class="d-flex gap-2 mt-3">
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                ← Volver
+            </a>
+
+            <a asp-action="Delete"
+               asp-route-id="@Model.IdEnvio"
+               class="btn btn-danger">
+                🗑️ Eliminar
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
