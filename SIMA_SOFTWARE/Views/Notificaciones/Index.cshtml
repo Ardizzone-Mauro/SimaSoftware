@@ -1,0 +1,67 @@
+﻿@model IEnumerable<SIMA_SOFTWARE.Models.Notificacion>
+
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<main class="main-content">
+
+    <!-- 🔥 MENSAJE -->
+    @if (TempData["mensaje"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["mensaje"]
+        </div>
+    }
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white">Notificaciones</h2>
+    </div>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+
+            <!-- 📊 TABLA -->
+            <div class="table-responsive">
+                <table class="table table-dark table-hover text-white">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Pedido</th>
+                            <th>Mensaje</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            foreach (var n in Model)
+                            {
+                                <tr>
+                                    <td>#@n.IdNotificacion</td>
+                                    <td>@n.Cliente?.Nombre</td>
+                                    <td>#@n.IdPedido</td>
+                                    <td>@n.Mensaje</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-secondary">
+                                    No hay notificaciones
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</main>

@@ -1,0 +1,92 @@
+﻿@model IEnumerable<SIMA_SOFTWARE.Models.Envio>
+
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<main class="main-content">
+
+    <!-- 🔥 MENSAJE -->
+    @if (TempData["mensaje"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["mensaje"]
+        </div>
+    }
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white">Envíos</h2>
+    </div>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body">
+
+            <!-- 🔍 FILTROS -->
+            <form method="get" class="mb-4">
+                <div class="row g-2">
+
+                    <div class="col-md-4">
+                        <input type="date" name="fechaDesde" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <input type="date" name="fechaHasta" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">
+                            🔍 Filtrar
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+            <!-- 📊 TABLA -->
+            <div class="table-responsive">
+                <table class="table table-dark table-hover text-white">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Pedido</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            foreach (var e in Model)
+                            {
+                                <tr>
+                                    <td>#@e.IdEnvio</td>
+                                    <td>#@e.IdPedido</td>
+                                    <td>@e.Fecha.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <span class="badge bg-info">
+                                            @e.Estado?.Descripcion
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-secondary">
+                                    No hay envíos registrados
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</main>
