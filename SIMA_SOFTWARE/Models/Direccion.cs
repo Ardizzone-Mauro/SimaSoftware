@@ -7,9 +7,14 @@ namespace SIMA_SOFTWARE.Models
     {
         [Key]
         public int IdDireccion { get; set; }
-        public string? Barrio { get; set; }
+
+        public int IdBarrio { get; set; }
+
         public string? Calle { get; set; }
+
         public string? NroPuerta { get; set; }
+
+        public Barrio? Barrio { get; set; }
 
         public List<Cliente>? Clientes { get; set; }
     }

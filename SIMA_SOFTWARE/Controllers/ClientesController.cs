@@ -80,7 +80,7 @@ namespace SIMA_SOFTWARE.Controllers
         }
 
         // GET: Clientes/Create
-       
+
 
         public IActionResult Create()
         {
@@ -91,6 +91,13 @@ namespace SIMA_SOFTWARE.Controllers
                     {
                         Value = t.IdTipoCliente.ToString(),
                         Text = t.Categoria
+                    }).ToList(),
+
+                Barrios = _context.Barrios
+                    .Select(b => new SelectListItem
+                    {
+                        Value = b.IdBarrio.ToString(),
+                        Text = b.Descripcion
                     }).ToList()
             };
 
@@ -98,7 +105,7 @@ namespace SIMA_SOFTWARE.Controllers
         }
 
         // POST: Clientes/Create
-        
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -110,7 +117,7 @@ namespace SIMA_SOFTWARE.Controllers
                 {
                     Calle = vm.Calle,
                     NroPuerta = vm.NroPuerta,
-                    Barrio = vm.Barrio
+                    IdBarrio = vm.IdBarrio
                 };
 
                 _context.Direcciones.Add(direccion);
@@ -149,6 +156,13 @@ namespace SIMA_SOFTWARE.Controllers
                     Text = t.Categoria
                 }).ToList();
 
+            vm.Barrios = _context.Barrios
+                .Select(b => new SelectListItem
+                {
+                Value = b.IdBarrio.ToString(),
+                Text = b.Descripcion
+                }).ToList();
+
             return View(vm);
         }
 
@@ -181,7 +195,7 @@ namespace SIMA_SOFTWARE.Controllers
                 // Dirección
                 Calle = cliente.Direccion.Calle,
                 NroPuerta = cliente.Direccion.NroPuerta,
-                Barrio = cliente.Direccion.Barrio,
+                IdBarrio = cliente.Direccion.IdBarrio,
 
                 // Cuenta
                 Saldo = cliente.Cuenta.Saldo,
@@ -196,13 +210,15 @@ namespace SIMA_SOFTWARE.Controllers
                         Value = t.IdTipoCliente.ToString(),
                         Text = t.Categoria
                     }).ToList()
+
+
             };
 
             return View(vm);
         }
 
         // POST: Clientes/Edit/5
-    
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -225,40 +241,60 @@ namespace SIMA_SOFTWARE.Controllers
                     if (cliente == null)
                         return NotFound();
 
+                    // =========================
                     // CLIENTE
+                    // =========================
                     cliente.Nombre = vm.Nombre;
                     cliente.Email = vm.Email;
                     cliente.Telefono = vm.Telefono;
                     cliente.Activo = vm.Activo;
                     cliente.TipoClienteId = vm.TipoClienteId;
 
+                    // =========================
                     // DIRECCION
+                    // =========================
                     cliente.Direccion.Calle = vm.Calle;
                     cliente.Direccion.NroPuerta = vm.NroPuerta;
-                    cliente.Direccion.Barrio = vm.Barrio;
+                    cliente.Direccion.IdBarrio = vm.IdBarrio;
 
+                    // =========================
                     // CUENTA
+                    // =========================
                     cliente.Cuenta.Saldo = vm.Saldo;
                     cliente.Cuenta.CondicionesPago = vm.CondicionesPago;
 
                     await _context.SaveChangesAsync();
+
                     await transaction.CommitAsync();
+
+                    TempData["mensaje"] = "✅ Cliente actualizado correctamente";
 
                     return RedirectToAction(nameof(Index));
                 }
-                catch
+                catch (Exception)
                 {
                     await transaction.RollbackAsync();
-                    throw;
+
+                    ModelState.AddModelError("", "Ocurrió un error al actualizar el cliente.");
                 }
             }
 
-            // Recargar dropdown si falla
+            // =========================
+            // RECARGAR DROPDOWNS
+            // =========================
+
             vm.TiposCliente = _context.TipoClientes
                 .Select(t => new SelectListItem
                 {
                     Value = t.IdTipoCliente.ToString(),
                     Text = t.Categoria
+                }).ToList();
+
+            vm.Barrios = _context.Barrios
+                .Select(b => new SelectListItem
+                {
+                    Value = b.IdBarrio.ToString(),
+                    Text = b.Descripcion
                 }).ToList();
 
             return View(vm);

@@ -27,6 +27,7 @@ namespace SIMA_SOFTWARE.Data
         public DbSet<Envio> Envios { get; set; }
         public DbSet<Notificacion> Notificaciones { get; set; }
         public DbSet<CodigoRecuperacion> CodigosRecuperacion { get; set; }
+        public DbSet<Barrio> Barrios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -82,6 +83,12 @@ namespace SIMA_SOFTWARE.Data
                 .WithMany(i => i.Stocks)
                 .HasForeignKey(s => s.IdInventario)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Direccion>()
+                .HasOne(d => d.Barrio)
+                .WithMany(b => b.Direcciones)
+                .HasForeignKey(d => d.IdBarrio)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             //............................................................

@@ -30,13 +30,20 @@
                 <option value="Mayorista">Mayorista</option>
             </select>
 
-            <label class="text-light">Cliente</label>
+            <label class="text-light">
+                Cliente <span class="text-danger">*</span>
+            </label>
+
             <select class="form-control" id="clienteSelect">
                 <option></option>
+
                 @foreach (var c in ViewBag.Clientes)
                 {
-                    <option value="@c.IdCliente" data-tipo="@c.TipoCliente?.Categoria">
+                    <option value="@c.IdCliente"
+                            data-tipo="@c.TipoCliente?.Categoria">
+
                         @c.Nombre (@c.TipoCliente?.Categoria)
+
                     </option>
                 }
             </select>
@@ -59,14 +66,25 @@
             </div>
 
             <div class="row g-3 mt-2">
+
                 <div class="col-md-3">
-                    <label class="text-light">Cantidad</label>
-                    <input type="number" min="1" class="form-control" id="cantidad" />
+                    <label class="text-light">
+                        Cantidad <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="number"
+                           min="1"
+                           class="form-control"
+                           id="cantidad" />
                 </div>
 
                 <div class="col-md-3 d-flex align-items-end">
-                    <button class="btn btn-success w-100" onclick="agregarItem()">Agregar</button>
+                    <button class="btn btn-success w-100"
+                            onclick="agregarItem()">
+                        Agregar
+                    </button>
                 </div>
+
             </div>
         </div>
 
