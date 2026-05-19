@@ -11,6 +11,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Kernel.Font;
+using ClosedXML.Excel;
 
 namespace SIMA_SOFTWARE.Controllers
 {
@@ -96,6 +97,149 @@ namespace SIMA_SOFTWARE.Controllers
 
             return View();
         }
+        //...................................................................................................................
+        //sprint 5 hu1
+
+        // ===============================
+        // 🔵 HU01 - LISTADO OPERATIVO
+        // ===============================
+       
+        // ===============================
+        public async Task<IActionResult> ListadoPedidoOperativo(DateTime? desde, DateTime? hasta, string orden = "desc")
+        {
+            var query = _context.Pedidos
+                .Include(p => p.Cliente)
+                .Include(p => p.PedidoProductos)
+                .Where(p => p.Activo) // 🔥 IMPORTANTE: solo activos
+                .AsQueryable();
+
+            // 🔵 SOLO Pendiente y En Proceso (según tu campo string)
+            query = query.Where(p =>
+                p.Estado == "Pendiente" ||
+                p.Estado == "En Proceso"
+            );
+
+            // 🔵 FILTRO FECHA
+            if (desde.HasValue)
+                query = query.Where(p => p.Fecha >= desde.Value);
+
+            if (hasta.HasValue)
+                query = query.Where(p => p.Fecha <= hasta.Value);
+
+            // 🔵 ORDENAMIENTO
+            query = orden == "asc"
+                ? query.OrderBy(p => p.Fecha)
+                : query.OrderByDescending(p => p.Fecha);
+
+            var model = await query
+                .Select(p => new PedidoListadoViewModel
+                {
+                    IdPedido = p.IdPedido,
+                    Cliente = p.Cliente.Nombre,
+                    Fecha = p.Fecha,
+
+                    Estado = p.Estado, // 🔥 DIRECTO
+
+                    Total = p.PedidoProductos.Sum(x => x.Cantidad * x.PrecioUnitario)
+                })
+                .ToListAsync();
+
+            ViewBag.Desde = desde;
+            ViewBag.Hasta = hasta;
+            ViewBag.Orden = orden;
+
+            return View(model);
+        }
+        public IActionResult ExportarExcel(DateTime? desde, DateTime? hasta)
+        {
+            var query = _context.Pedidos
+                .Include(p => p.Cliente)
+                .Include(p => p.Envios).ThenInclude(e => e.Estado)
+                .Include(p => p.PedidoProductos)
+                .AsQueryable();
+
+            // 🔵 mismos filtros que listado
+            query = query.Where(p =>
+                p.Envios.Any(e =>
+                    e.Estado != null &&
+                    (e.Estado.Descripcion == "Pendiente" ||
+                     e.Estado.Descripcion == "En Proceso")
+                )
+            );
+
+            if (desde.HasValue)
+                query = query.Where(p => p.Fecha >= desde.Value);
+
+            if (hasta.HasValue)
+                query = query.Where(p => p.Fecha <= hasta.Value);
+
+            var data = query
+                .Select(p => new
+                {
+                    p.IdPedido,
+                    Cliente = p.Cliente.Nombre,
+                    p.Fecha,
+                    Estado = p.Envios
+                        .OrderByDescending(e => e.Fecha)
+                        .Select(e => e.Estado!.Descripcion)
+                        .FirstOrDefault(),
+                    Total = p.PedidoProductos.Sum(x => x.Cantidad * x.PrecioUnitario)
+                })
+                .ToList();
+
+            using var workbook = new XLWorkbook();
+            var ws = workbook.Worksheets.Add("Pedidos");
+
+            // encabezados
+            ws.Cell(1, 1).Value = "ID Pedido";
+            ws.Cell(1, 2).Value = "Cliente";
+            ws.Cell(1, 3).Value = "Fecha";
+            ws.Cell(1, 4).Value = "Estado";
+            ws.Cell(1, 5).Value = "Total";
+
+            int row = 2;
+
+            foreach (var item in data)
+            {
+                ws.Cell(row, 1).Value = item.IdPedido;
+                ws.Cell(row, 2).Value = item.Cliente;
+                ws.Cell(row, 3).Value = item.Fecha.ToString("dd/MM/yyyy");
+                ws.Cell(row, 4).Value = item.Estado;
+                ws.Cell(row, 5).Value = item.Total;
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+
+            return File(
+                stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "ListadoPedidos.xlsx"
+            );
+        }
+
+
+
+
+
+
+
+        // ..........................................................................................................
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -180,6 +324,23 @@ foreach (var item in agrupados)
                 };
 
                 _context.Pedidos.Add(pedido);
+                _context.SaveChanges();
+
+                // =========================
+                // CREAR ENVÍO AUTOMÁTICO
+                // =========================
+
+                var estadoPendiente = _context.Estados
+                    .FirstOrDefault(e => e.Descripcion == "Pendiente");
+
+                var envio = new Envio
+                {
+                    IdPedido = pedido.IdPedido,
+                    IdEstado = estadoPendiente.IdEstado,
+                    Fecha = DateTime.Now
+                };
+
+                _context.Envios.Add(envio);
                 _context.SaveChanges();
 
                 // =========================

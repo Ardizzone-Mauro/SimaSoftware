@@ -138,34 +138,39 @@ namespace SIMA_SOFTWARE.Controllers
         public async Task<IActionResult> Edit(int id, Envio envio)
         {
             if (id != envio.IdEnvio)
-            {
                 return NotFound();
-            }
 
-            if (envio.IdEstado == 0)
+            if (envio.IdEstado == 0 || envio.IdPedido == 0)
+                return View(envio);
+
+            var envioDb = await _context.Envios
+                .Include(e => e.Estado)
+                .FirstOrDefaultAsync(e => e.IdEnvio == id);
+
+            if (envioDb == null)
+                return NotFound();
+
+            // actualizar estado del envío
+            envioDb.IdEstado = envio.IdEstado;
+            envioDb.Fecha = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            // 🔥 ACTUALIZAR ESTADO DEL PEDIDO AUTOMÁTICAMENTE
+            var pedido = await _context.Pedidos.FindAsync(envio.IdPedido);
+
+            var estadoActual = await _context.Estados
+                .FirstOrDefaultAsync(e => e.IdEstado == envio.IdEstado);
+
+            if (pedido != null && estadoActual != null)
             {
-                ModelState.AddModelError("", "Debe seleccionar un estado.");
+                pedido.Estado = estadoActual.Descripcion;
             }
 
-            if (envio.IdPedido == 0)
-            {
-                ModelState.AddModelError("", "Debe seleccionar un pedido.");
-            }
+            await _context.SaveChangesAsync();
 
-            if (ModelState.IsValid)
-            {
-                _context.Update(envio);
-
-                await _context.SaveChangesAsync();
-
-                TempData["mensaje"] = "✏️ Envío actualizado correctamente";
-
-                return RedirectToAction(nameof(Index));
-            }
-
-            CargarCombos();
-
-            return View(envio);
+            TempData["mensaje"] = "Envío actualizado y pedido sincronizado";
+            return RedirectToAction(nameof(Index));
         }
 
         // =========================
