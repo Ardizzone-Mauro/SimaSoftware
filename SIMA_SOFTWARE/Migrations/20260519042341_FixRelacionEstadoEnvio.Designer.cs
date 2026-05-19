@@ -12,8 +12,8 @@ using SIMA_SOFTWARE.Data;
 namespace SIMA_SOFTWARE.Migrations
 {
     [DbContext(typeof(SimaDbContext))]
-    [Migration("20260505231953_RelacionPedidoEnvio")]
-    partial class RelacionPedidoEnvio
+    [Migration("20260519042341_FixRelacionEstadoEnvio")]
+    partial class FixRelacionEstadoEnvio
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,6 +239,23 @@ namespace SIMA_SOFTWARE.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Barrio", b =>
+                {
+                    b.Property<int>("IdBarrio")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdBarrio"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdBarrio");
+
+                    b.ToTable("Barrios");
+                });
+
             modelBuilder.Entity("SIMA_SOFTWARE.Models.Cliente", b =>
                 {
                     b.Property<int>("IdCliente")
@@ -429,16 +446,18 @@ namespace SIMA_SOFTWARE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdDireccion"));
 
-                    b.Property<string>("Barrio")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Calle")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdBarrio")
+                        .HasColumnType("int");
 
                     b.Property<string>("NroPuerta")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdDireccion");
+
+                    b.HasIndex("IdBarrio");
 
                     b.ToTable("Direcciones");
                 });
@@ -466,6 +485,8 @@ namespace SIMA_SOFTWARE.Migrations
                     b.HasKey("IdEnvio");
 
                     b.HasIndex("EstadoIdEstado");
+
+                    b.HasIndex("IdEstado");
 
                     b.HasIndex("IdPedido");
 
@@ -852,11 +873,26 @@ namespace SIMA_SOFTWARE.Migrations
                     b.Navigation("Producto");
                 });
 
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Direccion", b =>
+                {
+                    b.HasOne("SIMA_SOFTWARE.Models.Barrio", "Barrio")
+                        .WithMany("Direcciones")
+                        .HasForeignKey("IdBarrio")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Barrio");
+                });
+
             modelBuilder.Entity("SIMA_SOFTWARE.Models.Envio", b =>
                 {
-                    b.HasOne("SIMA_SOFTWARE.Models.Estado", "Estado")
+                    b.HasOne("SIMA_SOFTWARE.Models.Estado", null)
                         .WithMany("Envios")
                         .HasForeignKey("EstadoIdEstado");
+
+                    b.HasOne("SIMA_SOFTWARE.Models.Estado", "Estado")
+                        .WithMany()
+                        .HasForeignKey("IdEstado");
 
                     b.HasOne("SIMA_SOFTWARE.Models.Pedido", "Pedido")
                         .WithMany("Envios")
@@ -968,6 +1004,11 @@ namespace SIMA_SOFTWARE.Migrations
             modelBuilder.Entity("SIMA_SOFTWARE.Models.ApplicationUser", b =>
                 {
                     b.Navigation("ClienteUser");
+                });
+
+            modelBuilder.Entity("SIMA_SOFTWARE.Models.Barrio", b =>
+                {
+                    b.Navigation("Direcciones");
                 });
 
             modelBuilder.Entity("SIMA_SOFTWARE.Models.Cliente", b =>

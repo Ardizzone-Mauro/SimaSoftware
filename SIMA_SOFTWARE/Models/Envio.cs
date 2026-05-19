@@ -10,14 +10,22 @@ namespace SIMA_SOFTWARE.Models
 
         public DateTime Fecha { get; set; }
 
-        // 🔥 FK
+        // =========================
+        // PEDIDO
+        // =========================
+
         public int IdPedido { get; set; }
 
-        [ForeignKey("IdPedido")]
+        [ForeignKey(nameof(IdPedido))]
         public Pedido? Pedido { get; set; }
 
-        // 🔥 OPCIONAL (estado del envío)
+        // =========================
+        // ESTADO
+        // =========================
+
         public int? IdEstado { get; set; }
+
+        [ForeignKey(nameof(IdEstado))]
         public Estado? Estado { get; set; }
     }
 }

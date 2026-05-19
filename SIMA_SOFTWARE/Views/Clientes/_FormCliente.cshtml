@@ -12,14 +12,22 @@
 
             <!-- CLIENTE -->
             <div class="col-md-6 mb-3">
-                <label asp-for="Nombre" class="form-label"></label>
+                <label asp-for="Nombre" class="form-label">
+                    Nombre <span class="text-danger">*</span>
+                </label>
+
                 <input asp-for="Nombre" class="form-control" />
+
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label asp-for="Email" class="form-label"></label>
+                <label asp-for="Email" class="form-label">
+                    Email <span class="text-danger">*</span>
+                </label>
+
                 <input asp-for="Email" class="form-control" />
+
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
@@ -30,8 +38,12 @@
 
             <!-- DIRECCIÓN -->
             <div class="col-md-6 mb-3">
-                <label asp-for="Calle" class="form-label"></label>
+                <label asp-for="Calle" class="form-label">
+                    Calle <span class="text-danger">*</span>
+                </label>
+
                 <input asp-for="Calle" class="form-control" />
+
                 <span asp-validation-for="Calle" class="text-danger"></span>
             </div>
 
@@ -41,9 +53,25 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                <label asp-for="Barrio" class="form-label"></label>
-                <input asp-for="Barrio" class="form-control" />
-                <span asp-validation-for="Barrio" class="text-danger"></span>
+
+                <label asp-for="IdBarrio" class="form-label">
+                    Barrio <span class="text-danger">*</span>
+                </label>
+
+                <select asp-for="IdBarrio"
+                        asp-items="Model.Barrios"
+                        class="form-select">
+
+                    <option value="">
+                        Seleccione un barrio
+                    </option>
+
+                </select>
+
+                <span asp-validation-for="IdBarrio"
+                      class="text-danger">
+                </span>
+
             </div>
 
             <!-- CUENTA -->
@@ -51,20 +79,62 @@
                 <label asp-for="Saldo" class="form-label"></label>
                 <input asp-for="Saldo" class="form-control" />
             </div>
+           
 
-            <div class="col-md-6 mb-3">
-                <label asp-for="CondicionesPago" class="form-label"></label>
-                <input asp-for="CondicionesPago" class="form-control" />
+                <div class="col-md-6 mb-3">
+
+                    <label asp-for="CondicionesPago" class="form-label">
+                        Condición de Pago <span class="text-danger">*</span>
+                    </label>
+
+                    <select asp-for="CondicionesPago" class="form-select">
+
+                        <option value="">
+                            Seleccione una condición
+                        </option>
+
+                        <option value="Contado">
+                            Contado
+                        </option>
+
+                        <option value="Transferencia">
+                            Transferencia
+                        </option>
+
+                        <option value="Débito">
+                            Débito
+                        </option>
+
+                        <option value="Crédito">
+                            Crédito
+                        </option>
+
+                        <option value="Cuenta Corriente">
+                            Cuenta Corriente
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="CondicionesPago"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
                 <span asp-validation-for="CondicionesPago" class="text-danger"></span>
-            </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="TipoClienteId" class="form-label">
+                        Tipo Cliente <span class="text-danger">*</span>
+                    </label>
 
-            <!-- TIPO CLIENTE -->
-            <div class="col-md-6 mb-3">
-                <label asp-for="TipoClienteId" class="form-label"></label>
-                <select asp-for="TipoClienteId" class="form-select" asp-items="Model.TiposCliente">
-                </select>
-                    <option value=""></option>
-            </div>
+                    <select asp-for="TipoClienteId"
+                            class="form-select"
+                            asp-items="Model.TiposCliente">
+                    </select>
+
+                    <span asp-validation-for="TipoClienteId"
+                          class="text-danger"></span>
+                </div>
 
             <!-- ESTADO -->
             <div class="col-md-6 mb-3">
