@@ -161,9 +161,9 @@ namespace SIMA_SOFTWARE.Data
             // ENVIO -> ESTADO
             modelBuilder.Entity<Envio>()
                 .HasOne(e => e.Estado)
-                .WithMany()
-                .HasForeignKey(e => e.IdEstado);
-
+                .WithMany(es => es.Envios)
+                .HasForeignKey(e => e.IdEstado)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

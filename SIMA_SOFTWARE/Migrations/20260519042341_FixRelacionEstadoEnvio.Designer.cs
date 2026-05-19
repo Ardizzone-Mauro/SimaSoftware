@@ -12,8 +12,8 @@ using SIMA_SOFTWARE.Data;
 namespace SIMA_SOFTWARE.Migrations
 {
     [DbContext(typeof(SimaDbContext))]
-    [Migration("20260515223240_SyncBarrio")]
-    partial class SyncBarrio
+    [Migration("20260519042341_FixRelacionEstadoEnvio")]
+    partial class FixRelacionEstadoEnvio
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
