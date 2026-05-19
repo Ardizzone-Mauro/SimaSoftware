@@ -5,25 +5,37 @@ namespace SIMA_SOFTWARE.Models.ViewModels
 {
     public class ProductoViewModel
     {
-        public int IdProducto { get; set; } // Solo para edición
+        public int IdProducto { get; set; }
 
+        // ===== PRODUCTO =====
         [Required(ErrorMessage = "El nombre del producto es obligatorio")]
         [StringLength(100)]
         public string Nombre { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Debe ingresar un precio")]
         public decimal Precio { get; set; }
-        public int IdDeposito { get; set; }//  asignar el depósito al crear un producto nuevo
-
-        [Required(ErrorMessage = "Debe ingresar stock inicial")]
-        public int StockInicial { get; set; }//  asignar el stock inicial al crear un producto nuevo
-        public int StockTotal { get; set; }
-
-        // Este campo permite gestionar la carga de archivos (HU 01)
-        public IFormFile? Imagen { get; set; }
-        public string? UrlImagenExistente { get; set; }
 
         [StringLength(500)]
-        public string? Descripcion { get; set; } = null;
+        public string? Descripcion { get; set; }
+
+        // ===== NUEVOS CAMPOS =====
+        [Required]
+        public string? Categoria { get; set; }   // LINEA RUECA / LINEA TELAR
+
+        public string? Color { get; set; }
+
+        public int? CantidadHebras { get; set; }
+
+        // ===== STOCK =====
+        public int IdDeposito { get; set; }
+
+        [Required]
+        public int StockInicial { get; set; }
+
+        public int StockTotal { get; set; }
+
+        // ===== IMAGEN =====
+        public IFormFile? Imagen { get; set; }
+        public string? UrlImagenExistente { get; set; }
     }
 }

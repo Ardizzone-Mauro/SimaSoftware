@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIMA_SOFTWARE.Data;
 
@@ -11,9 +12,11 @@ using SIMA_SOFTWARE.Data;
 namespace SIMA_SOFTWARE.Migrations
 {
     [DbContext(typeof(SimaDbContext))]
-    partial class SimaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260519072859_AddCategoriaToProducto")]
+    partial class AddCategoriaToProducto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -683,13 +686,7 @@ namespace SIMA_SOFTWARE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdProducto"));
 
-                    b.Property<int?>("CantidadHebras")
-                        .HasColumnType("int");
-
                     b.Property<string>("Categoria")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Descripcion")

@@ -6,13 +6,33 @@ namespace SIMA_SOFTWARE.Models
     {
         [Key]
         public int IdProducto { get; set; }
-        public string? Nombre { get; set; }
-        public decimal Precio { get; set; }
-        public string? Descripcion { get; set; }
-        public string? UrlImagen { get; set; } = null;
-        public bool Eliminado { get; set; } = false;//agrego para borrado logico 27/4
-        public DateTime? FechaEliminacion { get; set; }//agrego borrado logico 27/4
 
+        // 🧶 Nombre base del producto (OVEJA, LLAMA, etc.)
+        public string? Nombre { get; set; }
+
+        // 💰 Precio
+        public decimal Precio { get; set; }
+
+        // 📝 Descripción opcional
+        public string? Descripcion { get; set; }
+
+        // 🖼 Imagen
+        public string? UrlImagen { get; set; } = null;
+
+        // 🟢 LINEA DE PRODUCTO
+        public string? Categoria { get; set; } // "Linea Rueca" / "Linea Telar"
+
+        // 🎨 COLOR DEL PRODUCTO
+        public string? Color { get; set; }
+
+        // 🧵 CANTIDAD DE HEBRAS
+        public int? CantidadHebras { get; set; }
+
+        // 🔥 BORRADO LÓGICO
+        public bool Eliminado { get; set; } = false;
+        public DateTime? FechaEliminacion { get; set; }
+
+        // RELACIONES
         public ICollection<Inventario>? Inventarios { get; set; }
         public ICollection<PedidoProducto>? PedidoProductos { get; set; }
         public ICollection<DetalleProducto>? DetallesProducto { get; set; }
