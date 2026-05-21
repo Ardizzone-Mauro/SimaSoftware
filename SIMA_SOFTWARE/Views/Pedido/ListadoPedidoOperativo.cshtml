@@ -42,7 +42,8 @@
         <!-- TABLA -->
         <div class="custom-card p-3">
 
-            <table class="table table-dark table-hover">
+            <table id="pedidosTable"
+                   class="table table-dark table-hover align-middle">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -74,4 +75,9 @@
         </div>
 
     </div>
+    
 </main>
+
+@section Scripts {
+    <script src="~/js/datatables-listadoPedido.js"></script>
+}
