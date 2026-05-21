@@ -1,0 +1,375 @@
+﻿@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<main class="main-content">
+    <div class="container-fluid">
+
+        <h1 class="page-title mb-4">
+            Informe Gerencial de Ventas
+        </h1>
+
+        <!-- FILTRO -->
+        <form method="get" class="row g-3 mb-4">
+
+            <div class="col-md-4">
+                <label class="text-light">Categoría</label>
+
+                <select name="categoria" class="form-control">
+
+                    <option value="">Todas</option>
+
+                    <option value="Línea Telar"
+                            selected="@(ViewBag.Categoria == "Línea Telar")">
+                        Línea Telar
+                    </option>
+
+                    <option value="Línea Rueca"
+                            selected="@(ViewBag.Categoria == "Línea Rueca")">
+                        Línea Rueca
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-success w-100">
+                    Filtrar
+                </button>
+            </div>
+
+            <div class="col-md-3 d-flex align-items-end">
+                <a asp-action="ExportarPdf"
+                   asp-route-categoria="@ViewBag.Categoria"
+                   class="btn btn-danger w-100">
+                    Descargar PDF
+                </a>
+            </div>
+
+        </form>
+
+        <!-- KPI -->
+        <div class="row mb-4">
+            <div class="card-header bg-info text-dark">
+                <h5 class="mb-0">Total Facturacion</h5>
+            </div>
+
+            <div class="col-md-4">
+                <div class="custom-card p-3 text-center">
+                    <h5>Mes Actual</h5>
+                    <h2>$@ViewBag.TotalMesActual</h2>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="custom-card p-3 text-center">
+                    <h5>Mes Anterior</h5>
+                    <h2>$@ViewBag.TotalMesAnterior</h2>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="custom-card p-3 text-center">
+                    <h5>Ticket Promedio</h5>
+                    <h2>$@ViewBag.TicketPromedio</h2>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- GRAFICO -->
+        <div class="card border-0 shadow-lg rounded-4 p-4 mb-4 bg-dark text-light">
+
+            <h4 class="mb-3">📊 Comparativa de Ventas</h4>
+
+            <div style="max-width: 900px; margin:auto;">
+                <canvas id="ventasChart" height="220"></canvas>
+            </div>
+
+        </div>
+        <div class="row mt-4">
+
+            <!-- TOP PRODUCTOS -->
+            <div class="col-md-6">
+
+                <div class="card bg-dark text-light shadow-sm border-0 h-100">
+
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">🔥 Top Productos</h5>
+                    </div>
+
+                    <div class="card-body">
+
+                        <table class="table table-dark table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="text-white">Producto</th>
+                                    <th class="text-white">Cantidad Vendida</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in ViewBag.TopProductos)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.Producto
+                                        </td>
+
+                                        <td>
+                                            @item.CantidadVendida
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                        <canvas id="productosChart" height="120"></canvas>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- TOP CLIENTES -->
+            <div class="col-md-6">
+
+                <div class="card bg-dark text-light shadow-sm border-0 h-100">
+
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">👑 Top Clientes</h5>
+                    </div>
+
+                    <div class="card-body">
+
+                        <table class="table table-dark table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="text-white">Cliente</th>
+                                    <th class="text-white">Total Comprado</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @if (ViewBag.TopClientes != null)
+                                {
+                                    @foreach (var item in ViewBag.TopClientes)
+                                    {
+                                        <tr>
+                                            <td class="text-light">@item.Cliente</td>
+                                            <td class="text-success fw-bold">
+                                                $ @item.Total
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                        <canvas id="clientesChart" height="120"></canvas>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="card border-0 shadow-lg rounded-4 p-4 mt-4 bg-dark text-light">
+
+            <h4 class="mb-4">🏬 Stock por Depósito</h4>
+
+            <div style="max-width: 450px; margin:auto;">
+                <canvas id="depositosChart" height="220"></canvas>
+            </div>
+
+        </div>
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">🏬 Stock por Depósito</h5>
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-white">Depósito</th>
+                            <th class="text-white">Stock Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in ViewBag.Depositos)
+                        {
+                            <tr>
+                                <td class="text-white">@item.Deposito</td>
+                                <td class="text-white">@item.Stock</td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+        const ctx = document.getElementById('ventasChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Mes Actual', 'Mes Anterior'],
+            datasets: [{
+                label: 'Facturación',
+                data: [
+                    @ViewBag.TotalMesActual,
+                    @ViewBag.TotalMesAnterior
+                ],
+                borderRadius: 10,
+                borderSkipped: false,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 159, 64, 0.8)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'white',
+                        font: {
+                            size: 14
+                        }
+                    }
+                }
+            },
+
+            scales: {
+                x: {
+                    ticks: {
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.05)'
+                    }
+                },
+
+                y: {
+                    ticks: {
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.05)'
+                    }
+                }
+            }
+        }
+    });
+
+
+
+    // =========================================
+    // TOP PRODUCTOS
+    // =========================================
+
+    new Chart(document.getElementById('productosChart'), {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Json.Serialize(ViewBag.TopProductosLabels)),
+            datasets: [{
+                label: 'Cantidad Vendida',
+                data: @Html.Raw(Json.Serialize(ViewBag.TopProductosData))
+            }]
+        }
+    });
+
+
+    // =========================================
+    // TOP CLIENTES
+    // =========================================
+
+    new Chart(document.getElementById('clientesChart'), {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Json.Serialize(ViewBag.TopClientesLabels)),
+            datasets: [{
+                label: 'Total Comprado',
+                data: @Html.Raw(Json.Serialize(ViewBag.TopClientesData))
+            }]
+        }
+    });
+
+
+    // =========================================
+    // DEPÓSITOS
+    // =========================================
+
+        new Chart(document.getElementById('depositosChart'), {
+        type: 'doughnut',
+
+        data: {
+            labels: @Html.Raw(Json.Serialize(ViewBag.DepositosLabels)),
+
+            datasets: [{
+                data: @Html.Raw(Json.Serialize(ViewBag.DepositosData)),
+
+                backgroundColor: [
+                    '#36A2EB',
+                    '#4BC0C0',
+                    '#9966FF',
+                    '#FF9F40',
+                    '#FF6384'
+                ],
+
+                borderWidth: 2,
+                hoverOffset: 15
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    position: 'bottom',
+
+                    labels: {
+                        color: 'white',
+                        padding: 20,
+                        font: {
+                            size: 13
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+</script>
+<style>
+
+    .card {
+        transition: 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+    canvas {
+        max-height: 450px;
+    }
+
+</style>
+}
