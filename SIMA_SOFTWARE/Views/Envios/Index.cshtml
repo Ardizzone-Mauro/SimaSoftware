@@ -2,6 +2,9 @@
 
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    var fechaDesde = Context.Request.Query["fechaDesde"].ToString();
+    var fechaHasta = Context.Request.Query["fechaHasta"].ToString();
 }
 
 <main class="main-content">
@@ -17,6 +20,10 @@
     <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-white">Envíos</h2>
+
+        <a asp-action="Create" class="btn btn-success">
+            + Nuevo Envío
+        </a>
     </div>
 
     <div class="card shadow-lg border-0">
@@ -26,14 +33,23 @@
             <form method="get" class="mb-4">
                 <div class="row g-2">
 
+                    <!-- FECHA DESDE -->
                     <div class="col-md-4">
-                        <input type="date" name="fechaDesde" class="form-control" />
+                        <input type="date"
+                               name="fechaDesde"
+                               class="form-control"
+                               value="@fechaDesde" />
                     </div>
 
+                    <!-- FECHA HASTA -->
                     <div class="col-md-4">
-                        <input type="date" name="fechaHasta" class="form-control" />
+                        <input type="date"
+                               name="fechaHasta"
+                               class="form-control"
+                               value="@fechaHasta" />
                     </div>
 
+                    <!-- BOTÓN -->
                     <div class="col-md-4">
                         <button type="submit" class="btn btn-primary w-100">
                             🔍 Filtrar
@@ -45,42 +61,116 @@
 
             <!-- 📊 TABLA -->
             <div class="table-responsive">
-                <table class="table table-dark table-hover text-white">
+                <table id="enviosTable"
+                       class="table table-dark table-hover align-middle text-white">
 
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Envío</th>
                             <th>Pedido</th>
+                            <th>Cliente</th>
                             <th>Fecha</th>
                             <th>Estado</th>
+                            <th class="text-end">Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @if (Model.Any())
+
+                        @if (Model != null && Model.Any())
                         {
                             foreach (var e in Model)
                             {
+                                var estado = e.Estado?.Descripcion ?? "Sin estado";
+                                var clase = "bg-secondary";
+
+                                if (estado == "Pendiente")
+                                    clase = "bg-warning text-dark";
+
+                                else if (estado == "Enviado")
+                                    clase = "bg-primary";
+
+                                else if (estado == "Entregado")
+                                    clase = "bg-success";
+
+                                else if (estado == "Cancelado")
+                                    clase = "bg-danger";
+
                                 <tr>
-                                    <td>#@e.IdEnvio</td>
-                                    <td>#@e.IdPedido</td>
-                                    <td>@e.Fecha.ToString("dd/MM/yyyy")</td>
+
+                                    <!-- ID ENVIO -->
                                     <td>
-                                        <span class="badge bg-info">
-                                            @e.Estado?.Descripcion
+                                        #@e.IdEnvio
+                                    </td>
+
+                                    <!-- PEDIDO -->
+                                    <td>
+                                        Pedido #@e.IdPedido
+                                        <br />
+
+                                        <small class="text-secondary">
+                                            @e.Pedido?.Cliente?.Nombre
+                                        </small>
+                                    </td>
+
+                                    <!-- CLIENTE -->
+                                    <td>
+                                        @(e.Pedido?.Cliente?.Nombre ?? "-")
+                                    </td>
+
+                                    <!-- FECHA -->
+                                    <td>
+                                        @e.Fecha.ToString("dd/MM/yyyy")
+                                    </td>
+
+                                    <!-- ESTADO -->
+                                    <td>
+                                        <span class="badge @clase">
+                                            @estado
                                         </span>
                                     </td>
+
+                                    <!-- ACCIONES -->
+                                    <td class="text-end">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@e.IdEnvio"
+                                           class="btn btn-sm btn-info"
+                                           title="Ver">
+                                            👁️
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@e.IdEnvio"
+                                           class="btn btn-sm btn-warning"
+                                           title="Editar">
+                                            ✏️
+                                        </a>
+
+                                        <a asp-action="Delete"
+                                           asp-route-id="@e.IdEnvio"
+                                           class="btn btn-sm btn-danger"
+                                           title="Eliminar"
+                                           onclick="return confirm('¿Seguro que querés eliminar este envío?')">
+                                            ❌
+                                        </a>
+
+                                    </td>
+                                    
+
                                 </tr>
                             }
                         }
                         else
                         {
                             <tr>
-                                <td colspan="4" class="text-center text-secondary">
+                                <td colspan="6"
+                                    class="text-center text-secondary">
                                     No hay envíos registrados
                                 </td>
                             </tr>
                         }
+
                     </tbody>
 
                 </table>
@@ -90,3 +180,7 @@
     </div>
 
 </main>
+
+@section Scripts {
+    <script src="~/js/datatables-envios.js"></script>
+}

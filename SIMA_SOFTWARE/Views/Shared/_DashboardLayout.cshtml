@@ -106,70 +106,126 @@
         </div>
                
     </nav>
+
+    @{
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    }
+
     <!-- Sidebar -->
     <aside class="sidebar">
+
         <div class="px-4 mb-3">
-            <p class="text-uppercase small fw-bold text-secondary tracking-widest mb-0" style="font-size: 10px;">Menú Principal</p>
+            <p class="text-uppercase small fw-bold text-secondary tracking-widest mb-0"
+               style="font-size: 10px;">
+                Menú Principal
+            </p>
         </div>
+
         <nav class="nav flex-column">
-            <a class="nav-link active" asp-area="" asp-controller="Dashboard"  asp-action="Index">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL';">dashboard</span>
+
+            <!-- DASHBOARD -->
+            <a class="nav-link @(currentController == "Dashboard" ? "active" : "")"
+               asp-controller="Dashboard"
+               asp-action="Index">
+
+                <span class="material-symbols-outlined">dashboard</span>
                 Dashboard
             </a>
-            <a class="nav-link"   asp-area=""  asp-controller="Clientes"  asp-action="Index">
+
+            <!-- CLIENTES -->
+            <a class="nav-link @(currentController == "Clientes" ? "active" : "")"
+               asp-controller="Clientes"
+               asp-action="Index">
+
                 <span class="material-symbols-outlined">group</span>
                 Clientes
             </a>
 
+            <!-- PRODUCTOS -->
+            <a class="nav-link @(currentController == "Productos" ? "active" : "")"
+               asp-controller="Productos"
+               asp-action="Index">
 
-            @* @if(SignInManager.IsSignedIn(User) && UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Administrador del Sistema").Result)
-                { *@
-                     <a class="nav-link" asp-controller="Roles" asp-action="Index">
-                <span class="material-symbols-outlined">group</span>
-                Usuarios y Roles
-            </a>
-
-            <a class="nav-link" asp-controller="Roles" asp-action="Permisos">
-                <span class="material-symbols-outlined">admin_panel_settings</span>
-                Permisos
-            </a>
-
-                @* } *@
-
-           
-            
-            
-            
-            
-            
-            <a class="nav-link"  asp-controller="Productos" asp-action="Index">
                 <span class="material-symbols-outlined">inventory_2</span>
                 Productos
             </a>
-            <a class="nav-link" href="/Pedido/Index">
+
+            <!-- PEDIDOS -->
+            <a class="nav-link @(currentController == "Pedido" && currentAction == "Index" ? "active" : "")"
+               asp-controller="Pedido"
+               asp-action="Index">
+
                 <span class="material-symbols-outlined">shopping_cart</span>
                 Pedidos
             </a>
-            <a class="nav-link" asp-controller="Facturacion" asp-action="Index">
+
+            <!-- FACTURACION -->
+            <a class="nav-link @(currentController == "Facturacion" ? "active" : "")"
+               asp-controller="Facturacion"
+               asp-action="Index">
+
                 <span class="material-symbols-outlined">receipt_long</span>
                 Facturación
             </a>
-            <a class="nav-link" asp-controller="Envios" asp-action="Index">
+
+            <!-- ENVIOS -->
+            <a class="nav-link @(currentController == "Envios" ? "active" : "")"
+               asp-controller="Envios"
+               asp-action="Index">
+
                 <span class="material-symbols-outlined">local_shipping</span>
                 Envíos
             </a>
 
-            <a class="nav-link" asp-controller="Notificaciones" asp-action="Index">
+            <!-- REPORTES -->
+            <div class="mt-3 px-3 text-uppercase text-secondary fw-bold"
+                 style="font-size: 11px; letter-spacing: 1px;">
+                Reportes
+            </div>
+
+            <!-- LISTADO OPERATIVO -->
+            <a class="nav-link @(currentAction == "ListadoPedidoOperativo" ? "active" : "")"
+               asp-controller="Pedido"
+               asp-action="ListadoPedidoOperativo">
+
+                <span class="material-symbols-outlined">list_alt</span>
+                Listado de Pedidos
+            </a>
+
+            <!-- INFORME GERENCIAL -->
+            <a class="nav-link @(currentController == "Reportes" ? "active" : "")"
+               asp-controller="Reportes"
+               asp-action="VentasMensuales">
+
+                <span class="material-symbols-outlined">analytics</span>
+                Informe Gerencial
+            </a>
+
+            <!-- NOTIFICACIONES -->
+            <a class="nav-link @(currentController == "Notificaciones" ? "active" : "")"
+               asp-controller="Notificaciones"
+               asp-action="Index">
+
                 <span class="material-symbols-outlined">notifications</span>
                 Notificaciones
             </a>
+
         </nav>
+
+        <!-- BOTON -->
         <div class="px-4 mt-5">
-            <a asp-controller="Pedido" asp-action="Create" class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2">
+
+            <a asp-controller="Pedido"
+               asp-action="Create"
+               class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2">
+
                 <span class="material-symbols-outlined fs-5">add</span>
                 Nuevo Pedido
             </a>
+
         </div>
+
     </aside>
 
 

@@ -33,9 +33,11 @@ namespace SIMA_SOFTWARE.Models.ViewModels
         [Display(Name = "Número")]
         public string NroPuerta { get; set; }
 
-        [Required(ErrorMessage = "El campo Barrio es obligatorio.")]
-        [StringLength(100)]
-        public string Barrio { get; set; }
+        [Required(ErrorMessage = "Debe seleccionar un barrio.")]
+        [Display(Name = "Barrio")]
+        public int IdBarrio { get; set; }
+
+        public IEnumerable<SelectListItem>? Barrios { get; set; }
 
         // CUENTA
         [Range(0, 100000000)]

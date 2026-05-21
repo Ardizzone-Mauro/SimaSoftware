@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIMA_SOFTWARE.Data;
 
@@ -11,9 +12,11 @@ using SIMA_SOFTWARE.Data;
 namespace SIMA_SOFTWARE.Migrations
 {
     [DbContext(typeof(SimaDbContext))]
-    partial class SimaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260519042341_FixRelacionEstadoEnvio")]
+    partial class FixRelacionEstadoEnvio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -467,6 +470,9 @@ namespace SIMA_SOFTWARE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdEnvio"));
 
+                    b.Property<int?>("EstadoIdEstado")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
@@ -477,6 +483,8 @@ namespace SIMA_SOFTWARE.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("IdEnvio");
+
+                    b.HasIndex("EstadoIdEstado");
 
                     b.HasIndex("IdEstado");
 
@@ -683,15 +691,6 @@ namespace SIMA_SOFTWARE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdProducto"));
 
-                    b.Property<int?>("CantidadHebras")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Categoria")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
@@ -887,10 +886,13 @@ namespace SIMA_SOFTWARE.Migrations
 
             modelBuilder.Entity("SIMA_SOFTWARE.Models.Envio", b =>
                 {
-                    b.HasOne("SIMA_SOFTWARE.Models.Estado", "Estado")
+                    b.HasOne("SIMA_SOFTWARE.Models.Estado", null)
                         .WithMany("Envios")
-                        .HasForeignKey("IdEstado")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("EstadoIdEstado");
+
+                    b.HasOne("SIMA_SOFTWARE.Models.Estado", "Estado")
+                        .WithMany()
+                        .HasForeignKey("IdEstado");
 
                     b.HasOne("SIMA_SOFTWARE.Models.Pedido", "Pedido")
                         .WithMany("Envios")
