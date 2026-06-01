@@ -177,31 +177,33 @@
                 <span class="material-symbols-outlined">local_shipping</span>
                 Envíos
             </a>
+             @if (User.IsInRole("Administrador del Sistema"))
+            {
+                <!-- REPORTES -->
+                <div class="mt-3 px-3 text-uppercase text-secondary fw-bold"
+                style="font-size: 11px; letter-spacing: 1px;">
+                    Reportes
+                </div>
 
-            <!-- REPORTES -->
-            <div class="mt-3 px-3 text-uppercase text-secondary fw-bold"
-                 style="font-size: 11px; letter-spacing: 1px;">
-                Reportes
-            </div>
 
-            <!-- LISTADO OPERATIVO -->
-            <a class="nav-link @(currentAction == "ListadoPedidoOperativo" ? "active" : "")"
-               asp-controller="Pedido"
-               asp-action="ListadoPedidoOperativo">
+                <!-- LISTADO OPERATIVO -->
+                <a class="nav-link @(currentAction == "ListadoPedidoOperativo" ? "active" : "")"
+                asp-controller="Pedido"
+                asp-action="ListadoPedidoOperativo">
 
-                <span class="material-symbols-outlined">list_alt</span>
-                Listado de Pedidos
-            </a>
+                    <span class="material-symbols-outlined">list_alt</span>
+                    Listado de Pedidos
+                </a>
 
-            <!-- INFORME GERENCIAL -->
-            <a class="nav-link @(currentController == "Reportes" ? "active" : "")"
-               asp-controller="Reportes"
+                <!-- INFORME GERENCIAL -->
+                <a class="nav-link @(currentController == "Reportes" ? "active" : "")"
+                asp-controller="Reportes"
                asp-action="VentasMensuales">
 
                 <span class="material-symbols-outlined">analytics</span>
                 Informe Gerencial
             </a>
-
+            }
             <!-- NOTIFICACIONES -->
             <a class="nav-link @(currentController == "Notificaciones" ? "active" : "")"
                asp-controller="Notificaciones"
@@ -210,6 +212,34 @@
                 <span class="material-symbols-outlined">notifications</span>
                 Notificaciones
             </a>
+
+            @if (User.IsInRole("Administrador del Sistema"))
+            {
+                <div class="mt-3 px-3 text-uppercase text-secondary fw-bold"
+                     style="font-size: 11px; letter-spacing: 1px;">
+                    Administración
+                </div>
+
+                <!-- Usuarios y Roles -->
+                <a class="nav-link @(currentController == "Roles"
+                           && currentAction == "Index" ? "active" : "")"
+               asp-controller="Roles"
+               asp-action="Index">
+
+                    <span class="material-symbols-outlined">manage_accounts</span>
+                    Usuarios y Roles
+                </a>
+
+                <!-- Roles y Permisos -->
+                <a class="nav-link @(currentController == "Roles"
+                       && currentAction == "Permisos" ? "active" : "")"
+               asp-controller="Roles"
+               asp-action="Permisos">
+
+                    <span class="material-symbols-outlined">admin_panel_settings</span>
+                    Roles y Permisos
+                </a>
+                        }
 
         </nav>
 

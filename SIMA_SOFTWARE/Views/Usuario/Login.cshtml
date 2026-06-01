@@ -1,5 +1,157 @@
-﻿@using SIMA_SOFTWARE.Models.ViewModels
+﻿@{
+    // ViewData["Title"] = "Iniciar sesion";
+    Layout = "_AuthLayout";
+}
+@using SIMA_SOFTWARE.Models.ViewModels
 
+@model LoginViewModel;
+
+
+<div class="bg-pattern"></div>
+
+<div class="login-layout">
+
+    <!-- LADO IZQUIERDO -->
+    <div class="branding-side">
+
+        <div class="branding-content">
+
+            <!-- LOGO -->
+            <div class="branding-logo">
+
+                <img src="~/images/Logo_Sima_Software.png"
+                     alt="SIMA Software Logo"
+                     class="logo-image" />
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- LADO DERECHO -->
+    <div class="form-side">
+
+        <div class="auth-card">
+
+            <div class="text-center mb-4">
+
+                <h2 class="text-white fw-bold">
+                    Bienvenido
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    Iniciar sesión en el sistema
+                </p>
+
+            </div>
+
+            <!-- ERRORES -->
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger small mb-3">
+            </div>
+
+            <form method="post">
+
+                <input type="hidden"
+                       name="returnUrl"
+                       value="@ViewData["ReturnUrl"]" />
+
+                <!-- EMAIL -->
+                <div class="mb-3">
+
+                    <label asp-for="Email"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="Email"
+                           class="form-control"
+                           placeholder="usuario@sima.com" />
+
+                    <span asp-validation-for="Email"
+                          class="text-danger small">
+                    </span>
+
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="mb-3">
+
+                    <label asp-for="Clave"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="Clave"
+                           class="form-control"
+                           placeholder="••••••••" />
+
+                    <span asp-validation-for="Clave"
+                          class="text-danger small">
+                    </span>
+
+                </div>
+
+                <!-- RECORDARME -->
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+
+                    <div class="form-check">
+
+                        <input asp-for="Recordarme"
+                               class="form-check-input" />
+
+                        <label asp-for="Recordarme"
+                               class="form-check-label text-light small">
+                        </label>
+
+                    </div>
+
+                    <a class="forgot-password"
+                       href="/Usuario/RecuperarCuenta">
+
+                        ¿Olvidó su contraseña?
+
+                    </a>
+
+                </div>
+
+                <!-- BOTÓN LOGIN -->
+                <button class="btn btn-primary w-100 py-2"
+                        type="submit">
+
+                    Acceder al Sistema
+
+                </button>
+
+            </form>
+
+            <!-- REGISTRO -->
+            <div class="mt-4 pt-4 border-top border-secondary border-opacity-25 text-center">
+
+                <p class="text-secondary small mb-3">
+                    ¿No tienes una cuenta?
+                </p>
+
+                <a asp-controller="Usuario"
+                   asp-action="Registro"
+                   class="btn btn-outline-light w-100">
+
+                    <i class="bi bi-person-plus me-2"></i>
+
+                    Crear cuenta
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+@* @using SIMA_SOFTWARE.Models.ViewModels
 
 @model LoginViewModel;
 
@@ -8,52 +160,129 @@
     <link rel="stylesheet" href="~/css/auth.css" />
 }
 
-<div class="bg-pattern"></div>
-
 <div class="auth-wrapper">
-    <div class="auth-card">
-        <div class="text-center">
-            <a class="brand-logo" href="/">
-                <i class="bi bi-layers-fill"></i>
-                <span>SIMA Software</span>
-            </a>
-            <p class="text-secondary small">Iniciar sesión</p>
-        </div>
-        <!-- Error Message for .NET Identity -->
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <form method="post">
-            <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label" ></label>
-                    
-                    <input asp-for="Email" class="form-control"  placeholder="usuario@sima.com" />
-                    <span asp-validation-for="Email" class="text-danger small"></span>
-                
-            </div>
-            <div class="mb-3">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <label asp-for="Clave" class="form-label mb-0"></label>
-                </div>
-                    
-                    <input asp-for="Clave" class="form-control" placeholder="••••••••"  />
-                    <span asp-validation-for="Clave" class="text-danger small"></span>
-               
-            </div>
-            <div class="mb-4 d-flex justify-content-between align-items-center">
-                <div class="form-check">
-                    <input asp-for="Recordarme" class="form-check-input" />
-                    <label asp-for="Recordarme" class="form-check-label text-light small" ></label>      
-                </div>
-             
-                <a class="forgot-password" href="/Usuario/RecuperarCuenta" id="forgot-password">¿Olvidó su contraseña?</a>
-            </div>
-            <button class="btn btn-primary w-100" type="submit">
-                Acceder al Sistema
-            </button>
-        </form>
-        <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 text-center">
-            
+    <div class="auth-card">
+
+        <!-- LOGO SIMPLE -->
+        <div class="text-center mb-4">
+
+            <a class="brand-logo" href="/">
+
+                <i class="bi bi-layers-fill"></i>
+
+                <span>SIMA Software</span>
+
+            </a>
+
+            <p class="text-secondary small mb-0">
+                Iniciar sesión
+            </p>
+
         </div>
+
+        <!-- ERRORES -->
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger mb-3">
+        </div>
+
+        <!-- FORM -->
+        <form method="post">
+
+            <input type="hidden"
+                   name="returnUrl"
+                   value="@ViewData["ReturnUrl"]" />
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+
+                <label asp-for="Email"
+                       class="form-label">
+                </label>
+
+                <input asp-for="Email"
+                       class="form-control"
+                       placeholder="usuario@sima.com" />
+
+                <span asp-validation-for="Email"
+                      class="text-danger small">
+                </span>
+
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="mb-3">
+
+                <div class="d-flex justify-content-between align-items-center mb-1">
+
+                    <label asp-for="Clave"
+                           class="form-label mb-0">
+                    </label>
+
+                </div>
+
+                <input asp-for="Clave"
+                       class="form-control"
+                       placeholder="••••••••" />
+
+                <span asp-validation-for="Clave"
+                      class="text-danger small">
+                </span>
+
+            </div>
+
+            <!-- RECORDAR -->
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+
+                <div class="form-check">
+
+                    <input asp-for="Recordarme"
+                           class="form-check-input" />
+
+                    <label asp-for="Recordarme"
+                           class="form-check-label text-light small">
+                    </label>
+
+                </div>
+
+                <a class="forgot-password"
+                   href="/Usuario/RecuperarCuenta">
+
+                    ¿Olvidó su contraseña?
+
+                </a>
+
+            </div>
+
+            <!-- BOTÓN -->
+            <button class="btn btn-primary w-100"
+                    type="submit">
+
+                Acceder al Sistema
+
+            </button>
+
+        </form>
+
+        <!-- REGISTRO -->
+        <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 text-center">
+
+            <p class="text-secondary small mb-3">
+                ¿No tienes una cuenta?
+            </p>
+
+            <a asp-controller="Usuario"
+               asp-action="Registro"
+               class="btn btn-outline-light w-100">
+
+                <i class="bi bi-person-plus me-2"></i>
+
+                Crear cuenta
+
+            </a>
+
+        </div>
+
     </div>
-</div>
+
+</div> *@
