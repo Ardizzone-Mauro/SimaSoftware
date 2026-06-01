@@ -1,4 +1,7 @@
-﻿@{
+﻿
+
+
+@{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
@@ -40,15 +43,24 @@
                 </button>
             </div>
 
-            <div class="col-md-3 d-flex align-items-end">
-                <a asp-action="ExportarPdf"
-                   asp-route-categoria="@ViewBag.Categoria"
-                   class="btn btn-danger w-100">
-                    Descargar PDF
-                </a>
-            </div>
-
         </form>
+            <form id="pdfForm"
+                  asp-action="ExportarPdf"
+                  method="post">
+
+                <input type="hidden" name="categoria" value="@ViewBag.Categoria" />
+
+                <input type="hidden" id="ventasImg" name="ventasImg" />
+                <input type="hidden" id="productosImg" name="productosImg" />
+                <input type="hidden" id="clientesImg" name="clientesImg" />
+                <input type="hidden" id="depositosImg" name="depositosImg" />
+
+                <button type="submit" class="btn btn-danger w-100">
+                    Descargar PDF
+                </button>
+
+            </form>
+
 
         <!-- KPI -->
         <div class="row mb-4">
@@ -79,13 +91,16 @@
 
         </div>
 
+       
+
+
         <!-- GRAFICO -->
         <div class="card border-0 shadow-lg rounded-4 p-4 mb-4 bg-dark text-light">
 
             <h4 class="mb-3">📊 Comparativa de Ventas</h4>
 
             <div style="max-width: 900px; margin:auto;">
-                <canvas id="ventasChart" height="220"></canvas>
+                <canvas id="ventasChart" height="300"></canvas>
             </div>
 
         </div>
@@ -126,7 +141,7 @@
                             </tbody>
 
                         </table>
-                        <canvas id="productosChart" height="120"></canvas>
+                        <canvas id="productosChart" height="250"></canvas>
 
                     </div>
                 </div>
@@ -168,7 +183,7 @@
                             </tbody>
 
                         </table>
-                        <canvas id="clientesChart" height="120"></canvas>
+                        <canvas id="clientesChart" height="250"></canvas>
 
                     </div>
                 </div>
@@ -181,7 +196,7 @@
             <h4 class="mb-4">🏬 Stock por Depósito</h4>
 
             <div style="max-width: 450px; margin:auto;">
-                <canvas id="depositosChart" height="220"></canvas>
+                <canvas id="depositosChart" height="350"></canvas>
             </div>
 
         </div>
@@ -218,6 +233,16 @@
     </div>
 </main>
 
+@using System.Globalization
+
+@{
+    string totalActual = Convert.ToDecimal(ViewBag.TotalMesActual)
+        .ToString(CultureInfo.InvariantCulture);
+
+    string totalAnterior = Convert.ToDecimal(ViewBag.TotalMesAnterior)
+        .ToString(CultureInfo.InvariantCulture);
+}
+
 <script>
         const ctx = document.getElementById('ventasChart');
 
@@ -227,10 +252,10 @@
             labels: ['Mes Actual', 'Mes Anterior'],
             datasets: [{
                 label: 'Facturación',
-                data: [
-                    @ViewBag.TotalMesActual,
-                    @ViewBag.TotalMesAnterior
-                ],
+                    data: [
+        @Html.Raw(totalActual),
+        @Html.Raw(totalAnterior)
+    ],
                 borderRadius: 10,
                 borderSkipped: false,
                 backgroundColor: [
@@ -354,6 +379,27 @@
                 }
             }
         }
+       });
+
+            document.getElementById("pdfForm")
+    .addEventListener("submit", function () {
+
+        document.getElementById("ventasImg").value =
+            document.getElementById("ventasChart")
+            .toDataURL("image/png");
+
+        document.getElementById("productosImg").value =
+            document.getElementById("productosChart")
+            .toDataURL("image/png");
+
+        document.getElementById("clientesImg").value =
+            document.getElementById("clientesChart")
+            .toDataURL("image/png");
+
+        document.getElementById("depositosImg").value =
+            document.getElementById("depositosChart")
+            .toDataURL("image/png");
+ 
     });
 
 </script>
@@ -372,4 +418,3 @@
     }
 
 </style>
-}

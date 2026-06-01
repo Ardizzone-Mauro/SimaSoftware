@@ -1,4 +1,198 @@
-﻿:root {
+﻿/*:root {
+    --sima-bg: #020617;
+    --sima-card: #0f172a;
+    --sima-primary: #28a745;
+    --sima-primary-hover: #218838;
+    --sima-text-muted: #94a3b8;
+    --sima-border: #1e293b;
+}*/
+
+/* =========================================
+   BASE
+========================================= */
+
+/*html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    background: var(--sima-bg);
+    font-family: 'Inter', sans-serif;
+    color: #fff;
+}*/
+
+/* =========================================
+   LAYOUT
+========================================= */
+
+/*.login-layout {
+    width: 100%;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 55% 45%;
+}*/
+
+/* =========================================
+   LOGO SIDE
+========================================= */
+
+/*.branding-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 40px;
+}
+
+.branding-content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-image {
+    width: 100%;
+    max-width: 850px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow( 0 20px 60px rgba(0,255,255,0.15) );
+}*/
+
+/* =========================================
+   FORM SIDE
+========================================= */
+
+/*.form-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    background: rgba(15, 23, 42, 0.92);
+    border: 1px solid var(--sima-border);
+    border-radius: 24px;
+    padding: 40px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,.5);
+}*/
+
+/* =========================================
+   TYPOGRAPHY
+========================================= */
+
+/*h1,
+h2,
+h3 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+}*/
+
+/* =========================================
+   INPUTS
+========================================= */
+
+/*.form-label {
+    color: #e2e8f0;
+    font-size: .9rem;
+    margin-bottom: .5rem;
+}
+
+.form-control {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: white;
+    padding: .9rem 1rem;
+    border-radius: 12px;
+}
+
+    .form-control::placeholder {
+        color: #64748b;
+    }
+
+    .form-control:focus {
+        background: #1e293b;
+        border-color: var(--sima-primary);
+        color: white;
+        box-shadow: 0 0 0 4px rgba(40,167,69,.15);
+    }*/
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+/*.btn-primary {
+    background: var(--sima-primary);
+    border: none;
+    border-radius: 12px;
+    padding: .95rem;
+    font-weight: 600;
+}
+
+    .btn-primary:hover {
+        background: var(--sima-primary-hover);
+    }
+
+.btn-outline-light {
+    border-radius: 12px;
+    padding: .9rem;
+}*/
+
+/* =========================================
+   LINKS
+========================================= */
+
+/*.forgot-password {
+    color: var(--sima-primary);
+    text-decoration: none;
+}
+
+    .forgot-password:hover {
+        opacity: .8;
+    }*/
+
+/* =========================================
+   VALIDATION
+========================================= */
+
+/*.text-danger {
+    font-size: .8rem;
+}*/
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+/*@media (max-width: 992px) {
+
+    .login-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .branding-side {
+        min-height: auto;
+        padding: 40px 20px 10px;
+    }
+
+    .logo-image {
+        max-width: 280px;
+    }
+
+    .form-side {
+        padding: 20px;
+    }
+
+    .auth-card {
+        max-width: 100%;
+    }
+}*/
+:root {
     --sima-bg: #020617;
     --sima-card: #0f172a;
     --sima-primary: #28a745;
@@ -16,16 +210,52 @@ body {
     overflow-x: hidden;
 }
 
-h1, h2, h3, .brand-font {
-    font-family: 'Manrope', sans-serif;
-    font-weight: 800;
+/* =========================================
+   LAYOUT PRINCIPAL
+========================================= */
+
+.login-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    padding: 40px;
+    gap: 60px;
 }
 
-.auth-wrapper {
+/* =========================================
+   LADO IZQUIERDO
+========================================= */
+
+.branding-side {
     display: flex;
-    align-items: center;
     justify-content: center;
-    
+    align-items: center;
+}
+
+.branding-content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-image {
+    width: 100%;
+    max-width: 650px;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 60px rgba(40, 167, 69, 0.18));
+}
+
+/* =========================================
+   LADO DERECHO
+========================================= */
+
+.form-side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .auth-card {
@@ -38,16 +268,13 @@ h1, h2, h3, .brand-font {
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
-.brand-logo {
-    color: var(--sima-primary);
-    font-size: 1.75rem;
-    letter-spacing: -0.025em;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+/* =========================================
+   TEXTOS
+========================================= */
+
+h1, h2, h3 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
 }
 
 .form-label {
@@ -57,14 +284,21 @@ h1, h2, h3, .brand-font {
     margin-bottom: 0.5rem;
 }
 
+/* =========================================
+   INPUTS
+========================================= */
+
 .form-control {
     background-color: #1e293b;
     border: 1px solid #334155;
     color: #f8fafc;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
-    transition: all 0.2s ease;
 }
+
+    .form-control::placeholder {
+        color: #64748b;
+    }
 
     .form-control:focus {
         background-color: #1e293b;
@@ -73,102 +307,58 @@ h1, h2, h3, .brand-font {
         box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.15);
     }
 
+/* =========================================
+   BOTONES
+========================================= */
+
 .btn-primary {
     background-color: var(--sima-primary);
     border: none;
     padding: 0.8rem;
     font-weight: 600;
     border-radius: 0.5rem;
-    transition: transform 0.1s active, background-color 0.2s;
 }
 
     .btn-primary:hover {
         background-color: var(--sima-primary-hover);
     }
 
-    .btn-primary:active {
-        transform: scale(0.98);
-    }
-
-.input-group-text {
-    background-color: #1e293b;
-    border-color: #334155;
-    color: var(--sima-text-muted);
+.btn-outline-light {
+    border-radius: 0.5rem;
+    padding: 0.8rem;
 }
 
-.login-link {
+/* =========================================
+   LINKS
+========================================= */
+
+.forgot-password {
     color: var(--sima-primary);
     text-decoration: none;
     font-weight: 500;
 }
 
-    .login-link:hover {
+    .forgot-password:hover {
         text-decoration: underline;
     }
 
-/* Validation Overrides for Dark Mode */
-.is-invalid {
-    border-color: #ef4444 !important;
-    background-image: none !important;
-}
+/* =========================================
+   RESPONSIVE
+========================================= */
 
-.invalid-feedback {
-    color: #f87171;
-    font-size: 0.75rem;
-}
+@media (max-width: 992px) {
 
-.is-valid {
-    border-color: var(--sima-primary) !important;
-    background-image: none !important;
-}
-
-.divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: var(--sima-text-muted);
-    margin: 1.5rem 0;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-    .divider::before, .divider::after {
-        content: '';
-        flex: 1;
-        border-bottom: 1px solid #334155;
+    .login-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 20px;
     }
 
-    .divider:not(:empty)::before {
-        margin-right: .75em;
+    .logo-image {
+        max-width: 320px;
     }
 
-    .divider:not(:empty)::after {
-        margin-left: .75em;
+    .auth-card {
+        max-width: 100%;
     }
-
-.form-icon-wrapper {
-    position: relative;
-}
-
-    .form-icon-wrapper i {
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--sima-text-muted);
-    }
-
-.icon-container {
-    width: 64px;
-    height: 64px;
-    background-color: rgba(40, 167, 69, 0.1);
-    color: var(--sima-primary);
-    border-radius: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    font-size: 1.75rem;
-    border: 1px solid rgba(40, 167, 69, 0.2);
 }

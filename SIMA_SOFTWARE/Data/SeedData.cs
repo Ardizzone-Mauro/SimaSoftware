@@ -10,6 +10,7 @@ namespace SIMA_SOFTWARE.Data
         public static async Task Initialize(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             // Listado de roles SIMA Software
             string[] ListadoRoles = {
@@ -23,10 +24,42 @@ namespace SIMA_SOFTWARE.Data
             foreach (var rol in ListadoRoles)
             {
                 bool roleExist = await roleManager.RoleExistsAsync(rol);
+
                 if (!roleExist)
                 {
-                    // Crea los roles en la tabla AspNetRoles de SQL Server
                     await roleManager.CreateAsync(new IdentityRole(rol));
+                }
+            }
+
+            // ==========================================
+            // CREAR ADMIN POR DEFECTO
+            // ==========================================
+
+            if (!userManager.Users.Any())
+            {
+                var admin = new ApplicationUser
+                {
+                    UserName = "admin@sima.com",
+                    Email = "admin@sima.com",
+
+                    Nombre = "Administrador",
+                    Apellido = "Sistema",
+
+                    EmailConfirmed = true,
+                    Activo = true
+                };
+
+                var resultado = await userManager.CreateAsync(
+                    admin,
+                    "Admin123!"
+                );
+
+                if (resultado.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(
+                        admin,
+                        "Administrador del Sistema"
+                    );
                 }
             }
 

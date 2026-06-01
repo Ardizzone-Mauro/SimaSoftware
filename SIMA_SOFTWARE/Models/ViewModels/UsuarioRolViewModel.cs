@@ -7,6 +7,7 @@ namespace SIMA_SOFTWARE.Models.ViewModels
         public string UserId { get; set; }
         public string Email { get; set; }
         public string NombreCompleto { get; set; }
+        public bool Activo { get; set; }
 
         // ROLES
         public List<string> RolesAsignados { get; set; } = new();

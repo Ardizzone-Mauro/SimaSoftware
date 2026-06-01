@@ -41,6 +41,25 @@ namespace SIMA_SOFTWARE.Controllers
             if (!ModelState.IsValid)
                 return View(Usuario);
 
+            var user = await _userManager.FindByEmailAsync(Usuario.Email);
+
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty,
+                    "Email o contraseña incorrectos");
+
+                return View(Usuario);
+            }
+
+            //  VALIDAR SI ESTÁ ACTIVO
+            if (!user.Activo)
+            {
+                ModelState.AddModelError(string.Empty,
+                    "Usuario deshabilitado");
+
+                return View(Usuario);
+            }
+
             var resultado = await _signInManager.PasswordSignInAsync(
                 Usuario.Email,
                 Usuario.Clave,
@@ -124,7 +143,7 @@ namespace SIMA_SOFTWARE.Controllers
                 );
             }
 
-            return RedirectToAction("ValidarOTP",new { email = Usuario.Email });
+            return RedirectToAction("ValidarOtp",new { email = Usuario.Email });
         }
 
         [HttpGet]
