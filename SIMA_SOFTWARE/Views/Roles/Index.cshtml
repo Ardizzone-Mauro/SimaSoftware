@@ -5,95 +5,243 @@
 }
 
 <main class="main-content">
+
     <div class="container-fluid p-0">
 
         <!-- HEADER -->
-        <div class="d-flex justify-content-between align-items-end mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+
             <div>
-                <h2 class="text-white mb-1">Usuarios y Roles</h2>
+                <h2 class="text-white fw-bold mb-1">
+                    Administración de Usuarios
+                </h2>
+
                 <p class="text-secondary mb-0">
-                    Asigná roles a cada usuario del sistema
+                    Gestioná roles, accesos y estado de usuarios del sistema
                 </p>
             </div>
+
         </div>
 
-        <div class="glass-card p-0 overflow-hidden">
+        <!-- CARD -->
+        <div class="glass-card border-0 overflow-hidden">
 
             <div class="table-responsive">
-                <table class="table table-custom align-middle mb-0">
 
-                    <thead>
+                <table class="table table-dark table-hover align-middle mb-0">
+
+                    <thead class="border-bottom border-secondary">
+
                         <tr>
-                            <th>Usuario</th>
-                            <th>Roles actuales</th>
-                            <th>Asignar roles</th>
-                            <th class="text-end">Acción</th>
+                            <th class="ps-4 py-3">Usuario</th>
+                            <th class="py-3">Roles Actuales</th>
+                            <th class="py-3">Asignación de Roles</th>
+                            <th class="text-center py-3">Estado</th>
+                            <th class="text-end pe-4 py-3">Acciones</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
+
                         @foreach (var user in Model)
                         {
                             <tr>
-                                <form asp-action="AsignarRoles" method="post">
-                                    @Html.AntiForgeryToken()
 
-                                    <input type="hidden" name="userId" value="@user.UserId" />
+                                <!-- USUARIO -->
+                                <td class="ps-4 py-4">
 
-                                    <!-- USUARIO -->
-                                <td>
-                                    <div class="d-flex flex-column">
-                                        <span class="fw-bold text-light">@user.NombreCompleto</span>
-                                        <span class="text-secondary small">@user.Email</span>
+                                    <div class="d-flex align-items-center gap-3">
+
+                                        <!-- AVATAR -->
+                                        <div class="rounded-circle bg-secondary d-flex justify-content-center align-items-center flex-shrink-0"
+                                             style="width:48px; height:48px; font-weight:600;">
+
+                                            @(user.NombreCompleto?.Substring(0, 1).ToUpper())
+
+                                        </div>
+
+                                        <!-- INFO -->
+                                        <div class="d-flex flex-column overflow-hidden">
+
+                                            <span class="fw-semibold text-light text-truncate">
+                                                @user.NombreCompleto
+                                            </span>
+
+                                            <span class="text-secondary small text-truncate">
+                                                @user.Email
+                                            </span>
+
+                                        </div>
+
                                     </div>
+
                                 </td>
 
                                 <!-- ROLES ACTUALES -->
-                                <td>
-                                    @foreach (var rol in user.RolesAsignados)
-                                    {
-                                        <span class="badge bg-success me-1">@rol</span>
-                                    }
-                                </td>
+                                <td style="min-width:220px;">
 
-                                <!-- CHECKBOX -->
-                                <td>
                                     <div class="d-flex flex-wrap gap-2">
-                                        @foreach (var rol in user.TodosLosRoles)
+
+                                        @if (user.RolesAsignados.Any())
                                         {
-                                            var isChecked = user.RolesAsignados.Contains(rol.Value);
-
-                                            <div class="form-check">
-                                                <input class="form-check-input"
-                                                       type="checkbox"
-                                                       name="rolesSeleccionados"
-                                                       value="@rol.Value"
-                                                       @(isChecked ? "checked" : "") />
-
-                                                <label class="form-check-label text-light small">
-                                                    @rol.Text
-                                                </label>
-                                            </div>
+                                            @foreach (var rol in user.RolesAsignados)
+                                            {
+                                                <span class="badge rounded-pill bg-success-subtle text-success border border-success px-3 py-2">
+                                                    @rol
+                                                </span>
+                                            }
                                         }
+                                        else
+                                        {
+                                            <span class="text-secondary small">
+                                                Sin roles asignados
+                                            </span>
+                                        }
+
                                     </div>
+
                                 </td>
 
-                                <!-- BOTÓN -->
-                                <td class="text-end">
-                                    <button type="submit" class="btn btn-success btn-sm" style="width:120px;">
-                                        Guardar
-                                    </button>
+                                <!-- ASIGNAR ROLES -->
+                                <td style="min-width:320px;">
+
+                                    <form asp-action="AsignarRoles"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="userId"
+                                               value="@user.UserId" />
+
+                                        <!-- CHECKBOXES -->
+                                        <div class="d-flex flex-wrap gap-3 mb-3">
+
+                                            @foreach (var rol in user.TodosLosRoles)
+                                            {
+                                                var isChecked =
+                                                user.RolesAsignados.Contains(rol.Value);
+
+                                                <div class="form-check">
+
+                                                    <input class="form-check-input"
+                                                           type="checkbox"
+                                                           name="rolesSeleccionados"
+                                                           value="@rol.Value"
+                                                           id="@(user.UserId + rol.Value)"
+                                                           @(isChecked ? "checked" : "") />
+
+                                                    <label class="form-check-label text-light small"
+                                                           for="@(user.UserId + rol.Value)">
+
+                                                        @rol.Text
+
+                                                    </label>
+
+                                                </div>
+                                            }
+
+                                        </div>
+
+                                        <!-- BOTÓN GUARDAR -->
+                                        <button type="submit"
+                                                class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2 px-4 fw-semibold">
+
+                                            <span class="material-symbols-outlined"
+                                                  style="font-size:18px;">
+
+                                                save
+                                            </span>
+
+                                            Guardar Roles
+
+                                        </button>
+
+                                    </form>
+
                                 </td>
 
-                                </form>
+                                <!-- ESTADO -->
+                                <td class="text-center">
+
+                                    @if (user.Activo)
+                                    {
+                                        <span class="badge rounded-pill bg-success px-3 py-2">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge rounded-pill bg-danger px-3 py-2">
+                                            Inactivo
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <!-- ACCIONES -->
+                                <td class="text-end pe-4">
+
+                                    <form asp-action="CambiarEstadoUsuario"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="userId"
+                                               value="@user.UserId" />
+
+                                        @if (user.Activo)
+                                        {
+                                            <button type="submit"
+                                                    class="btn btn-outline-danger btn-sm d-inline-flex align-items-center gap-2 px-3">
+
+                                                <span class="material-symbols-outlined"
+                                                      style="font-size:18px;">
+
+                                                    block
+                                                </span>
+
+                                                <span class="d-none d-md-inline">
+                                                    Desactivar
+                                                </span>
+
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit"
+                                                    class="btn btn-outline-success btn-sm d-inline-flex align-items-center gap-2 px-3">
+
+                                                <span class="material-symbols-outlined"
+                                                      style="font-size:18px;">
+
+                                                    check_circle
+                                                </span>
+
+                                                <span class="d-none d-md-inline">
+                                                    Activar
+                                                </span>
+
+                                            </button>
+                                        }
+
+                                    </form>
+
+                                </td>
+
                             </tr>
                         }
+
                     </tbody>
 
                 </table>
+
             </div>
 
         </div>
 
     </div>
+
 </main>

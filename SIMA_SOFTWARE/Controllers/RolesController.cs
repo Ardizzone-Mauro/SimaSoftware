@@ -7,7 +7,7 @@ using SIMA_SOFTWARE.Models.ViewModels;
 
 namespace SIMA_SOFTWARE.Controllers
 {
-    //[Authorize(Roles = "Administrador del Sistema")]
+    [Authorize(Roles = "Administrador del Sistema")]
     public class RolesController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -39,6 +39,7 @@ namespace SIMA_SOFTWARE.Controllers
                     UserId = user.Id,
                     Email = user.Email,
                     NombreCompleto = $"{user.Nombre} {user.Apellido}",
+                    Activo = user.Activo,
 
                     RolesAsignados = rolesUsuario.ToList(),
 
@@ -180,7 +181,23 @@ namespace SIMA_SOFTWARE.Controllers
             return RedirectToAction("Permisos", new { rol });
         }
 
-      
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CambiarEstadoUsuario(string userId)
+        {
+            var usuario = await _userManager.FindByIdAsync(userId);
+
+            if (usuario != null)
+            {
+                // 🔥 invertir estado
+                usuario.Activo = !usuario.Activo;
+
+                await _userManager.UpdateAsync(usuario);
+            }
+
+            return RedirectToAction("Index");
+        }
+
 
     }
 }
