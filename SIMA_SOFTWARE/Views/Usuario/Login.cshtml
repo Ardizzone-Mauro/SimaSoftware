@@ -51,7 +51,7 @@
                  class="text-danger small mb-3">
             </div>
 
-            <form method="post">
+            <form method="post" autocomplete="on">
 
                 <input type="hidden"
                        name="returnUrl"
@@ -65,8 +65,10 @@
                     </label>
 
                     <input asp-for="Email"
+                           type="email"
                            class="form-control"
-                           placeholder="usuario@sima.com" />
+                           placeholder="usuario@sima.com"
+                           autocomplete="email" />
 
                     <span asp-validation-for="Email"
                           class="text-danger small">
@@ -82,8 +84,10 @@
                     </label>
 
                     <input asp-for="Clave"
+                           type="password"
                            class="form-control"
-                           placeholder="••••••••" />
+                           placeholder="••••••••"
+                           autocomplete="new-password" />
 
                     <span asp-validation-for="Clave"
                           class="text-danger small">

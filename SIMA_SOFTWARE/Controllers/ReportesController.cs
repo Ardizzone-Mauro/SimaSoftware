@@ -39,7 +39,7 @@ namespace SIMA_SOFTWARE.Controllers
             var image =
                 new iText.Layout.Element.Image(imageData);
 
-            image.SetWidth(300);
+            image.SetWidth(380);
 
             doc.Add(image);
             doc.Add(new Paragraph(" "));

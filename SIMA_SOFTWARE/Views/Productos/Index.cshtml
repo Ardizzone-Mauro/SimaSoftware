@@ -40,12 +40,23 @@
         </div>
         <!-- Filter Ribbon -->
         <div class="filter-ribbon">
-            <button class="btn btn-pill btn-pill-active">Todos los Hilados</button>
-            <button class="btn btn-pill btn-pill-outline">Lanas Naturales</button>
-            <button class="btn btn-pill btn-pill-outline">Algodón Orgánico</button>
-            <button class="btn btn-pill btn-pill-outline">Sintéticos Premium</button>
-            <button class="btn btn-pill btn-pill-outline">Mezclas Especiales</button>
-            <button class="btn btn-pill btn-pill-outline">Línea de Verano</button>
+
+            <a asp-action="Index"
+               class="btn btn-pill @(string.IsNullOrEmpty(ViewBag.CategoriaActual) ? "btn-pill-active" : "btn-pill-outline")">
+                Todos
+            </a>
+
+            @foreach (var categoria in ViewBag.Categorias)
+            {
+                <a asp-action="Index"
+                   asp-route-categoria="@categoria"
+                   class="btn btn-pill @(ViewBag.CategoriaActual == categoria ? "btn-pill-active" : "btn-pill-outline")">
+
+                    @categoria
+
+                </a>
+            }
+
         </div>
         <!-- Products Grid -->
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
@@ -106,7 +117,11 @@
                                 <h3 class="product-name">@item.Nombre</h3>
                                 <span class="product-price">$@item.Precio</span>
                             </div>
-
+                            <div>
+                                <span class="text-light">
+                                    Stock: @item.StockTotal
+                                </span>
+                            </div>
                             <div class="card-footer-custom d-flex justify-content-evenly">
                                 <span class="ref-text">Ref: @item.IdProducto</span>
                             </div>

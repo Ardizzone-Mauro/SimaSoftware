@@ -244,7 +244,8 @@
 }
 
 <script>
-        const ctx = document.getElementById('ventasChart');
+
+    const ctx = document.getElementById('ventasChart');
 
     new Chart(ctx, {
         type: 'bar',
@@ -252,10 +253,10 @@
             labels: ['Mes Actual', 'Mes Anterior'],
             datasets: [{
                 label: 'Facturación',
-                    data: [
-        @Html.Raw(totalActual),
-        @Html.Raw(totalAnterior)
-    ],
+                data: [
+                    @Html.Raw(totalActual),
+                    @Html.Raw(totalAnterior)
+                ],
                 borderRadius: 10,
                 borderSkipped: false,
                 backgroundColor: [
@@ -266,41 +267,9 @@
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
-
-            plugins: {
-                legend: {
-                    labels: {
-                        color: 'white',
-                        font: {
-                            size: 14
-                        }
-                    }
-                }
-            },
-
-            scales: {
-                x: {
-                    ticks: {
-                        color: 'white'
-                    },
-                    grid: {
-                        color: 'rgba(255,255,255,0.05)'
-                    }
-                },
-
-                y: {
-                    ticks: {
-                        color: 'white'
-                    },
-                    grid: {
-                        color: 'rgba(255,255,255,0.05)'
-                    }
-                }
-            }
+            maintainAspectRatio: false
         }
     });
-
 
 
     // =========================================
@@ -315,6 +284,10 @@
                 label: 'Cantidad Vendida',
                 data: @Html.Raw(Json.Serialize(ViewBag.TopProductosData))
             }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
         }
     });
 
@@ -331,6 +304,10 @@
                 label: 'Total Comprado',
                 data: @Html.Raw(Json.Serialize(ViewBag.TopClientesData))
             }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
         }
     });
 
@@ -339,7 +316,7 @@
     // DEPÓSITOS
     // =========================================
 
-        new Chart(document.getElementById('depositosChart'), {
+    new Chart(document.getElementById('depositosChart'), {
         type: 'doughnut',
 
         data: {
@@ -363,46 +340,65 @@
 
         options: {
             responsive: true,
-            maintainAspectRatio: false,
-
-            plugins: {
-                legend: {
-                    position: 'bottom',
-
-                    labels: {
-                        color: 'white',
-                        padding: 20,
-                        font: {
-                            size: 13
-                        }
-                    }
-                }
-            }
+            maintainAspectRatio: false
         }
-       });
-
-            document.getElementById("pdfForm")
-    .addEventListener("submit", function () {
-
-        document.getElementById("ventasImg").value =
-            document.getElementById("ventasChart")
-            .toDataURL("image/png");
-
-        document.getElementById("productosImg").value =
-            document.getElementById("productosChart")
-            .toDataURL("image/png");
-
-        document.getElementById("clientesImg").value =
-            document.getElementById("clientesChart")
-            .toDataURL("image/png");
-
-        document.getElementById("depositosImg").value =
-            document.getElementById("depositosChart")
-            .toDataURL("image/png");
- 
     });
 
+
+    // =========================================
+    // EXPORTAR PDF
+    // =========================================
+
+    function exportChart(chartId) {
+
+        const canvas = document.getElementById(chartId);
+
+        const exportCanvas = document.createElement("canvas");
+
+        exportCanvas.width = canvas.width * 2;
+        exportCanvas.height = canvas.height * 2;
+
+        const ctx = exportCanvas.getContext("2d");
+
+        // Fondo blanco para PDF
+        ctx.fillStyle = "#FFFFFF";
+
+        ctx.fillRect(
+            0,
+            0,
+            exportCanvas.width,
+            exportCanvas.height
+        );
+
+        ctx.drawImage(
+            canvas,
+            0,
+            0,
+            exportCanvas.width,
+            exportCanvas.height
+        );
+
+        return exportCanvas.toDataURL("image/png");
+    }
+
+    document.getElementById("pdfForm")
+        .addEventListener("submit", function () {
+
+            document.getElementById("ventasImg").value =
+                exportChart("ventasChart");
+
+            document.getElementById("productosImg").value =
+                exportChart("productosChart");
+
+            document.getElementById("clientesImg").value =
+                exportChart("clientesChart");
+
+            document.getElementById("depositosImg").value =
+                exportChart("depositosChart");
+        });
+
 </script>
+
 <style>
 
     .card {
