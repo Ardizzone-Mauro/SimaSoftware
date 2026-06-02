@@ -19,28 +19,39 @@ namespace SIMA_SOFTWARE.Controllers
         // =========================
         // INDEX
         // =========================
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string categoria)
         {
-            var productos = await _context.Productos
-                .Where(p => !p.Eliminado)
+            var productos = _context.Productos
                 .Include(p => p.Inventarios)
+                .Where(p => !p.Eliminado);
+
+            if (!string.IsNullOrEmpty(categoria))
+            {
+                productos = productos.Where(p => p.Categoria == categoria);
+            }
+
+            ViewBag.CategoriaActual = categoria;
+
+            ViewBag.Categorias = await _context.Productos
+                .Where(p => !p.Eliminado)
+                .Select(p => p.Categoria)
+                .Distinct()
+                .ToListAsync();
+
+            var listado = await productos
                 .Select(p => new ProductoViewModel
                 {
                     IdProducto = p.IdProducto,
                     Nombre = p.Nombre,
                     Precio = p.Precio,
                     UrlImagenExistente = p.UrlImagen,
-                    Descripcion = p.Descripcion,
-
                     Categoria = p.Categoria,
-                    Color = p.Color,
-                    CantidadHebras = p.CantidadHebras,
 
                     StockTotal = p.Inventarios.Sum(i => i.Stock)
                 })
                 .ToListAsync();
 
-            return View(productos);
+            return View(listado);
         }
 
         // =========================
@@ -256,6 +267,36 @@ namespace SIMA_SOFTWARE.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        // =========================
+        // DELETE GET
+        // =========================
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var producto = await _context.Productos
+                .Include(p => p.Inventarios)
+                .FirstOrDefaultAsync(p => p.IdProducto == id);
+
+            if (producto == null)
+                return NotFound();
+
+            var model = new ProductoViewModel
+            {
+                IdProducto = producto.IdProducto,
+                Nombre = producto.Nombre,
+                Precio = producto.Precio,
+                UrlImagenExistente = producto.UrlImagen,
+                Categoria = producto.Categoria,
+                Color = producto.Color,
+                CantidadHebras = producto.CantidadHebras,
+                StockTotal = producto.Inventarios?.Sum(i => i.Stock) ?? 0
+            };
+
+            return View(model);
         }
 
         // =========================
