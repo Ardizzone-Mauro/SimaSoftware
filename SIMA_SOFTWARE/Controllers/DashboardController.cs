@@ -32,7 +32,7 @@ namespace SIMA_SOFTWARE.Controllers
                     p.Estado == "En Proceso");
 
             // FACTURADOS
-            model.PedidosListosEnvio = await _context.Pedidos
+            model.PedidosFacturados = await _context.Pedidos
                 .CountAsync(p => p.Estado == "Facturado");
 
             // 🔹 STOCK TOTAL
@@ -43,10 +43,30 @@ namespace SIMA_SOFTWARE.Controllers
             model.StockBajo = await _context.Inventarios
                 .CountAsync(i => i.Stock <= 5);
 
+            var hoy = DateTime.Today;
+
+            model.FacturasHoy = await _context.Facturas
+                .CountAsync(f => f.FechaEmision.Date == hoy);
+
+            //
+            model.EnviosEntregadosHoy = await _context.Envios
+                .Include(e => e.Estado)
+                .CountAsync(e =>
+                    e.Estado != null &&
+                    e.Estado.Descripcion == "Entregado" &&
+                    e.Fecha.Date == hoy);
+
+            model.PedidosCancelados = await _context.Pedidos
+    .CountAsync(p => p.Estado == "Cancelado");
+
+            
+
+           
+
             // =========================================================
             // 🟡 ALERTAS DE STOCK
             // =========================================================
-            
+
             // 🔹 PRODUCTOS CON STOCK BAJO
 
             model.ProductosStockBajo = await _context.Inventarios
@@ -54,7 +74,7 @@ namespace SIMA_SOFTWARE.Controllers
                 .Include(i => i.Deposito)
                 .Where(i => i.Stock <= 10)
                 .OrderBy(i => i.Stock)
-                .Take(5)
+                .Take(7)
                 .ToListAsync();
 
             // 🔹 INGRESOS
@@ -77,7 +97,7 @@ namespace SIMA_SOFTWARE.Controllers
                 : ((double)(model.IngresosMensuales - ingresosMesAnterior) / (double)ingresosMesAnterior) * 100;
 
 
-            
+
 
             // =========================================================
             // 🟣 PASO 1 — TRAER PEDIDOS (DB)
@@ -86,8 +106,9 @@ namespace SIMA_SOFTWARE.Controllers
             var pedidos = await _context.Pedidos
                 .Include(p => p.Cliente)
                 .Include(p => p.PedidoProductos)
+                .Where(p => p.Estado != "Cancelado")
                 .OrderByDescending(p => p.Fecha)
-                .Take(5)
+                .Take(10)
                 .ToListAsync();
 
             // =========================================================

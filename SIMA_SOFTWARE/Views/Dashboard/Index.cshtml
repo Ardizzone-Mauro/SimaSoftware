@@ -38,7 +38,7 @@
 
                 <div class="d-flex align-items-center gap-1 text-success small fw-bold">
                     <span class="material-symbols-outlined fs-6">arrow_forward</span>
-                    @Model.PedidosListosEnvio Preparados para envío
+                    @Model.PedidosFacturados Pedidos Facturados
                 </div>
             </div>
         </div>
@@ -136,22 +136,34 @@
 
                                     <!-- ESTADO -->
                                     <td>
-                                    @if (item.Estado == "Entregado")
+                                    @if (item.Estado == "Pendiente")
                                         {
-                                            <span class="badge-status bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-                                                Completado
+                                            <span class="badge-status bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
+                                                Pendiente
                                             </span>
                                         }
-                                        else if (item.Estado == "Listo")
+                                        else if (item.Estado == "En Proceso")
                                         {
                                             <span class="badge-status bg-info bg-opacity-10 text-info border border-info border-opacity-25">
-                                                Listo
+                                                En Proceso
+                                            </span>
+                                        }
+                                        else if (item.Estado == "Facturado")
+                                        {
+                                            <span class="badge-status bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                                Facturado
+                                            </span>
+                                        }
+                                        else if (item.Estado == "Cancelado")
+                                        {
+                                            <span class="badge-status bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
+                                                Cancelado
                                             </span>
                                         }
                                         else
                                         {
-                                            <span class="badge-status bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
-                                                Pendiente
+                                            <span class="badge-status bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25">
+                                                @item.Estado
                                             </span>
                                         }
                                     </td>
@@ -270,27 +282,60 @@
                 <div class="custom-card flex-grow-1">
                     <div class="d-flex align-items-center gap-3 mb-4">
                         <div class="bg-primary rounded-pill" style="width: 4px; height: 24px;"></div>
-                        <h2 class="h5 fw-bold mb-0 text-white">Actividad Reciente</h2>
+                        <h2 class="h5 fw-bold mb-0 text-white">
+                            Resumen Operativo
+                        </h2>
                     </div>
                     <div class="timeline">
+
                         <div class="timeline-item">
                             <div class="timeline-dot bg-success"></div>
-                            <p class="mb-0 small fw-bold text-light">Pago confirmado</p>
-                            <p class="mb-1 text-secondary" style="font-size: 10px;">El pedido #ORD-7281 ha sido pagado</p>
-                            <span class="badge bg-dark border border-secondary border-opacity-25 text-secondary" style="font-size: 9px;">Hace 5 min</span>
+
+                            <p class="mb-0 small fw-bold text-light">
+                                Facturas emitidas hoy
+                            </p>
+
+                            <p class="mb-1 text-secondary">
+                                @Model.FacturasHoy facturas generadas
+                            </p>
+
+                            <span class="badge bg-success bg-opacity-10 text-success">
+                                Facturación
+                            </span>
                         </div>
+
                         <div class="timeline-item">
                             <div class="timeline-dot bg-primary"></div>
-                            <p class="mb-0 small fw-bold text-light">Nuevo cliente registrado</p>
-                            <p class="mb-1 text-secondary" style="font-size: 10px;">Carlos Mendoza se unió a la plataforma</p>
-                            <span class="badge bg-dark border border-secondary border-opacity-25 text-secondary" style="font-size: 9px;">Hace 42 min</span>
+
+                            <p class="mb-0 small fw-bold text-light">
+                                Envíos entregados hoy
+                            </p>
+
+                            <p class="mb-1 text-secondary">
+                                @Model.EnviosEntregadosHoy entregas completadas
+                            </p>
+
+                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                Logística
+                            </span>
                         </div>
+
                         <div class="timeline-item">
-                            <div class="timeline-dot bg-warning"></div>
-                            <p class="mb-0 small fw-bold text-light">Stock bajo detectado</p>
-                            <p class="mb-1 text-secondary" style="font-size: 10px;">Producto "Zapatilla Air Max" requiere reposición</p>
-                            <span class="badge bg-dark border border-secondary border-opacity-25 text-secondary" style="font-size: 9px;">Hace 2 horas</span>
+                            <div class="timeline-dot bg-danger"></div>
+
+                            <p class="mb-0 small fw-bold text-light">
+                                Pedidos cancelados
+                            </p>
+
+                            <p class="mb-1 text-secondary">
+                                @Model.PedidosCancelados pedidos cancelados
+                            </p>
+
+                            <span class="badge bg-danger bg-opacity-10 text-danger">
+                                Incidencias
+                            </span>
                         </div>
+
                     </div>
                 </div>
             </div>
