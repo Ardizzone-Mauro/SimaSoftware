@@ -1,4 +1,6 @@
-﻿namespace SIMA_SOFTWARE.Models.ViewModels
+﻿using SIMA_SOFTWARE.Models;
+
+namespace SIMA_SOFTWARE.Models.ViewModels
 {
     public class DashboardViewModel
     {
@@ -13,5 +15,8 @@
         public double VariacionIngresos { get; set; }
 
         public List<PedidoViewModel> PedidosRecientes { get; set; } = new();
+
+        public List<Inventario> ProductosStockBajo { get; set; }
+                = new List<Inventario>();
     }
 }

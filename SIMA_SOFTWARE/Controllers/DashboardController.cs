@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SIMA_SOFTWARE.Data;
 using SIMA_SOFTWARE.Models.ViewModels;
+using SIMA_SOFTWARE.Models;
 
 namespace SIMA_SOFTWARE.Controllers
 {
@@ -23,13 +24,16 @@ namespace SIMA_SOFTWARE.Controllers
             // 🔹 CLIENTES
             model.TotalClientes = await _context.Clientes.CountAsync();
 
-            // 🔹 PEDIDOS ACTIVOS
-            model.PedidosActivos = await _context.Pedidos
-                .CountAsync(p => p.Estado != "Entregado");
 
-            // 🔹 PEDIDOS LISTOS
+            // PEDIDOS ACTIVOS
+            model.PedidosActivos = await _context.Pedidos
+                .CountAsync(p =>
+                    p.Estado == "Pendiente" ||
+                    p.Estado == "En Proceso");
+
+            // FACTURADOS
             model.PedidosListosEnvio = await _context.Pedidos
-                .CountAsync(p => p.Estado == "Listo");
+                .CountAsync(p => p.Estado == "Facturado");
 
             // 🔹 STOCK TOTAL
             model.StockTotal = await _context.Inventarios
@@ -38,6 +42,20 @@ namespace SIMA_SOFTWARE.Controllers
             // 🔹 STOCK BAJO
             model.StockBajo = await _context.Inventarios
                 .CountAsync(i => i.Stock <= 5);
+
+            // =========================================================
+            // 🟡 ALERTAS DE STOCK
+            // =========================================================
+            
+            // 🔹 PRODUCTOS CON STOCK BAJO
+
+            model.ProductosStockBajo = await _context.Inventarios
+                .Include(i => i.Producto)
+                .Include(i => i.Deposito)
+                .Where(i => i.Stock <= 10)
+                .OrderBy(i => i.Stock)
+                .Take(5)
+                .ToListAsync();
 
             // 🔹 INGRESOS
             var inicioMes = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -57,6 +75,9 @@ namespace SIMA_SOFTWARE.Controllers
             model.VariacionIngresos = ingresosMesAnterior == 0
                 ? 100
                 : ((double)(model.IngresosMensuales - ingresosMesAnterior) / (double)ingresosMesAnterior) * 100;
+
+
+            
 
             // =========================================================
             // 🟣 PASO 1 — TRAER PEDIDOS (DB)
