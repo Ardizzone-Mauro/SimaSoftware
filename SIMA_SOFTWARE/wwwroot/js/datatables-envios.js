@@ -43,7 +43,7 @@ $(document).ready(function () {
             url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
         },
 
-        pageLength: 5,
+        pageLength: 10,
 
         lengthMenu: [
             [5, 10, 25, 50],

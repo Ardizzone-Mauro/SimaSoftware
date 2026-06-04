@@ -31,7 +31,7 @@ namespace SIMA_SOFTWARE.Controllers
         public IActionResult Index(string estado, DateTime? fechaDesde, DateTime? fechaHasta)
         {
             var query = _context.Pedidos
-                .Where(p => p.Activo)
+                //.Where(p => p.Activo)
                 .AsQueryable();
 
             // 🔹 FILTRO POR ESTADO
@@ -411,9 +411,23 @@ foreach (var item in agrupados)
                         inv.Stock += d.Cantidad;
                 }
 
-                // 🔥 ACA VA
-                pedido.Activo = false;
+                // 🔥 cancelar pedido
                 pedido.Estado = "Cancelado";
+
+                // 🔥 cancelar envío asociado
+                var envio = _context.Envios
+                    .FirstOrDefault(e => e.IdPedido == id);
+
+                if (envio != null)
+                {
+                    var estadoCancelado = _context.Estados
+                        .FirstOrDefault(e => e.Descripcion == "Cancelado");
+
+                    if (estadoCancelado != null)
+                    {
+                        envio.IdEstado = estadoCancelado.IdEstado;
+                    }
+                }
 
                 _context.SaveChanges();
             }
@@ -463,6 +477,19 @@ foreach (var item in agrupados)
             };
 
             return View(vm);
+        }
+
+        public IActionResult IniciarProduccion(int id)
+        {
+            var pedido = _context.Pedidos.Find(id);
+
+            if (pedido != null && pedido.Estado == "Pendiente")
+            {
+                pedido.Estado = "En Proceso";
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
         }
 
         // ===============================

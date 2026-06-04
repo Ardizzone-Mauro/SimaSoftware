@@ -156,20 +156,8 @@ namespace SIMA_SOFTWARE.Controllers
 
             await _context.SaveChangesAsync();
 
-            // 🔥 ACTUALIZAR ESTADO DEL PEDIDO AUTOMÁTICAMENTE
-            var pedido = await _context.Pedidos.FindAsync(envio.IdPedido);
 
-            var estadoActual = await _context.Estados
-                .FirstOrDefaultAsync(e => e.IdEstado == envio.IdEstado);
-
-            if (pedido != null && estadoActual != null)
-            {
-                pedido.Estado = estadoActual.Descripcion;
-            }
-
-            await _context.SaveChangesAsync();
-
-            TempData["mensaje"] = "Envío actualizado y pedido sincronizado";
+            TempData["mensaje"] = "✅ Estado del envío actualizado correctamente";
             return RedirectToAction(nameof(Index));
         }
 
@@ -193,8 +181,16 @@ namespace SIMA_SOFTWARE.Controllers
                 "Texto"
             );
 
+            var estadosEnvio = _context.Estados
+    .Where(e =>
+        e.Descripcion == "Pendiente" ||
+        e.Descripcion == "Enviado" ||
+        e.Descripcion == "Entregado"||
+        e.Descripcion == "Cancelado")
+    .ToList();
+
             ViewBag.Estados = new SelectList(
-                _context.Estados.ToList(),
+                estadosEnvio,
                 "IdEstado",
                 "Descripcion"
             );

@@ -38,7 +38,7 @@
 
                 <div class="d-flex align-items-center gap-1 text-success small fw-bold">
                     <span class="material-symbols-outlined fs-6">arrow_forward</span>
-                    @Model.PedidosListosEnvio listos para envío
+                    @Model.PedidosFacturados Pedidos Facturados
                 </div>
             </div>
         </div>
@@ -86,7 +86,13 @@
                         <div class="bg-success rounded-pill" style="width: 4px; height: 24px;"></div>
                         <h2 class="h5 fw-bold mb-0 text-white">Pedidos Recientes</h2>
                     </div>
-                    <button class="btn btn-link text-success text-decoration-none fw-bold small p-0">Ver todos</button>
+                    <a asp-controller="Pedido"
+                       asp-action="Index"
+                       class="btn btn-link text-success text-decoration-none fw-bold small p-0">
+
+                        Ver todos
+
+                    </a>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-custom mb-0">
@@ -97,7 +103,6 @@
                                 <th>Estado</th>
                                 <th>Total</th>
                                 <th>Fecha</th>
-                                <th>Acciones</th>
                             </tr>
                         </thead>
                         
@@ -131,22 +136,34 @@
 
                                     <!-- ESTADO -->
                                     <td>
-                                    @if (item.Estado == "Entregado")
+                                    @if (item.Estado == "Pendiente")
                                         {
-                                            <span class="badge-status bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-                                                Completado
+                                            <span class="badge-status bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
+                                                Pendiente
                                             </span>
                                         }
-                                        else if (item.Estado == "Listo")
+                                        else if (item.Estado == "En Proceso")
                                         {
                                             <span class="badge-status bg-info bg-opacity-10 text-info border border-info border-opacity-25">
-                                                Listo
+                                                En Proceso
+                                            </span>
+                                        }
+                                        else if (item.Estado == "Facturado")
+                                        {
+                                            <span class="badge-status bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                                Facturado
+                                            </span>
+                                        }
+                                        else if (item.Estado == "Cancelado")
+                                        {
+                                            <span class="badge-status bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
+                                                Cancelado
                                             </span>
                                         }
                                         else
                                         {
-                                            <span class="badge-status bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
-                                                Pendiente
+                                            <span class="badge-status bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25">
+                                                @item.Estado
                                             </span>
                                         }
                                     </td>
@@ -161,22 +178,7 @@
                                         @item.Fecha.ToString("dd/MM/yyyy")
                                     </td>
 
-                                    <!-- ACCIONES -->
-                                    <td>
-                                        <div class="d-flex gap-2">
-
-                                            <a asp-controller="Pedidos" asp-action="Edit" asp-route-id="@item.IdPedido"
-                                               class="btn btn-link text-secondary p-1">
-                                                <span class="material-symbols-outlined fs-5">edit</span>
-                                            </a>
-
-                                            <a asp-controller="Pedidos" asp-action="Delete" asp-route-id="@item.IdPedido"
-                                               class="btn btn-link text-danger p-1">
-                                                <span class="material-symbols-outlined fs-5">delete</span>
-                                            </a>
-
-                                        </div>
-                                    </td>
+                                   
 
                                 </tr>
                             }
@@ -196,60 +198,144 @@
                         <h2 class="h5 fw-bold mb-0 text-white">Alertas de Stock</h2>
                     </div>
                     <div class="vstack gap-3">
-                        <div class="d-flex align-items-center justify-content-between p-2 rounded-3 bg-dark bg-opacity-25">
-                            <div class="d-flex align-items-center gap-3">
-                                <img class="rounded" height="40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBof01xVq9bsuK9CVjTJFXMobvZh7AwPtxWn37-6CNoB5J0HnrJs_iDFrYKmhz1qk6m9ZVDKZpYMfKMtKTpxCZf8j6OkULaUFbbOUw1JUk25EOdot34yr9DDyyap7cwZHwE53hEH3KOIUuWVijmwQoxMRenhoGBb5krjabm8o-mENeRvVkfXWR5b3V8PLrcj_o0SdBQNgH1Sd1gaPCZZWqFsEMFGm6kaQTh7SJJ1l9KcFY5OUn6Kagmox12l8hCRr_q1qhqSb7KEJpu" style="object-fit: cover;" width="40" />
-                                <div>
-                                    <p class="mb-0 small fw-bold text-light">Zapatilla Air Max</p>
-                                    <p class="mb-0 text-secondary" style="font-size: 10px;">SKU: ZAP-002</p>
+
+                        @if (Model.ProductosStockBajo.Any())
+                        {
+                            @foreach (var item in Model.ProductosStockBajo)
+                            {
+                                <div class="d-flex align-items-center justify-content-between p-2 rounded-3 bg-dark bg-opacity-25">
+
+                                    <div class="d-flex align-items-center gap-3">
+
+                                        <!-- Icono -->
+                                        @if (!string.IsNullOrEmpty(item.Producto?.UrlImagen))
+                                        {
+                                            <img class="rounded"
+                                                 src="@item.Producto.UrlImagen"
+                                                 width="50"
+                                                 height="50"
+                                                 style="object-fit:cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-warning bg-opacity-10 rounded d-flex align-items-center justify-content-center"
+                                                 style="width:40px;height:40px;">
+
+                                                <span class="material-symbols-outlined text-warning">
+                                                    inventory_2
+                                                </span>
+
+                                            </div>
+                                        }
+
+                                        <div>
+                                            <p class="mb-0 small fw-bold text-light">
+                                                @item.Producto?.Nombre
+                                            </p>
+
+                                            <p class="mb-0 text-secondary"
+                                               style="font-size:10px;">
+                                                @item.Producto?.Categoria
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="text-end">
+
+                                        <p class="mb-0 small fw-black
+                               @(item.Stock <= 2 ? "text-danger" : "text-warning")">
+
+                                            @item.Stock uni.
+                                        </p>
+
+                                        <p class="mb-0 text-secondary"
+                                           style="font-size:10px;">
+
+                                            @(item.Stock <= 2 ? "Crítico" : "Bajo")
+
+                                        </p>
+
+                                    </div>
+
                                 </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-success mb-0">
+                                No existen productos con stock bajo.
                             </div>
-                            <div class="text-end">
-                                <p class="mb-0 small fw-black text-danger">2 uni.</p>
-                                <p class="mb-0 text-secondary" style="font-size: 10px;">Crítico</p>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between p-2 rounded-3 bg-dark bg-opacity-25">
-                            <div class="d-flex align-items-center gap-3">
-                                <img class="rounded" height="40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhcvcSiPxSrwZltMOvRkltwRJS3jX6mItEY6_G0yNSZRVD2XrQH5NsbAYyTBiewl4Tcb7JJW5HYOAxhXY2P-CR_6BYC3YA2C0hxYfBEd_aDHlr8e9-5tMvLVV7w-PposI1VYnZEhhIWJw2YkqxymS-PkF9NkQkeK-tnflQHvmoJO500VrpM2ZC3jCHmF1RBI-gD3OCJuTjPcdILzACKdZEyjcO2cJ5k3t6Wdt5IuCk9_3tSWdbEtv42lqc50z9t3ZgP_yILzQrpAU1" style="object-fit: cover;" width="40" />
-                                <div>
-                                    <p class="mb-0 small fw-bold text-light">Auriculares Pro</p>
-                                    <p class="mb-0 text-secondary" style="font-size: 10px;">SKU: AUD-015</p>
-                                </div>
-                            </div>
-                            <div class="text-end">
-                                <p class="mb-0 small fw-black text-warning">5 uni.</p>
-                                <p class="mb-0 text-secondary" style="font-size: 10px;">Bajo</p>
-                            </div>
-                        </div>
+                        }
+
                     </div>
-                    <button class="btn btn-outline-secondary w-100 mt-4 text-uppercase fw-bold border-opacity-25" style="font-size: 11px; letter-spacing: 1px;">Gestionar Inventario</button>
+                    <a asp-controller="Productos"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary w-100 mt-4 text-uppercase fw-bold border-opacity-25"
+                       style="font-size: 11px; letter-spacing: 1px;">
+
+                        Gestionar Inventario
+
+                    </a>
                 </div>
                 <!-- Recent Activity -->
                 <div class="custom-card flex-grow-1">
                     <div class="d-flex align-items-center gap-3 mb-4">
                         <div class="bg-primary rounded-pill" style="width: 4px; height: 24px;"></div>
-                        <h2 class="h5 fw-bold mb-0 text-white">Actividad Reciente</h2>
+                        <h2 class="h5 fw-bold mb-0 text-white">
+                            Resumen Operativo
+                        </h2>
                     </div>
                     <div class="timeline">
+
                         <div class="timeline-item">
                             <div class="timeline-dot bg-success"></div>
-                            <p class="mb-0 small fw-bold text-light">Pago confirmado</p>
-                            <p class="mb-1 text-secondary" style="font-size: 10px;">El pedido #ORD-7281 ha sido pagado</p>
-                            <span class="badge bg-dark border border-secondary border-opacity-25 text-secondary" style="font-size: 9px;">Hace 5 min</span>
+
+                            <p class="mb-0 small fw-bold text-light">
+                                Facturas emitidas hoy
+                            </p>
+
+                            <p class="mb-1 text-secondary">
+                                @Model.FacturasHoy facturas generadas
+                            </p>
+
+                            <span class="badge bg-success bg-opacity-10 text-success">
+                                Facturación
+                            </span>
                         </div>
+
                         <div class="timeline-item">
                             <div class="timeline-dot bg-primary"></div>
-                            <p class="mb-0 small fw-bold text-light">Nuevo cliente registrado</p>
-                            <p class="mb-1 text-secondary" style="font-size: 10px;">Carlos Mendoza se unió a la plataforma</p>
-                            <span class="badge bg-dark border border-secondary border-opacity-25 text-secondary" style="font-size: 9px;">Hace 42 min</span>
+
+                            <p class="mb-0 small fw-bold text-light">
+                                Envíos entregados hoy
+                            </p>
+
+                            <p class="mb-1 text-secondary">
+                                @Model.EnviosEntregadosHoy entregas completadas
+                            </p>
+
+                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                Logística
+                            </span>
                         </div>
+
                         <div class="timeline-item">
-                            <div class="timeline-dot bg-warning"></div>
-                            <p class="mb-0 small fw-bold text-light">Stock bajo detectado</p>
-                            <p class="mb-1 text-secondary" style="font-size: 10px;">Producto "Zapatilla Air Max" requiere reposición</p>
-                            <span class="badge bg-dark border border-secondary border-opacity-25 text-secondary" style="font-size: 9px;">Hace 2 horas</span>
+                            <div class="timeline-dot bg-danger"></div>
+
+                            <p class="mb-0 small fw-bold text-light">
+                                Pedidos cancelados
+                            </p>
+
+                            <p class="mb-1 text-secondary">
+                                @Model.PedidosCancelados pedidos cancelados
+                            </p>
+
+                            <span class="badge bg-danger bg-opacity-10 text-danger">
+                                Incidencias
+                            </span>
                         </div>
+
                     </div>
                 </div>
             </div>
