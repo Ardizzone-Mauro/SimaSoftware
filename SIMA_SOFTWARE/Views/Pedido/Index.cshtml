@@ -37,8 +37,6 @@
                             <option value="">Todos los estados</option>
                             <option value="Pendiente">Pendiente</option>
                             <option value="En Proceso">En Proceso</option>
-                            <option value="Enviado">Enviado</option>
-                            <option value="Entregado">Entregado</option>
                             <option value="Facturado">Facturado</option>
                             <option value="Cancelado">Cancelado</option>
                         </select>
@@ -111,18 +109,6 @@
                                                     clase = "bg-warning text-dark";
                                                     break;
 
-                                                case "En Proceso":
-                                                    clase = "bg-info text-dark";
-                                                    break;
-
-                                                case "Enviado":
-                                                    clase = "bg-primary";
-                                                    break;
-
-                                                case "Entregado":
-                                                    clase = "bg-success";
-                                                    break;
-
                                                 case "Cancelado":
                                                     clase = "bg-danger";
                                                     break;
@@ -143,6 +129,15 @@
                                            title="Editar">
                                             ✏️
                                         </a>
+
+                                        @if (item.Estado == "Pendiente")
+                                        {
+                                            <a asp-action="IniciarProduccion"
+                                               asp-route-id="@item.IdPedido"
+                                               class="btn btn-sm btn-primary">
+                                                ▶ Producción
+                                            </a>
+                                        }
 
                                         <a asp-action="Cancelar"
                                            asp-route-id="@item.IdPedido"
