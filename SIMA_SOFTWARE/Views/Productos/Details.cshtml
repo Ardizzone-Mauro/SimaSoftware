@@ -15,7 +15,7 @@
             <img src="@(Model.UrlImagenExistente ?? "/img/no-image.png")"
                  style="max-width:250px; border-radius:10px;" />
 
-            <p><strong>Precio:</strong> $@Model.Precio</p>
+            <p><strong>Precio:</strong> $@Model.Precio.ToString("N0")</p>
             <p><strong>Stock:</strong> @Model.StockInicial</p>
             <p><strong>Descripción:</strong> @Model.Descripcion</p>
             <p><strong>Categoría:</strong> @Model.Categoria</p>

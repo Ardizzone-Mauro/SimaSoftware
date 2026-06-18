@@ -93,13 +93,16 @@ namespace SIMA_SOFTWARE.Controllers
 
             if (pedidosMesActual > 0)
             {
-                ticketPromedio = totalMesActual / pedidosMesActual;
+                ticketPromedio = Math.Round(
+                    totalMesActual / pedidosMesActual,
+                        0
+                     );
             }
 
             // 🔵 VIEWBAG
             ViewBag.TotalMesActual = totalMesActual;
             ViewBag.TotalMesAnterior = totalMesAnterior;
-            ViewBag.TicketPromedio = ticketPromedio;
+            ViewBag.TicketPromedio = Math.Round(ticketPromedio, 0); 
             ViewBag.Categoria = categoria;
 
 
@@ -115,10 +118,10 @@ namespace SIMA_SOFTWARE.Controllers
                 select new
                 {
                     Producto = g.Key,
-                    CantidadVendida = g.Sum(x => x.Cantidad)
+                    Cantidad = g.Sum(x => x.Cantidad)
                 }
             )
-            .OrderByDescending(x => x.CantidadVendida)
+            .OrderByDescending(x => x.Cantidad)
             .Take(5)
             .ToList();
 
@@ -128,7 +131,7 @@ namespace SIMA_SOFTWARE.Controllers
     .ToList();
 
             ViewBag.TopProductosData = topProductos
-                .Select(x => x.CantidadVendida)
+                .Select(x => x.Cantidad)
                 .ToList();
             // =====================================================
             // 🔵 TOP CLIENTES
@@ -374,9 +377,9 @@ namespace SIMA_SOFTWARE.Controllers
             kpiTable.AddHeaderCell("Mes Anterior");
             kpiTable.AddHeaderCell("Ticket Promedio");
 
-            kpiTable.AddCell($"${totalMesActual:N2}");
-            kpiTable.AddCell($"${totalMesAnterior:N2}");
-            kpiTable.AddCell($"${ticketPromedio:N2}");
+            kpiTable.AddCell($"${totalMesActual:N0}");
+            kpiTable.AddCell($"${totalMesAnterior:N0}");
+            kpiTable.AddCell($"${ticketPromedio:N0}");
 
             doc.Add(kpiTable);
 
@@ -428,7 +431,7 @@ namespace SIMA_SOFTWARE.Controllers
             foreach (var item in topClientes)
             {
                 tablaClientes.AddCell(item.Cliente);
-                tablaClientes.AddCell($"${item.Total:N2}");
+                tablaClientes.AddCell($"${item.Total:N0}");
             }
 
             doc.Add(tablaClientes);

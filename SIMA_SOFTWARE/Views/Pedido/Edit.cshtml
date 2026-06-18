@@ -68,7 +68,7 @@
                         </td>
 
                         <td id="precio-@i">
-                            $ @Model.Detalles[i].Precio
+                            $ @Model.Detalles[i].Precio.ToString("N0")
                             <input type="hidden"
                                    name="Detalles[@i].Precio"
                                    id="precioHidden-@i"
@@ -86,7 +86,7 @@
                         </td>
 
                         <td id="subtotal-@i">
-                            $ @Model.Detalles[i].Subtotal
+                            $ @Model.Detalles[i].Subtotal.ToString("N0")
                         </td>
 
                         <td>
@@ -105,7 +105,7 @@
         <!-- TOTAL -->
         <div class="text-end mt-3 me-2">
             <h5 class="text-white" id="totalBox">
-                Total: $ @Model.Detalles.Sum(d => d.Subtotal)
+                Total: $ @Model.Detalles.Sum(d => d.Subtotal).ToString("N0")
             </h5>
         </div>
 

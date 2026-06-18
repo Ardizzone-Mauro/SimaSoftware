@@ -24,13 +24,13 @@
 
                     <option value="">Todas</option>
 
-                    <option value="Línea Telar"
-                            selected="@(ViewBag.Categoria == "Línea Telar")">
+                    <option value="LINEA TELAR"
+                            selected="@(ViewBag.Categoria == "LINEA TELAR")">
                         Línea Telar
                     </option>
 
-                    <option value="Línea Rueca"
-                            selected="@(ViewBag.Categoria == "Línea Rueca")">
+                    <option value="LINEA RUECA"
+                            selected="@(ViewBag.Categoria == "LINEA RUECA")">
                         Línea Rueca
                     </option>
 
@@ -71,21 +71,21 @@
             <div class="col-md-4">
                 <div class="custom-card p-3 text-center">
                     <h5>Mes Actual</h5>
-                    <h2>$@ViewBag.TotalMesActual</h2>
+                    <h2>$@Convert.ToDecimal(ViewBag.TotalMesActual).ToString("N0")</h2>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="custom-card p-3 text-center">
                     <h5>Mes Anterior</h5>
-                    <h2>$@ViewBag.TotalMesAnterior</h2>
+                    <h2>$@Convert.ToDecimal(ViewBag.TotalMesAnterior).ToString("N0")</h2>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="custom-card p-3 text-center">
                     <h5>Ticket Promedio</h5>
-                    <h2>$@ViewBag.TicketPromedio</h2>
+                    <h2>$@Convert.ToDecimal(ViewBag.TicketPromedio).ToString("N0")</h2>
                 </div>
             </div>
 
@@ -134,7 +134,7 @@
                                         </td>
 
                                         <td>
-                                            @item.CantidadVendida
+                                            @item.Cantidad
                                         </td>
                                     </tr>
                                 }
@@ -175,7 +175,7 @@
                                         <tr>
                                             <td class="text-light">@item.Cliente</td>
                                             <td class="text-success fw-bold">
-                                                $ @item.Total
+                                                $ @Convert.ToDecimal(item.Total).ToString("N0")
                                             </td>
                                         </tr>
                                     }

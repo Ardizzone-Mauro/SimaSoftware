@@ -1,5 +1,9 @@
 ﻿let items = [];
 let total = 0;
+const moneyFormatter = new Intl.NumberFormat('es-AR', {
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0
+});
 
 function agregarItem() {
     let select = document.getElementById("productoSelect");
@@ -56,8 +60,8 @@ function renderTabla() {
         fila.innerHTML = `
             <td>${producto}</td>
             <td>${item.cantidad}</td>
-            <td>$${item.precio}</td>
-            <td>$${item.subtotal}</td>
+            <td>$${moneyFormatter.format(item.precio)}</td>
+            <td>$${moneyFormatter.format(item.subtotal)}</td>
             <td>
                 <button class="btn btn-danger btn-sm" onclick="eliminarItem(${index})">
                     ❌
@@ -77,7 +81,7 @@ function eliminarItem(index) {
 }
 
 function actualizarTotal() {
-    document.getElementById("total").innerText = total.toFixed(2);
+    document.getElementById("total").innerText = moneyFormatter.format(total);
 }
 
 function guardarPedido() {
