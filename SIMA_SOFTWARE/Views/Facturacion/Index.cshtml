@@ -76,7 +76,7 @@
             <div class="card bg-success text-white shadow">
                 <div class="card-body">
                     <h6>Total Facturado</h6>
-                    <h3>$ @totalFacturado.ToString("N2")</h3>
+                    <h3>$ @totalFacturado.ToString("N0")</h3>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
             <div class="card bg-warning text-dark shadow">
                 <div class="card-body">
                     <h6>Total IVA</h6>
-                    <h3>$ @totalIVA.ToString("N2")</h3>
+                    <h3>$ @totalIVA.ToString("N0")</h3>
                 </div>
             </div>
         </div>
@@ -135,11 +135,11 @@
                                     <td>@f.FechaEmision.ToString("dd/MM/yyyy")</td>
 
                                     <td class="text-success fw-bold">
-                                        $ @f.MontoTotal.ToString("N2")
+                                        $ @f.MontoTotal.ToString("N0")
                                     </td>
 
                                     <td class="text-warning">
-                                        $ @f.Impuestos.ToString("N2")
+                                        $ @f.Impuestos.ToString("N0")
                                     </td>
 
                                     <td>

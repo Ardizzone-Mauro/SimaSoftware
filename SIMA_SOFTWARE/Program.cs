@@ -1,4 +1,6 @@
+﻿using System.Globalization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using SIMA_SOFTWARE.Configuration;
 using SIMA_SOFTWARE.Data;
@@ -7,9 +9,19 @@ using SIMA_SOFTWARE.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var appCulture = new CultureInfo("es-AR");
+CultureInfo.DefaultThreadCurrentCulture = appCulture;
+CultureInfo.DefaultThreadCurrentUICulture = appCulture;
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture(appCulture);
+    options.SupportedCultures = new[] { appCulture };
+    options.SupportedUICultures = new[] { appCulture };
+});
 
 //Incluir DbContext
 builder.Services.AddDbContext<SimaDbContext>(options =>
@@ -30,7 +42,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     .AddEntityFrameworkStores<SimaDbContext>()
     .AddDefaultTokenProviders()
     .AddSignInManager<SignInManager<ApplicationUser>>();
-//Manejo de la cookie de autenticaci�n en defecto
+//Manejo de la cookie de autenticación en defecto
 builder.Services.AddAuthentication(opt =>
 { opt.DefaultScheme = IdentityConstants.ApplicationScheme; })
     .AddIdentityCookies();
@@ -64,6 +76,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseRequestLocalization();
 
 app.UseRouting();
 
@@ -82,6 +95,6 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     await SeedData.Initialize(services);
 }
-
+  
 
 app.Run();

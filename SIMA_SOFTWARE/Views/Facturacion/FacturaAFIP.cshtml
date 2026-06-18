@@ -3,6 +3,7 @@
 @{
     Layout = null;
     var numeroFormateado = $"{Model.PuntoVenta}-{Model.Numero.ToString("00000000")}";
+    var neto = Model.MontoTotal - Model.Impuestos;
 }
 
 <!DOCTYPE html>
@@ -135,8 +136,8 @@
                         <tr>
                             <td>@d.DetalleProducto?.Producto?.Nombre</td>
                             <td>@d.DetalleProducto?.Cantidad</td>
-                            <td>$ @d.DetalleProducto?.PrecioUnitario</td>
-                            <td>$ @(d.DetalleProducto?.Cantidad * d.DetalleProducto?.PrecioUnitario)</td>
+                            <td>$ @Convert.ToDecimal(d.DetalleProducto?.PrecioUnitario ?? 0).ToString("N0")</td>
+                            <td>$ @Convert.ToDecimal((d.DetalleProducto?.Cantidad ?? 0) * (d.DetalleProducto?.PrecioUnitario ?? 0)).ToString("N0")</td>
                         </tr>
                     }
                 }
@@ -145,9 +146,9 @@
 
         <!-- TOTALES -->
         <div class="total">
-            Neto: $ @(Model.MontoTotal - Model.Impuestos) <br />
-            IVA (21%): $ @Model.Impuestos <br />
-            <strong>TOTAL: $ @Model.MontoTotal</strong>
+            Neto: $ @neto.ToString("N0") <br />
+            IVA (21%): $ @Model.Impuestos.ToString("N0") <br />
+            <strong>TOTAL: $ @Model.MontoTotal.ToString("N0")</strong>
         </div>
 
     </div>

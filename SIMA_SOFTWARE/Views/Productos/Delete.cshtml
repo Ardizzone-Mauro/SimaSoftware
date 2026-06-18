@@ -14,7 +14,7 @@
         </p>
 
         <p class="text-light"><strong>Nombre:</strong> @Model.Nombre</p>
-        <p class="text-light"><strong>Precio:</strong> $ @Model.Precio</p>
+        <p class="text-light"><strong>Precio:</strong> $ @Model.Precio.ToString("N0")</p>
 
         @if (!string.IsNullOrEmpty(Model.UrlImagenExistente))
         {
