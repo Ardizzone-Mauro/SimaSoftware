@@ -44,9 +44,10 @@
             </div>
 
         </form>
-            <form id="pdfForm"
-                  asp-action="ExportarPdf"
-                  method="post">
+        <form id="pdfForm"
+              asp-action="ExportarPdf"
+              method="post"
+              enctype="multipart/form-data">
 
                 <input type="hidden" name="categoria" value="@ViewBag.Categoria" />
 
@@ -267,7 +268,8 @@
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false
+            maintainAspectRatio: false,
+            animation: false
         }
     });
 
@@ -287,7 +289,8 @@
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false
+            maintainAspectRatio: false,
+             animation: false
         }
     });
 
@@ -307,7 +310,8 @@
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false
+            maintainAspectRatio: false,
+             animation: false
         }
     });
 
@@ -340,7 +344,8 @@
 
         options: {
             responsive: true,
-            maintainAspectRatio: false
+            maintainAspectRatio: false,
+             animation: false
         }
     });
 
@@ -349,53 +354,99 @@
     // EXPORTAR PDF
     // =========================================
 
-    function exportChart(chartId) {
+    // function exportChart(chartId) {
 
+    //     const canvas = document.getElementById(chartId);
+
+    //     const exportCanvas = document.createElement("canvas");
+
+    //     exportCanvas.width = canvas.width * 2;
+    //     exportCanvas.height = canvas.height * 2;
+
+    //     const ctx = exportCanvas.getContext("2d");
+
+    //     Fondo blanco para PDF
+    //     ctx.fillStyle = "#FFFFFF";
+
+    //     ctx.fillRect(
+    //         0,
+    //         0,
+    //         exportCanvas.width,
+    //         exportCanvas.height
+    //     );
+
+    //     ctx.drawImage(
+    //         canvas,
+    //         0,
+    //         0,
+    //         exportCanvas.width,
+    //         exportCanvas.height
+    //     );
+
+    //     return exportCanvas.toDataURL("image/png");
+    // }
+
+    // document.getElementById("pdfForm")
+    //     .addEventListener("submit", function () {
+
+    //         document.getElementById("ventasImg").value =
+    //             exportChart("ventasChart");
+
+    //         document.getElementById("productosImg").value =
+    //             exportChart("productosChart");
+
+    //         document.getElementById("clientesImg").value =
+    //             exportChart("clientesChart");
+
+    //         document.getElementById("depositosImg").value =
+    //             exportChart("depositosChart");
+    //     });
+
+
+            function exportChart(chartId, scale = 0.7, type = "image/png", quality = 0.9) {
         const canvas = document.getElementById(chartId);
 
         const exportCanvas = document.createElement("canvas");
-
-        exportCanvas.width = canvas.width * 2;
-        exportCanvas.height = canvas.height * 2;
+        exportCanvas.width = Math.max(1, Math.floor(canvas.width * scale));
+        exportCanvas.height = Math.max(1, Math.floor(canvas.height * scale));
 
         const ctx = exportCanvas.getContext("2d");
 
-        // Fondo blanco para PDF
         ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+        ctx.drawImage(canvas, 0, 0, exportCanvas.width, exportCanvas.height);
 
-        ctx.fillRect(
-            0,
-            0,
-            exportCanvas.width,
-            exportCanvas.height
-        );
+        if (type === "image/jpeg") {
+            return exportCanvas.toDataURL(type, quality);
+        }
 
-        ctx.drawImage(
-            canvas,
-            0,
-            0,
-            exportCanvas.width,
-            exportCanvas.height
-        );
-
-        return exportCanvas.toDataURL("image/png");
+        return exportCanvas.toDataURL(type);
     }
 
-    document.getElementById("pdfForm")
-        .addEventListener("submit", function () {
 
+    document.getElementById("pdfForm")
+    .addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        setTimeout(() => {
             document.getElementById("ventasImg").value =
-                exportChart("ventasChart");
+                 exportChart("ventasChart", 1, "image/png");
 
             document.getElementById("productosImg").value =
-                exportChart("productosChart");
+                exportChart("productosChart", 1,"image/png");
 
             document.getElementById("clientesImg").value =
-                exportChart("clientesChart");
+                exportChart("clientesChart", 1,"image/png");
 
             document.getElementById("depositosImg").value =
-                exportChart("depositosChart");
-        });
+                exportChart("depositosChart", 1,"image/png");
+
+            event.target.submit();
+        }, 500);
+    });
+
+
+
 
 </script>
 
