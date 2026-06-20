@@ -27,22 +27,42 @@ namespace SIMA_SOFTWARE.Controllers
 
         private void AgregarGrafico(Document doc, string base64)
         {
-            if (string.IsNullOrEmpty(base64))
+            if (string.IsNullOrWhiteSpace(base64))
                 return;
 
-            var bytes = Convert.FromBase64String(
-                base64.Substring(base64.IndexOf(",") + 1));
+            try
+            {
+                base64 = base64.Trim();
 
-            var imageData =
-                iText.IO.Image.ImageDataFactory.Create(bytes);
+                int commaIndex = base64.IndexOf(",");
+                if (commaIndex >= 0)
+                    base64 = base64.Substring(commaIndex + 1);
 
-            var image =
-                new iText.Layout.Element.Image(imageData);
+                base64 = base64
+                    .Replace(" ", "+")
+                    .Replace("\r", "")
+                    .Replace("\n", "")
+                    .Replace("\t", "");
 
-            image.SetWidth(380);
+                while (base64.Length % 4 != 0)
+                {
+                    base64 += "=";
+                }
 
-            doc.Add(image);
-            doc.Add(new Paragraph(" "));
+                var bytes = Convert.FromBase64String(base64);
+
+                var imageData = iText.IO.Image.ImageDataFactory.Create(bytes);
+                var image = new iText.Layout.Element.Image(imageData);
+
+                image.SetWidth(300);
+
+                doc.Add(image);
+                doc.Add(new Paragraph(" "));
+            }
+            catch
+            {
+                doc.Add(new Paragraph("No se pudo cargar el gráfico."));
+            }
         }
 
         // ==================================================
@@ -390,7 +410,7 @@ namespace SIMA_SOFTWARE.Controllers
             // =====================================
 
             doc.Add(new Paragraph("Comparativa de Ventas"));
-
+            doc.Add(new Paragraph(" "));
             AgregarGrafico(doc, ventasImg);
 
             // =====================================
